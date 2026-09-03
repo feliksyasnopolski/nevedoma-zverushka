@@ -1,0 +1,88 @@
+# Compiled objects and local build products
+*.o
+*.a
+*.d
+*.ko
+*.mod
+*.mod.c
+*.order
+Module.symvers
+modules.order
+
+# Conventional native build directories. Keep source-side generated files
+# visible unless they are inside one of these explicitly named directories.
+/build/
+/build-*/
+/out/
+/.ninja_deps
+/.ninja_log
+CMakeCache.txt
+CMakeFiles/
+meson-private/
+meson-logs/
+
+# Editors, IDEs, and operating-system metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local and transient runtime output
+*.log
+*.tmp
+*.temp
+*.pid
+core
+core.*
+/logs/
+/tmp/
+
+# Raw evidence and generated captures; named source fixtures remain trackable.
+/captures/
+/raw-captures/
+/pstore/
+/strace/
+*.pstore
+*.strace
+
+# Generated and device-specific images
+/generated-images/
+/images/boot*.img
+/images/vendor_boot*.img
+/images/init_boot*.img
+/images/dtbo*.img
+/images/*rootfs*.img
+/images/*filesystem*.img
+/boot-images/
+/partition-dumps/
+
+# Package and copied stock artifacts. Deliberate fixtures must use a tracked
+# path outside these stock/provenance directories.
+/apks/
+/stock-libs/
+/vendor-libs/
+/firmware-dumps/
+/stock-harvest/
+/android-harvest/
+/rootfs-harvest/
+
+# Sensitive device material and model payloads
+/nvram/
+/calibration/
+/security-material/
+/tee/
+/provisioning/
+/neural-models/
+/model-blobs/
+
+# Deployment output and local toolchains
+/deploy/
+/deployment/
+/toolchains/
+/sysroot/
+/toolchain-cache/
