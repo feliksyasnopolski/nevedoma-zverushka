@@ -1,0 +1,12 @@
+[Unit]
+Description=TB330FU native Panfrost render stack
+Wants=tb330fu-devd.service
+Requires=tb330fu-android-boot-complete.service
+After=local-fs.target tb330fu-devd.service tb330fu-android-boot-complete.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/tb330fu-panfrost
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal

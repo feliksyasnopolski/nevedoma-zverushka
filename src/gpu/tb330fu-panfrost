@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+MODULE_DIR=/usr/lib/tb330fu/native-modules
+SCHED_MODULE="$MODULE_DIR/gpu_sched.ko"
+PANFROST_MODULE="$MODULE_DIR/panfrost.ko"
+GPU_DEVICE=/sys/bus/platform/devices/13040000.mali
+
+die() { echo "tb330fu-panfrost: $*" >&2; exit 1; }
+loaded() { [ -d "/sys/module/$1" ]; }
+
+[ -r "$SCHED_MODULE" ] || die "missing $SCHED_MODULE"
+[ -r "$PANFROST_MODULE" ] || die "missing $PANFROST_MODULE"
+[ -d "$GPU_DEVICE" ] || die "missing platform device $GPU_DEVICE"
+
+# The runtime graph owns the vendor GPU prerequisite. The unit ordering makes
+# its absence a prompt, loud failure rather than a long polling delay.
+[ -d /sys/module/mtk_gpufreq_wrapper_legacy ] || die "required vendor dependency mtk_gpufreq_wrapper_legacy is unavailable after graph"
+
+if ! loaded gpu_sched; then
+    /sbin/insmod "$SCHED_MODULE" || die "failed to load gpu_sched"
+fi
+
+# The stock Mali driver owns this platform device on the native baseline.
+# Hand that same device to Panfrost without touching MediaTek display DRM.
+driver_link="$GPU_DEVICE/driver"
+if [ -L "$driver_link" ] && [ "$(basename "$(readlink "$driver_link")")" != panfrost ]; then
+    printf '%s\n' panfrost > "$GPU_DEVICE/driver_override"
+    printf '%s\n' 13040000.mali > /sys/bus/platform/drivers/mali/unbind || die "failed to unbind stock Mali"
+fi
+
+if ! loaded panfrost; then
+    /sbin/insmod "$PANFROST_MODULE" || die "failed to load panfrost"
+fi
+
+if [ ! -L "$driver_link" ]; then
+    [ -w /sys/bus/platform/drivers/panfrost/bind ] || die "Panfrost bind endpoint unavailable"
+    printf '%s\n' 13040000.mali > /sys/bus/platform/drivers/panfrost/bind || die "failed to bind Panfrost"
+fi
+[ -L "$driver_link" ] && [ "$(basename "$(readlink "$driver_link")")" = panfrost ] || die "GPU platform device is not bound to Panfrost"
+
+udevadm settle --timeout=5 || true
+[ -e /dev/dri/renderD128 ] || die "Panfrost render node was not created"
+stat -c '%U:%G %a %t:%T %n' /dev/dri/renderD* /dev/dri/card* 2>/dev/null || true
