@@ -11,21 +11,22 @@ tune, initialize, or activate zram.
 | `src/zram/tb330fu-zram` | Idempotent setup and activation helper. |
 | `systemd/tb330fu-zram.service` | Orders and runs the helper during native boot. |
 
-The helper creates `/dev/zram0`, selects `zstd`, requests a 2G disk size,
-initializes swap, and activates it with priority 100. The deployed 2G request
-is rounded by this kernel to `1999634432` bytes. No writeback, backing device,
+The helper creates the `zram0` kernel device when needed, selects `zstd`, requests a 2G disk size, initializes swap, and activates it with priority 100. `tb330fu-devd` materializes `/dev/zram0` from the resulting kernel uevent.
+The kernel supplies the
+resulting runtime `disksize`; the helper requires it to be nonzero but does not
+encode an exact byte count. No writeback, backing device,
 or zram-local tuning is configured. Generic VM policy such as swappiness,
 page-cluster, MGLRU, and unrelated sysctls is not copied from Android init.
 
 The service runs after `tb330fu-devd.service` and does not use a systemd
-`.device` unit. If needed, the helper loads `zram.ko`, creates `zram0` through
+`.device` unit. The generator-created `dev-zram0.swap` unit is masked on the
+native target and is not part of the native ownership path. If needed, the
+helper loads `zram.ko`, creates `zram0` through
 the kernel control interface, and waits for devd to materialize the node. It
 never manually creates the node. An active incompatible zram device fails
-without reset. An inactive stale device may be reset. Service stop does not
-run `swapoff` or reset zram; teardown is an explicit maintenance operation.
+without reset. An inactive stale device may be reset.
 
-The service has no stop teardown. Stopping it does not run `swapoff`, reset,
-or hot-remove.
+The service has no stop teardown. Stopping it does not run swapoff, reset, or hot-remove; teardown is an explicit maintenance operation.
 
 ## Post-deployment verification
 
@@ -36,5 +37,5 @@ cat /sys/block/zram0/comp_algorithm
 cat /sys/block/zram0/disksize
 ```
 
-Expected results are `/dev/zram0` with priority `100`, `[zstd]` selected, and
-`1999634432` for `disksize` on the current kernel.
+Expected results are `/dev/zram0` with priority `100`, `[zstd]` selected, and a
+nonzero kernel-provided `disksize`.

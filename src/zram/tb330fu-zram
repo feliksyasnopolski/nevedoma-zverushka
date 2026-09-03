@@ -8,8 +8,6 @@ DEV=/dev/zram0
 CONTROL=/sys/class/zram-control
 SYSFS=/sys/block/zram0
 ALGORITHM=zstd
-# The deployed `zramctl --size 2G` configuration is rounded by this kernel.
-DISKSIZE=1999634432
 TIMEOUT=5
 
 fail() { echo "tb330fu-zram: $*" >&2; exit 1; }
@@ -17,6 +15,11 @@ fail() { echo "tb330fu-zram: $*" >&2; exit 1; }
 active() {
     swapon --show=NAME --noheadings 2>/dev/null |
         awk -v dev="$DEV" '$1 == dev { found = 1 } END { exit !found }'
+}
+
+active_priority() {
+    swapon --show=NAME,PRIO --noheadings 2>/dev/null |
+        awk -v dev="$DEV" '$1 == dev { print $2; found = 1 } END { if (!found) exit 1 }'
 }
 
 selected_algorithm() {
@@ -61,8 +64,8 @@ start() {
     if active; then
         [ "$(selected_algorithm)" = "$ALGORITHM" ] ||
             fail "active zram has incompatible compression algorithm"
-        [ "$(current_disksize)" = "$DISKSIZE" ] ||
-            fail "active zram has incompatible disksize"
+        [ "$(current_disksize)" -gt 0 ] || fail "active zram has no configured disksize"
+        [ "$(active_priority)" = 100 ] || fail "active zram has incompatible priority"
         exit 0
     fi
     if [ "$(current_disksize)" != 0 ]; then
@@ -72,7 +75,7 @@ start() {
     /usr/sbin/zramctl --algorithm "$ALGORITHM" --size 2G "$DEV" ||
         fail "unable to configure $DEV"
     [ "$(selected_algorithm)" = "$ALGORITHM" ] || fail "compression algorithm was not applied"
-    [ "$(current_disksize)" = "$DISKSIZE" ] || fail "unexpected configured disksize"
+    [ "$(current_disksize)" -gt 0 ] || fail "kernel did not create zram swap storage"
     /usr/sbin/mkswap "$DEV" >/dev/null || fail "mkswap failed"
     /usr/sbin/swapon -p 100 "$DEV" || fail "swapon failed"
 }
