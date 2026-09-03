@@ -1,0 +1,15 @@
+[Unit]
+Description=TB330FU Android HAL to IIO sensor producer
+Requires=tb330fu-android-boot-complete.service tb330fu-sensor-iio-module.service iio-sensor-proxy.service
+After=tb330fu-android-boot-complete.service tb330fu-sensor-iio-module.service iio-sensor-proxy.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/libexec/tb330fu-sensor-iio-producer
+User=root
+Group=root
+Environment=LD_LIBRARY_PATH=/system/lib64:/system_ext/lib64:/vendor/lib64:/vendor/lib64/hw:/apex/com.android.runtime/lib64:/apex/com.android.i18n/lib64
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

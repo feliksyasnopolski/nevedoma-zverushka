@@ -35,6 +35,7 @@ Start with:
 - `docs/BUILD.md` — build and deployment procedures.
 - `docs/RECOVERY.md` — recovery-critical artifacts and procedures.
 - `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
+- `docs/SENSORS.md` — Android sensor HAL to Linux IIO integration.
 
 Subsystem documentation lives under `docs/`.
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=TB330FU IIO sensor kernel shim
+After=local-fs.target
+Before=tb330fu-sensor-iio-producer.service
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/insmod /usr/lib/tb330fu/sensors-iio/tb330fu_iio.ko
+ExecStartPost=/usr/bin/udevadm trigger --subsystem-match=iio
+ExecStop=/sbin/rmmod tb330fu_iio
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
