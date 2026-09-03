@@ -37,6 +37,7 @@ Start with:
 - `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
 - `docs/SENSORS.md` — Android sensor HAL to Linux IIO integration.
 - `docs/CHARGER.md` — native early-boot charger-mode runtime.
+- `docs/AUDIO.md` — native MT6768/MT6358 ALSA, UCM, PipeWire, and WirePlumber path.
 - `docs/PLYMOUTH.md` — early native graphical startup and SDDM handoff.
 - `docs/INIT_CORPUS.md` — Android init corpus provenance and graph carving.
 - `docs/GRAPH_COMPILER.md` — parser, compiler transformations, and graph contract.

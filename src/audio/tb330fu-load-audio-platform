@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+MODULE_DIR=/vendor/lib/modules
+load() {
+    file=$1
+    name=${file%.ko}
+    internal=$(printf '%s' "$name" | tr '-' '_')
+    [ -d "/sys/module/$internal" ] && return 0
+    [ -r "$MODULE_DIR/$file" ] || { echo "TB330FU AUDIO PLATFORM: missing $file" >&2; return 1; }
+    /sbin/insmod "$MODULE_DIR/$file"
+}
+
+# The production connectivity graph owns the shared MTK/BSP prerequisite
+# closure. This is the audio-specific provider outside that closure.
+for module in nvmem-mt635x-efuse.ko; do
+    load "$module"
+done

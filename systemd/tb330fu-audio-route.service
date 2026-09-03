@@ -1,0 +1,13 @@
+[Unit]
+Description=TB330FU known-good ALSA audio route
+After=tb330fu-audio-modules.service tb330fu-devnodes.service
+Requires=tb330fu-audio-modules.service
+Before=sound.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/lenovo-audio-init
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

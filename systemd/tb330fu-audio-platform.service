@@ -1,0 +1,14 @@
+[Unit]
+Description=TB330FU native audio platform prerequisites
+DefaultDependencies=no
+After=local-fs.target tb330fu-android-boot-complete.service
+Before=tb330fu-audio-modules.service
+Requires=tb330fu-android-boot-complete.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/tb330fu-load-audio-platform
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+#!/bin/sh
+set -eu
+CARD=0
+
+speaker() {
+    amixer -q -c "$CARD" cset name='I2S1_CH1 DL1_CH1' off
+    amixer -q -c "$CARD" cset name='I2S1_CH2 DL1_CH2' off
+    amixer -q -c "$CARD" cset name='ADDA_DL_CH1 DL3_CH1' off
+    amixer -q -c "$CARD" cset name='ADDA_DL_CH2 DL3_CH2' off
+    amixer -q -c "$CARD" cset name='HPL Mux' 'Open'
+    amixer -q -c "$CARD" cset name='HPR Mux' 'Open'
+    amixer -q -c "$CARD" cset name='I2S1_HD_Mux' 'Low_Jitter'
+    amixer -q -c "$CARD" cset name='I2S1_CH1 DL3_CH1' on
+    amixer -q -c "$CARD" cset name='I2S1_CH2 DL3_CH2' on
+}
+
+capture() {
+    amixer -q -c "$CARD" cset name='Mic Type Mux' 'ACC'
+    amixer -q -c "$CARD" cset name='ADC L Mux' 'Left Preamplifier'
+    amixer -q -c "$CARD" cset name='ADC R Mux' 'Right Preamplifier'
+    amixer -q -c "$CARD" cset name='PGA L Mux' 'AIN0'
+    amixer -q -c "$CARD" cset name='PGA R Mux' 'AIN0'
+    amixer -q -c "$CARD" cset name='UL1_CH1 ADDA_UL_CH1' on
+    amixer -q -c "$CARD" cset name='UL1_CH2 ADDA_UL_CH2' on
+}
+
+headphone() {
+    amixer -q -c "$CARD" cset name='I2S1_CH1 DL1_CH1' off
+    amixer -q -c "$CARD" cset name='I2S1_CH2 DL1_CH2' off
+    amixer -q -c "$CARD" cset name='I2S1_CH1 DL3_CH1' off
+    amixer -q -c "$CARD" cset name='I2S1_CH2 DL3_CH2' off
+    amixer -q -c "$CARD" cset name='I2S1_HD_Mux' 'Normal'
+    amixer -q -c "$CARD" cset name='ADDA_DL_CH1 DL3_CH1' on
+    amixer -q -c "$CARD" cset name='ADDA_DL_CH2 DL3_CH2' on
+    amixer -q -c "$CARD" cset name='HPL Mux' 'Audio Playback'
+    amixer -q -c "$CARD" cset name='HPR Mux' 'Audio Playback'
+    amixer -q -c "$CARD" sset 'Headset' 9
+}
+
+case "${1:-speaker}" in
+    speaker) speaker; capture ;;
+    headphone) headphone ;;
+    capture) capture ;;
+    *) echo "usage: $0 {speaker|headphone|capture}" >&2; exit 2 ;;
+esac

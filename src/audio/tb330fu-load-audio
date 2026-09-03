@@ -1,0 +1,40 @@
+#!/bin/sh
+set -eu
+MODULE_DIR=/vendor/lib/modules
+log() { printf '%s\n' "TB330FU AUDIO: $*"; }
+load() {
+    file=$1
+    name=${file%.ko}
+    loaded_name=$(printf '%s' "$name" | tr '-' '_')
+    [ -d "/sys/module/$loaded_name" ] && { log "$file already loaded"; return 0; }
+    [ -r "$MODULE_DIR/$file" ] || { log "FAILED $file: missing $MODULE_DIR/$file"; return 1; }
+    log "loading $file"
+    /sbin/insmod "$MODULE_DIR/$file" || {
+        [ -d "/sys/module/$loaded_name" ] && return 0
+        log "FAILED $file"
+        return 1
+    }
+}
+
+# Direct insmod needs the provider before the codec drivers. mtk-btcvsd is an
+# ASoC runtime component despite its missing modules.dep edge.
+for module in mt6358-accdet.ko mtk-sp-spk-amp.ko snd-soc-aw883xx.ko snd-soc-mt6660.ko \
+    mtk-btcvsd.ko mtk-afe-external.ko \
+    snd-soc-mtk-common.ko snd-soc-mt6768-afe.ko snd-soc-mt6358.ko \
+    mt6768-mt6358.ko; do
+    if [ "$module" = snd-soc-mt6660.ko ]; then
+        load "$module" || log 'snd-soc-mt6660 did not initialize; continuing (not in active sound topology)'
+    else
+        load "$module"
+    fi
+done
+
+for i in $(seq 1 20); do
+    if grep -q 'mt6768mt6358' /proc/asound/cards 2>/dev/null; then
+        log 'mt6768-mt6358 card registered'
+        exit 0
+    fi
+    sleep 1
+done
+log 'FAILED: mt6768-mt6358 card did not register'
+exit 1

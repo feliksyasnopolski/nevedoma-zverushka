@@ -65,7 +65,10 @@ The compatibility substrate currently includes the Android property area and
 property service, the deployed connectivity graph, selected vendor services,
 stock kernel modules, camera and sensor bridges, Bluetooth support, GNSS
 support, and vendor power/audio components. A component's Android origin does
-not make Android the operating system in charge of the desktop.
+not make Android the operating system in charge of the desktop. Audio above
+the kernel/BSP is native ALSA, UCM, PipeWire, and WirePlumber; Android
+AudioFlinger and an Android Audio HAL are not in that path. See
+[AUDIO.md](AUDIO.md).
 
 ## Device node lifecycle
 

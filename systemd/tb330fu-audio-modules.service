@@ -1,0 +1,14 @@
+[Unit]
+Description=TB330FU native ASoC vendor modules
+DefaultDependencies=no
+After=tb330fu-audio-platform.service
+Before=tb330fu-devnodes.service sound.target
+Requires=tb330fu-audio-platform.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/tb330fu-load-audio
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
