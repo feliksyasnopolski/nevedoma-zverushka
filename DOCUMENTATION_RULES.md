@@ -2,12 +2,9 @@
 
 These rules apply to all primary TB330FU documentation.
 
-The target reader is a competent Linux, kernel, or embedded-systems
-engineer who has no prior knowledge of this project.
+The target reader is a competent Linux, kernel, or embedded-systems engineer who has no prior knowledge of this project.
 
-Primary documentation must explain the current system clearly enough that
-the reader does not need to reconstruct it from implementation reports,
-chat transcripts, audits, or historical experiments.
+Primary documentation must explain the current system clearly enough that the reader does not need to reconstruct it from implementation reports, chat transcripts, audits, or historical experiments.
 
 ## 1. Write for humans
 
@@ -17,8 +14,7 @@ Prefer short declarative sentences.
 
 State the fact first.
 
-Do not add conversational filler, motivational prose, rhetorical
-questions, or decorative introductions.
+Do not add conversational filler, motivational prose, rhetorical questions, or decorative introductions.
 
 Do not write phrases such as:
 
@@ -38,23 +34,20 @@ If three words are sufficient, use three words.
 
 Primary documentation describes how the system works now.
 
-Do not narrate the sequence of experiments that produced the current
-implementation.
+Do not narrate the sequence of experiments that produced the current implementation.
 
 Bad:
 
-> Initially the device did not expose the stylus correctly. After several
-> experiments we discovered that...
+> Initially the device did not expose the stylus correctly.
+> After several experiments we discovered that...
 
 Good:
 
 > The stylus requires a synthetic udev add event during coldboot.
 
-Historical investigation belongs in archived evidence, not in the
-primary documentation.
+Historical investigation belongs in archived evidence, not in the primary documentation.
 
-Include history only when it explains a current constraint or prevents a
-known failure from being repeated.
+Include history only when it explains a current constraint or prevents a known failure from being repeated.
 
 ## 3. Use precise names
 
@@ -69,8 +62,7 @@ Name actual:
 - interfaces;
 - protocols.
 
-Do not infer a component's purpose from its historical filename or unit
-name.
+Do not infer a component's purpose from its historical filename or unit name.
 
 If a name is misleading, state its actual function.
 
@@ -85,11 +77,9 @@ Distinguish:
 - native Linux service responsibility;
 - desktop/session policy.
 
-Do not describe vendor compatibility code as part of the Linux policy
-layer.
+Do not describe vendor compatibility code as part of the Linux policy layer.
 
-Do not preserve Android policy when a standard Linux subsystem owns the
-same function.
+Do not preserve Android policy when a standard Linux subsystem owns the same function.
 
 ## 5. Prefer structure over repetition
 
@@ -112,8 +102,7 @@ Do not repeat the same fact in several sections.
 
 Use tables for mappings and inventories.
 
-Use diagrams for control or data flow when they communicate the structure
-better than prose.
+Use diagrams for control or data flow when they communicate the structure better than prose.
 
 ## 6. Commands are procedures
 
@@ -145,15 +134,13 @@ Do not fill primary documentation with logs.
 
 Quote a log line only when its exact wording is useful for diagnosis.
 
-Large traces, journals, pstore captures, strace output, and raw command
-sessions belong in archived evidence.
+Large traces, journals, pstore captures, strace output, and raw command sessions belong in archived evidence.
 
 ## 8. State uncertainty accurately
 
 Do not invent an explanation because it makes the document feel complete.
 
-Use terms such as `unknown`, `unverified`, `expected`, or `observed` when
-they are technically correct.
+Use terms such as `unknown`, `unverified`, `expected`, or `observed` when they are technically correct.
 
 Use `may`, `can`, and `typically` when behavior is genuinely conditional.
 
@@ -169,8 +156,8 @@ State what can fail and why.
 
 Example:
 
-> Module BTF must remain enabled. Modules built without matching split-BTF
-> metadata have caused kernel panics on this device.
+> Module BTF must remain enabled.
+> Modules built without matching split-BTF metadata have caused kernel panics on this device.
 
 Place critical constraints near the procedure they affect.
 
@@ -188,8 +175,7 @@ Documentation must identify whether an artifact is:
 * recovery-only;
 * historical.
 
-Do not instruct the reader to edit generated files when a canonical
-source or generator exists.
+Do not instruct the reader to edit generated files when a canonical source or generator exists.
 
 ## 11. Avoid artificial headings
 
@@ -213,8 +199,7 @@ Do not add a conclusion that merely repeats the document.
 
 End when the useful information ends.
 
-Use a final section only when it contains operationally useful information,
-such as known limitations, recovery instructions, or unresolved work.
+Use a final section only when it contains operationally useful information, such as known limitations, recovery instructions, or unresolved work.
 
 ## 13. Primary docs and archive have different roles
 
@@ -226,8 +211,7 @@ Archived evidence answers:
 
 > How did we discover this?
 
-Do not require the reader to consult archived evidence to understand the
-normal system.
+Do not require the reader to consult archived evidence to understand the normal system.
 
 A subsystem should normally have one primary document.
 
@@ -239,8 +223,8 @@ Do not invent new terminology for concepts that already have names.
 
 Do not sanitize technical language into corporate language.
 
-Primary documentation should remain professional and durable. Internal
-notes may use a less formal register.
+Primary documentation should remain professional and durable.
+Internal notes may use a less formal register.
 
 ## 15. Optimize for information density
 
@@ -256,8 +240,7 @@ Avoid statements whose only purpose is to make the text sound polished.
 
 The objective is not minimal word count.
 
-The objective is maximum useful information per sentence without making
-the document difficult to read.
+The objective is maximum useful information per sentence without making the document difficult to read.
 
 ## 16. Agent requirements
 
@@ -274,5 +257,4 @@ When an agent writes or updates documentation:
 * mark unresolved facts explicitly;
 * keep primary documentation self-contained.
 
-Documentation is considered incomplete if a competent engineer must read
-multiple historical reports to understand one subsystem.
+Documentation is considered incomplete if a competent engineer must read multiple historical reports to understand one subsystem.

@@ -3,8 +3,7 @@
 ## Purpose
 
 `tb330fu-usb-gadget.service` creates the late native Linux management link.
-It provides an NCM USB gadget and does not implement Android USB policy,
-role switching, ADB, ACM, RNDIS, or USB storage.
+It provides an NCM USB gadget and does not implement Android USB policy, role switching, ADB, ACM, RNDIS, or USB storage.
 
 ## Architecture
 
@@ -22,11 +21,10 @@ musb-hdrc UDC
 usb0: 192.168.7.2/24
 ```
 
-The helper owns creation of the `tb330fu_ncm` configfs gadget, its one NCM
-function, UDC binding, and the gadget-side IPv4 address. `usb0` is unmanaged
-by NetworkManager. No DHCP or networkd address configuration is used. The
-host-side contract is `192.168.7.1/24` with host MAC
-`02:00:00:00:00:02`; the tablet-side MAC is `02:00:00:00:00:01`.
+The helper owns creation of the `tb330fu_ncm` configfs gadget, its one NCM function, UDC binding, and the gadget-side IPv4 address.
+`usb0` is unmanaged by NetworkManager.
+No DHCP or networkd address configuration is used.
+The host-side contract is `192.168.7.1/24` with host MAC `02:00:00:00:00:02`; the tablet-side MAC is `02:00:00:00:00:01`.
 
 ## Gadget contract
 
@@ -45,31 +43,27 @@ host-side contract is `192.168.7.1/24` with host MAC
 | Network interface | `usb0` |
 | Address | `192.168.7.2/24` |
 
-The helper records available USB role and Type-C state for diagnostics but
-does not force a role. It discovers the first available UDC instead of
-hardcoding its name.
+The helper records available USB role and Type-C state for diagnostics but does not force a role.
+It discovers the first available UDC instead of hardcoding its name.
 
 ## Startup and failure behavior
 
-The service is enabled for `multi-user.target`. It waits for
-`systemd-udev-settle.service` and `network-pre.target`, then the helper waits
-eight seconds before touching configfs. The helper starts or verifies SSH on
-TCP port 22 after configuring `usb0`.
+The service is enabled for `multi-user.target`.
+It waits for `systemd-udev-settle.service` and `network-pre.target`, then the helper waits eight seconds before touching configfs.
+The helper starts or verifies SSH on TCP port 22 after configuring `usb0`.
 
-The helper refuses to run if `tb330fu_ncm` already exists. It therefore does
-not silently reconfigure or unbind an active gadget. It has no automatic
-teardown; the oneshot unit remains active after successful setup. Teardown is
-manual maintenance and is outside normal service stop behavior.
+The helper refuses to run if `tb330fu_ncm` already exists.
+It therefore does not silently reconfigure or unbind an active gadget.
+It has no automatic teardown; the oneshot unit remains active after successful setup.
+Teardown is manual maintenance and is outside normal service stop behavior.
 
-USB controller and gadget state can affect suspend and wake behavior. Use
-Wi-Fi/mDNS for tablet access during suspend or USB investigations. Do not
-unbind/rebind the UDC as part of ordinary verification.
+USB controller and gadget state can affect suspend and wake behavior.
+Use Wi-Fi/mDNS for tablet access during suspend or USB investigations.
+Do not unbind/rebind the UDC as part of ordinary verification.
 
-The retained Android-init corpus still contains `g1` configfs actions for
-Android modes, including RNDIS, ACM, ADB, and factory/META paths. Those are
-compatibility-corpus inputs, not dependencies of this native NCM service.
-The native service does not remove or modify them; any future ownership
-cleanup requires a separate graph review.
+The retained Android-init corpus still contains `g1` configfs actions for Android modes, including RNDIS, ACM, ADB, and factory/META paths.
+Those are compatibility-corpus inputs, not dependencies of this native NCM service.
+The native service does not remove or modify them; any future ownership cleanup requires a separate graph review.
 
 ## Verification
 
@@ -84,6 +78,5 @@ ip addr show usb0
 nmcli device show usb0
 ```
 
-Expected state is an active/exited service, `UDC=musb-hdrc` on the observed
-platform, an NCM function linked into `configs/c.1`, and `usb0` at
-`192.168.7.2/24`. NetworkManager should report the interface unmanaged.
+Expected state is an active/exited service, `UDC=musb-hdrc` on the observed platform, an NCM function linked into `configs/c.1`, and `usb0` at `192.168.7.2/24`.
+NetworkManager should report the interface unmanaged.

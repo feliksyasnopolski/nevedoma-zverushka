@@ -1,18 +1,16 @@
 # Build environment
 
-This document defines the external environment for building the TB330FU
-release sources. It is a provenance contract. Subsystem documents and the
-repository build files remain the authority for individual commands.
+This document defines the external environment for building the TB330FU release sources.
+It is a provenance contract.
+Subsystem documents and the repository build files remain the authority for individual commands.
 
-The build host is a Linux x86_64 machine. The currently validated host is
-`entertainment.local`, Ubuntu 26.04.1 LTS. The host is not the target runtime:
-native Linux artifacts target AArch64 glibc, while retained Android/vendor
-bridges target AArch64 bionic and are linked with target Android libraries.
+The build host is a Linux x86_64 machine.
+The currently validated host is `entertainment.local`, Ubuntu 26.04.1 LTS.
+The host is not the target runtime: native Linux artifacts target AArch64 glibc, while retained Android/vendor bridges target AArch64 bionic and are linked with target Android libraries.
 
 ## Dependency status
 
-The following terms distinguish the release contract from the present
-development layout:
+The following terms distinguish the release contract from the present development layout:
 
 | Term | Meaning |
 |---|---|
@@ -21,15 +19,13 @@ development layout:
 | External | Must be supplied by the builder; it is not redistributed here. |
 | Current path | An evidence path only. It is not a repository requirement. |
 
-The old workspace `/Users/felix/tb330fu` and its remote counterpart are
-evidence sources. They are not canonical dependency paths. Use logical roots
-such as `KERNEL_DIR`, `NDK`, `AOSP_ROOT`, `ANDROID_BINDER_LIBS`, and
-`BUSYBOX` when reconstructing the environment.
+The old workspace `/Users/felix/tb330fu` and its remote counterpart are evidence sources.
+They are not canonical dependency paths.
+Use logical roots such as `KERNEL_DIR`, `NDK`, `AOSP_ROOT`, `ANDROID_BINDER_LIBS`, and `BUSYBOX` when reconstructing the environment.
 
 ## Host tools and provenance
 
-The versions below were read from `entertainment.local`; no build was run for
-this document.
+The versions below were read from `entertainment.local`; no build was run for this document.
 
 | Tool | Validated version | Provenance and requirement |
 |---|---|---|
@@ -50,38 +46,27 @@ this document.
 | zstd | Ubuntu host package | Used by the zstd-capable dwarves workflow. Exact package version was not needed by the repository build files and is not recorded as a contract. |
 | LZ4 | `magiskboot` legacy LZ4 support | A separate `lz4` executable is not currently installed on the host and is not required by the vendor_boot script. |
 
-The host-side Apple tools in the old workspace are not a valid replacement for
-the Linux build host. The release scripts that use `linux-x86_64` NDK
-prebuilts and the boot builder's Linux guard require a Linux host.
+The host-side Apple tools in the old workspace are not a valid replacement for the Linux build host.
+The release scripts that use `linux-x86_64` NDK prebuilts and the boot builder's Linux guard require a Linux host.
 
 ## Compiler and ABI contract
 
-Native Linux programs use the Ubuntu AArch64 glibc cross toolchain unless a
-source file is configuration-only. This includes `tb330fu-devd`, the folio
-input helper, graph executor, Rediska's native broker and control utility,
-the charger renderer, and boot `src/boot/init.c`. The charger additionally
-requires AArch64 `libdrm` and FreeType development headers/libraries. The
-source Makefile currently names `/usr/include/freetype2`, `/usr/include/libdrm`,
-and `/usr/lib/aarch64-linux-gnu`; these are host package layout assumptions,
-not private project paths.
+Native Linux programs use the Ubuntu AArch64 glibc cross toolchain unless a source file is configuration-only.
+This includes `tb330fu-devd`, the folio input helper, graph executor, Rediska's native broker and control utility, the charger renderer, and boot `src/boot/init.c`.
+The charger additionally requires AArch64 `libdrm` and FreeType development headers/libraries.
+The source Makefile currently names `/usr/include/freetype2`, `/usr/include/libdrm`, and `/usr/lib/aarch64-linux-gnu`; these are host package layout assumptions, not private project paths.
 
-Android-facing programs are bionic AArch64 PIE executables. They use an NDK
-LLVM compiler with `--target=aarch64-linux-android35`, target Android headers,
-and target libraries from the retained Android runtime. They are not host
-glibc programs and must not be linked against host `libbinder`, `libutils`, or
-other host libraries. The runtime linker and library search paths are part of
-the deployed target unit files.
+Android-facing programs are bionic AArch64 PIE executables.
+They use an NDK LLVM compiler with `--target=aarch64-linux-android35`, target Android headers, and target libraries from the retained Android runtime.
+They are not host glibc programs and must not be linked against host `libbinder`, `libutils`, or other host libraries.
+The runtime linker and library search paths are part of the deployed target unit files.
 
-The retained Android API assumption is API 35 / Android 15 interface shape for
-the Android-facing targets. This does not establish one global AOSP r17
-checkout. The camera build pins its graphics mapper snapshot to the AOSP tag
-`android-15.0.0_r17`; the graph and property contracts also refer to Android
-interface semantics. The current header bundle is mixed: its nested
-`interfaces` Git checkout reports tag `android-13.0.0_r84`, commit
-`8c308539d804a6efb2272e4c9e73407241966f34`, while the scripts consume Android
-15-shaped paths and interfaces. The exact complete AOSP source provenance of
-the current copied header bundle is unresolved. Do not treat the Android 13
-tag as the canonical release target.
+The retained Android API assumption is API 35 / Android 15 interface shape for the Android-facing targets.
+This does not establish one global AOSP r17 checkout.
+The camera build pins its graphics mapper snapshot to the AOSP tag `android-15.0.0_r17`; the graph and property contracts also refer to Android interface semantics.
+The current header bundle is mixed: its nested `interfaces` Git checkout reports tag `android-13.0.0_r84`, commit `8c308539d804a6efb2272e4c9e73407241966f34`, while the scripts consume Android 15-shaped paths and interfaces.
+The exact complete AOSP source provenance of the current copied header bundle is unresolved.
+Do not treat the Android 13 tag as the canonical release target.
 
 ## Android, AIDL, Binder, and FMQ inputs
 
@@ -95,25 +80,18 @@ The Android build side requires the following external roots:
 | Frozen graphics AIDL snapshot | `graphics/common`, `graphics/allocator`, and stable mapper C headers at `android-15.0.0_r17` | Camera mapper v2/v5-compatible generated bindings. |
 | Target Android libraries | `libbinder_ndk.so`, `libcamera_metadata.so`, `libfmq.so`, `libcutils.so`, `libutils.so`, `libbase.so`, `liblog.so`, `libandroid.so`, `libpng.so`, and `libz.so` as applicable | Bionic bridge link steps. These are copied from the stock-compatible target runtime or a matching extracted root, not host libraries. |
 
-Generated AIDL C++ is disposable output under each component's build output;
-the `.aidl` contracts in the repository and the external AOSP contracts are
-the sources. `IBluetoothHci` and callback contracts are local copies of the
-interface source used by the Bluetooth bridge. Camera and sensor FMQ support
-compiles the authoritative AOSP `EventFlag.cpp` and `FmqInternal.cpp` subset;
-it does not substitute a host `libfmq.so`. `PAGE_SIZE=4096`,
-`-DBINDER_STABILITY_SUPPORT`, VINTF stability, and the component-specific
-interface versions are part of the validated compile contract.
+Generated AIDL C++ is disposable output under each component's build output; the `.aidl` contracts in the repository and the external AOSP contracts are the sources.
+`IBluetoothHci` and callback contracts are local copies of the interface source used by the Bluetooth bridge.
+Camera and sensor FMQ support compiles the authoritative AOSP `EventFlag.cpp` and `FmqInternal.cpp` subset; it does not substitute a host `libfmq.so`.
+`PAGE_SIZE=4096`, `-DBINDER_STABILITY_SUPPORT`, VINTF stability, and the component-specific interface versions are part of the validated compile contract.
 
-Rediska has two ABI families. Its broker and `rediskactl` are glibc AArch64;
-`rediska_android_property_service`, the genuine property backend/client, and
-the property-info generator use the Android bionic property ABI and AOSP
-property parser/serializer sources. See [PROPERTIES.md](PROPERTIES.md) and
-[`src/properties/Makefile`](../src/properties/Makefile).
+Rediska has two ABI families.
+Its broker and `rediskactl` are glibc AArch64; `rediska_android_property_service`, the genuine property backend/client, and the property-info generator use the Android bionic property ABI and AOSP property parser/serializer sources.
+See [PROPERTIES.md](PROPERTIES.md) and [`src/properties/Makefile`](../src/properties/Makefile).
 
 ## Kernel and module build contract
 
-External modules must be built against the reconstructed Android-derived
-kernel source and prepared output tree for the exact target kernel release:
+External modules must be built against the reconstructed Android-derived kernel source and prepared output tree for the exact target kernel release:
 
 | Requirement | Contract |
 |---|---|
@@ -127,52 +105,38 @@ kernel source and prepared output tree for the exact target kernel release:
 | Signing | The prepared configuration has module signing enabled (`CONFIG_MODULE_SIG=y`, SHA-1, RSA key metadata). Whether a release module is signed by the target deployment pipeline is an external key/provisioning decision; no signing key is redistributed here. |
 | Vermagic | Must match the running target kernel exactly. A successful compiler invocation is not sufficient. |
 
-The release module set includes the Bluetooth HCI shim, sensor IIO shim,
-camera `v4l2loopback` fork, and LK framebuffer helper. Their build entry
-points are the respective `Makefile`/`build.sh` files under `src/` and
-`modules/`. Built `.ko` files are disposable and are not canonical source
-artifacts in this repository. Stock Lenovo/MediaTek modules remain imported
-deployment inputs.
+The release module set includes the Bluetooth HCI shim, sensor IIO shim, camera `v4l2loopback` fork, and LK framebuffer helper.
+Their build entry points are the respective `Makefile`/`build.sh` files under `src/` and `modules/`.
+Built `.ko` files are disposable and are not canonical source artifacts in this repository.
+Stock Lenovo/MediaTek modules remain imported deployment inputs.
 
 ## BTF and symbol CRC contract
 
-Module BTF is mandatory. Earlier modules built without module BTF caused
-kernel panics on this device. Do not disable `CONFIG_DEBUG_INFO_BTF_MODULES`,
-strip `.BTF`, or replace a split-BTF module with a standalone BTF encoding.
+Module BTF is mandatory.
+Earlier modules built without module BTF caused kernel panics on this device.
+Do not disable `CONFIG_DEBUG_INFO_BTF_MODULES`, strip `.BTF`, or replace a split-BTF module with a standalone BTF encoding.
 
 The validated workflow uses:
 
 1. the prepared output tree for `6.6.82-android15-8-g076ac12bde16-ab13715361-4k`;
-2. the reconstructed stock base BTF, currently represented by the external
-   `stock-vmlinux.btf` artifact;
-3. zstd-capable `pahole`/dwarves v1.31 and its matching libdwarves/libdw/libelf
-   runtime;
-4. kernel `scripts/mod/modpost`, Kbuild, and `scripts/sign-file` where signing
-   is authorized; and
-5. the reconstructed stock symbol-CRC data, currently represented by
-   `stock-reconstructed.symvers` and the `recover-stock-crcs.py` workflow.
+2. the reconstructed stock base BTF, currently represented by the external `stock-vmlinux.btf` artifact;
+3. zstd-capable `pahole`/dwarves v1.31 and its matching libdwarves/libdw/libelf runtime;
+4. kernel `scripts/mod/modpost`, Kbuild, and `scripts/sign-file` where signing is authorized; and
+5. the reconstructed stock symbol-CRC data, currently represented by `stock-reconstructed.symvers` and the `recover-stock-crcs.py` workflow.
 
-The current external artifact hashes are evidence identifiers, not repository
-payloads: `stock-vmlinux.btf` SHA-256 is
-`8551db8c9f43ddf5dc949c7b6094f5362e692803edaa4f4ed78213d98ff3acba`, and
-`stock-reconstructed.symvers` SHA-256 is
-`c58d55871ae24d83dc6f72348bf2fe19d8ee1d17600325e23a8a2b913d6674c4`.
-Obtain them from the matching stock-kernel reconstruction; do not copy these
-values onto a different kernel.
+The current external artifact hashes are evidence identifiers, not repository payloads: `stock-vmlinux.btf` SHA-256 is `8551db8c9f43ddf5dc949c7b6094f5362e692803edaa4f4ed78213d98ff3acba`, and `stock-reconstructed.symvers` SHA-256 is `c58d55871ae24d83dc6f72348bf2fe19d8ee1d17600325e23a8a2b913d6674c4`.
+Obtain them from the matching stock-kernel reconstruction; do not copy these values onto a different kernel.
 
 Split-BTF compatibility and symbol-CRC compatibility are separate gates.
-`bpftool` must validate a module's split BTF against the matching base BTF;
-standalone `pahole -F btf` output is not that check. Kbuild/modpost and
-`Module.symvers`/`__versions` must separately provide the exact symbol CRC
-closure. Passing one gate does not prove the other, and neither proves runtime
-driver compatibility. The exact validated `bpftool` binary provenance is
-currently unknown and must be resolved before a clean-room reproduction.
+`bpftool` must validate a module's split BTF against the matching base BTF; standalone `pahole -F btf` output is not that check.
+Kbuild/modpost and `Module.symvers`/`__versions` must separately provide the exact symbol CRC closure.
+Passing one gate does not prove the other, and neither proves runtime driver compatibility.
+The exact validated `bpftool` binary provenance is currently unknown and must be resolved before a clean-room reproduction.
 
 ## Boot image inputs and tooling
 
-`scripts/build_vendor_boot.sh` builds only the project-owned `init` and
-vendor-ramdisk fragment, then replaces the platform `init_boot` fragment in a
-stock Android `vendor_boot` v4 container. It requires:
+`scripts/build_vendor_boot.sh` builds only the project-owned `init` and vendor-ramdisk fragment, then replaces the platform `init_boot` fragment in a stock Android `vendor_boot` v4 container.
+It requires:
 
 | Input/tool | Role |
 |---|---|
@@ -185,13 +149,10 @@ stock Android `vendor_boot` v4 container. It requires:
 | Python 3 | `rebuild_vendor_boot.py`, validation, and module-order tooling. |
 | `sha256sum`, `cmp`, `find`, `sort`, and POSIX shell tools | Deterministic assembly and validation. |
 
-DTB/DTBO, stock boot/vendor_boot metadata, firmware, Wi-Fi NVRAM, SELinux
-policy, target Android libraries, and proprietary Lenovo/MediaTek userspace
-are imported or stock-derived inputs. They are intentionally not
-redistributed. Generated ramdisks, images, module order reports, and AIDL
-outputs are disposable build products unless a release artifact is explicitly
-archived outside the source tree. Runtime boot behavior is documented in
-[BOOT.md](BOOT.md).
+DTB/DTBO, stock boot/vendor_boot metadata, firmware, Wi-Fi NVRAM, SELinux policy, target Android libraries, and proprietary Lenovo/MediaTek userspace are imported or stock-derived inputs.
+They are intentionally not redistributed.
+Generated ramdisks, images, module order reports, and AIDL outputs are disposable build products unless a release artifact is explicitly archived outside the source tree.
+Runtime boot behavior is documented in [BOOT.md](BOOT.md).
 
 ## Artifact classes and subsystem matrix
 
@@ -219,9 +180,8 @@ archived outside the source tree. Runtime boot behavior is documented in
 | PowerDevil integration | Patch/configuration only | host KDE/Qt | patch application and KDE build outside repo | none in this tree | matching PowerDevil source/package | [`patches/powerdevil/`](../patches/powerdevil/) |
 | Vendor runtime/init corpus | Imported plus generated | target Android/vendor runtime | Python graph generation and shell/runtime config | none for checked-in corpus | stock init files, vendor libraries, Binder/HIDL services, firmware, policy | [`docs/VENDOR_RUNTIME.md`](VENDOR_RUNTIME.md) |
 
-The graph JSON, generated policy, generated AIDL, module-order reports, boot
-ramdisk, and boot images are outputs. The repository's source corpus, scripts,
-Makefiles, AIDL contracts, and configuration are the canonical repository inputs.
+The graph JSON, generated policy, generated AIDL, module-order reports, boot ramdisk, and boot images are outputs.
+The repository's source corpus, scripts, Makefiles, AIDL contracts, and configuration are the canonical repository inputs.
 
 ## Known provenance gaps and path debt
 
@@ -229,15 +189,11 @@ The following are deliberately not presented as canonical facts:
 
 * the exact `magiskboot` release and exact target BusyBox build;
 * the validated `bpftool` binary and package/source release;
-* a complete, single-revision AOSP checkout corresponding to all current
-  copied headers; and
+* a complete, single-revision AOSP checkout corresponding to all current copied headers; and
 * exact package versions for host zstd, libdrm, and FreeType.
 
-The release scripts still contain development-path defaults. In particular,
-`src/sensors/build.sh` and `modules/tb330fu_iio/build.sh` contain defaults for
-`/home/felix/android-aosp-headers`, `/home/felix/android-tools`,
-`/home/felix/tcl11-android-root`, `/home/felix/tb330fu`, the release scratch
-directory, and the old clang/pahole locations. These are technical debt and
-current-environment examples, not normative dependencies. Override them with
-logical environment variables or relocate the scripts before a clean-room
-build. No unrelated script was changed while documenting this contract.
+The release scripts still contain development-path defaults.
+In particular, `src/sensors/build.sh` and `modules/tb330fu_iio/build.sh` contain defaults for `/home/felix/android-aosp-headers`, `/home/felix/android-tools`, `/home/felix/tcl11-android-root`, `/home/felix/tb330fu`, the release scratch directory, and the old clang/pahole locations.
+These are technical debt and current-environment examples, not normative dependencies.
+Override them with logical environment variables or relocate the scripts before a clean-room build.
+No unrelated script was changed while documenting this contract.
