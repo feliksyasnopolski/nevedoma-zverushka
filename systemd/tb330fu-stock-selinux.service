@@ -1,0 +1,16 @@
+[Unit]
+Description=TB330FU load exact stock Android SELinux policy (permissive)
+DefaultDependencies=no
+After=local-fs.target
+Before=rediska-genuine-property.service
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'set -eu; policy=/opt/tb330fu/android-selinux/stock-policy; test -r "$policy" || { echo "stock SELinux policy missing: $policy" >&2; exit 1; }; expected=34367c8b059815c098572eef0d0470d77719212fd389b636a296e4006f2d8267; set -- $(sha256sum "$policy"); actual=$1; test "$actual" = "$expected" || { echo "stock SELinux policy hash mismatch: $actual" >&2; exit 1; }; /system/bin/setenforce 0; /system/bin/load_policy "$policy"; /system/bin/setenforce 0; test "$(cat /sys/fs/selinux/enforce)" = 0'
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

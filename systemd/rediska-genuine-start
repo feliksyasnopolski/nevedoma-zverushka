@@ -1,0 +1,41 @@
+#!/bin/sh
+set -eu
+
+# Boot wrapper for the already-validated genuine Android property frontend.
+# The frontend remains the sole writer of the bionic property area; the
+# ordinary Rediska daemon remains the admin/observability broker.
+AREA=/run/tb330fu/rediska-genuine-area
+SEED=/run/tb330fu/rediska-genuine-seed.txt
+STOCK=/var/lib/tb330fu/binder/android-properties.txt
+INFO=/usr/lib/tb330fu/rediska/property_info
+FRONTEND=/usr/local/libexec/rediska-android-property-service
+LINKER=/apex/com.android.runtime/bin/linker64
+XATTR_SHIM=/usr/lib/tb330fu/rediska/librediska-no-selinux-xattr.so
+PIDFILE=/run/tb330fu/gnss/genuine-property-service.pid
+
+mkdir -p /run/tb330fu/gnss
+echo "$$" > "$PIDFILE"
+mkdir -p "$AREA" /dev/__properties__ /dev/socket
+rm -f /dev/socket/property_service
+mountpoint -q /dev/__properties__ || mount --bind "$AREA" /dev/__properties__
+rm -f /dev/__properties__/properties_serial /dev/__properties__/property_info
+find /dev/__properties__ -maxdepth 1 -type f -name 'u:*' -delete
+cp "$INFO" /dev/__properties__/property_info
+# This snapshot is a broad post-boot oracle, not a valid pre-runtime state.
+# Readiness and transient boot-completion state are produced by the native
+# init graph and must not be imported from the snapshot before it runs. Keep
+# all other stock properties unchanged, including immutable/default properties.
+sed -n \
+  -e '/^\[vendor\.connsys\.driver\.ready\]: /d' \
+  -e '/^\[sys\.boot_completed\]: /d' \
+  -e '/^\[dev\.bootcomplete\]: /d' \
+  -e 's/^\[\([^]]*\)\]: \[\(.*\)\]$/\1=\2/p' \
+  "$STOCK" > "$SEED"
+test "$(wc -l < "$SEED")" -gt 1900
+exec env ANDROID_ROOT=/system ANDROID_DATA=/run/tb330fu/gnss/data \
+  ANDROID_RUNTIME_ROOT=/apex/com.android.runtime \
+  LD_LIBRARY_PATH=/system/lib64:/system_ext/lib64:/vendor/lib64:/apex/com.android.runtime/lib64 \
+  LD_PRELOAD="$XATTR_SHIM" \
+  REDISKA_PROPERTY_INFO_SOURCE="$INFO" \
+  TB330FU_REDISKA_ADMIN_SOCKET=/run/tb330fu/rediska-admin.sock \
+  "$LINKER" "$FRONTEND" "$SEED"

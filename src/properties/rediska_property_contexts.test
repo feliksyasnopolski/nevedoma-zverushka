@@ -1,0 +1,4 @@
+# Controlled test additions using the Android property-context grammar.
+ro.boot.hardware           u:object_r:bootloader_prop:s0 exact string
+island.seed u:object_r:default_prop:s0
+island.test u:object_r:default_prop:s0

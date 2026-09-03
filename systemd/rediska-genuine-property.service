@@ -1,0 +1,17 @@
+[Unit]
+Description=Rediska genuine Android property area and property service
+Requires=rediska.service tb330fu-stock-selinux.service
+After=rediska.service tb330fu-stock-selinux.service local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecStart=/usr/local/libexec/rediska-genuine-start
+ExecStopPost=/bin/umount /dev/__properties__
+ExecStopPost=/bin/rm -f /run/tb330fu/gnss/genuine-property-service.pid
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
