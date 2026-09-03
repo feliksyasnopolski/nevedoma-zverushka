@@ -89,3 +89,6 @@ core.*
 
 # Devd's local native build output
 /src/devd/tb330fu-devd
+
+# Charger build output
+/src/charger/tb330fu-native-charger-renderer

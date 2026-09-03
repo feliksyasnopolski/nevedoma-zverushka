@@ -36,6 +36,7 @@ Start with:
 - `docs/RECOVERY.md` — recovery-critical artifacts and procedures.
 - `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
 - `docs/SENSORS.md` — Android sensor HAL to Linux IIO integration.
+- `docs/CHARGER.md` — native early-boot charger-mode runtime.
 
 Subsystem documentation lives under `docs/`.
 
