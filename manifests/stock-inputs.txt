@@ -1,0 +1,27 @@
+# External inputs required for a TB330FU custom vendor_boot build.
+# These files are not distributed by this repository.
+
+vendor_boot image
+  Lenovo stock-derived vendor_boot v4 image for the supported device/kernel.
+  The builder replaces exactly one platform fragment named init_boot and
+  preserves the other fragments and container metadata.
+
+BusyBox
+  A statically linked AArch64 BusyBox binary installed as /bin/busybox in the
+  generated vendor ramdisk. Its license and source provenance must be kept by
+  the user supplying it.
+
+Early kernel modules
+  The exact 154-module closure named by manifests/modules.load.native. Supply
+  matching modules for the running Android-derived kernel, including matching
+  vermagic, modversions, and split-BTF metadata where the kernel requires it.
+  Proprietary Lenovo/MediaTek modules remain external inputs.
+
+Userspace charger executable
+  /usr/libexec/tb330fu-charger must already exist and be executable on the
+  Ubuntu root used by the target. Its source is in src/charger/; the binary is
+  not embedded in this repository.
+
+Required host tools
+  Python 3, aarch64-linux-gnu-gcc (or CC), GNU cpio, magiskboot with legacy
+  LZ4 compression support, sha256sum, cmp, and standard POSIX utilities.

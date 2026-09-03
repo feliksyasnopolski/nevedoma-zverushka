@@ -1,0 +1,7297 @@
+{
+  "counts": {
+    "A": 151,
+    "B": 390,
+    "E": 156,
+    "H": 154,
+    "N": 151,
+    "R": 171,
+    "S": 2
+  },
+  "edges": [
+    {
+      "from": "8250_mtk",
+      "to": "mtk_uart_apdma",
+      "type": "hard"
+    },
+    {
+      "from": "aee_hangdet",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mediatek_drm",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "aee_rs",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "aw35615_whole",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "aw35615_whole",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "aw35615_whole",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "blocktag",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "cache_parity",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "cache_parity",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clk_common",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clk_fmeter_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "clk_fmeter_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clk_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "clk_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clk_mt6768_pg",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "clk_mt6768_pg",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clkbuf",
+      "to": "mt6397",
+      "type": "soft_pre"
+    },
+    {
+      "from": "clkchk_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "clkchk_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "clkdbg_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "clkdbg_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_helper_inf",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "cmdq_platform_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "cqhci",
+      "to": "blocktag",
+      "type": "hard"
+    },
+    {
+      "from": "cqhci",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "dbg_error_flag",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "device_apc_common_legacy",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "device_apc_mt6768",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "device_apc_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "dvfsrc_opp_mt6768",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "emimpu",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "extcon_mtk_usb",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "extcon_mtk_usb",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "i2c_hid",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "himax_mmi",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "hq_usbnet",
+      "to": "hq_mii",
+      "type": "hard"
+    },
+    {
+      "from": "hqsys_misc",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "hqsys_misc",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "hqsys_misc",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "hqsys_misc",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "hqsys_misc",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "hqsysfs",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "hqsysfs",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "hqsysfs",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "hqsysfs",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "himax_mmi",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "i2c_hid",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "tps65132_bias",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "hx83102j_dsi_vdo_boe",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "i2c_hid",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "i2c_mt65xx",
+      "to": "pinctrl_mtk_common_v2_debug",
+      "type": "hard"
+    },
+    {
+      "from": "i2c_mt65xx",
+      "to": "pinctrl_mtk_v2",
+      "type": "hard"
+    },
+    {
+      "from": "iommu_debug",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "iommu_debug",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "isee",
+      "to": "bootprof",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mediatek_drm",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_disp",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mediatek_drm",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "leds_mtk_pwm",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mediatek_drm",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mm8013",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mm8013",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mme",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mmprofile",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_common",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mmqos_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "monitor_hang",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mt6358_battery",
+      "to": "pmic_lbat_service",
+      "type": "hard"
+    },
+    {
+      "from": "mt6358_battery",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mt6370_charger",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mt6768_dcm",
+      "to": "mtk_dcm",
+      "type": "hard"
+    },
+    {
+      "from": "mt6768_dcm",
+      "to": "mtk_dcm",
+      "type": "soft_pre"
+    },
+    {
+      "from": "mtk_charger_framework",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_charger_framework",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_charger_framework",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_charger_framework",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_charger_framework",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_chg_type_det",
+      "to": "mtk_pd_adapter",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_chg_type_det",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_chg_type_det",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_chg_type_det",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_chg_type_det",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_cmdq_drv_ext",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc",
+      "to": "mtk_emi",
+      "type": "soft_post"
+    },
+    {
+      "from": "mtk_dvfsrc_regulator",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc_regulator",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc_regulator",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_dvfsrc_regulator",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_emi",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_emi",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_emi",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_emi",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_hvbpc",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "mtk_iommu_util",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "iommu_secure",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_iommu",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_low_battery_throttling",
+      "to": "pmic_lvsys_notify",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_low_battery_throttling",
+      "to": "pmic_lbat_service",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "cqhci",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "rpmb_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "mcDrvModule",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "ufs_mediatek_mod",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "rpmb",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "ufs_mediatek_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "mtk_mmc_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "blocktag",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "pinctrl_mtk_common_v2_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "pinctrl_mtk_v2",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc_dbg",
+      "to": "blocktag",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc_dbg",
+      "to": "pinctrl_mtk_common_v2_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc_dbg",
+      "to": "pinctrl_mtk_v2",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmc_dbg",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mmdvfs_debug",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_mml",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pbm",
+      "to": "mtk_mdpm_v1",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pbm",
+      "to": "mtk_dynamic_loading_throttling",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_adapter",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_adapter",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_adapter",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pd_charging",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep20",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep40",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "mtk_charger_framework",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "mtk_charger_algorithm_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "adapter_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pep50p",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_pmic_wrap",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_scpsys",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_scpsys",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_scpsys_mt6768",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_scpsys_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_scpsys_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_smi",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_smi_dbg",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_smi_dbg",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "mtk_smi_dbg",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "musb_hdrc",
+      "to": "phy_generic",
+      "type": "hard"
+    },
+    {
+      "from": "musb_hdrc",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "musb_main",
+      "to": "musb_hdrc",
+      "type": "hard"
+    },
+    {
+      "from": "musb_main",
+      "to": "phy_generic",
+      "type": "hard"
+    },
+    {
+      "from": "musb_main",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "nvt_36523n",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mediatek_drm",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "hx83102j_dsi_vdo_boe",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "himax_mmi",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "i2c_hid",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "tps65132_bias",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_boe",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "nvt_36523n",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mediatek_drm",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "clkbuf",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "spi_slave",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "drm_display_helper",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "cmdq_helper_inf",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "drm_dma_helper",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mmqos_common",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_mmdvfs_debug",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_mmdebug_vcp_stub",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_mmdvfs",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_mmdvfs_ftrace",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_dramc",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "leds_mtk",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_dvfsrc",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_scpsys",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_mml",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "system_heap",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_sync",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_icc_core",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_cmdq_drv_ext",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "device_apc_common_legacy",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mmprofile",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mme",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "hx83102j_dsi_vdo_boe",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "himax_mmi",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "i2c_hid",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "tps65132_bias",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_panel_ext",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "iommu_debug",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_smi_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "emicen",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mtk_smi",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "nt36523n_dsi_vdo_tcl",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "mtk_disp_notify",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "i2c_hid",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "hqsysfs",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "hqsys_pcba",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "nvt_36523n",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "pd_chk_mt6768",
+      "to": "clkchk_mt6768",
+      "type": "hard"
+    },
+    {
+      "from": "pd_chk_mt6768",
+      "to": "clk_common",
+      "type": "hard"
+    },
+    {
+      "from": "pd_chk_mt6768",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "pinctrl_mt6768",
+      "to": "pinctrl_mtk_v2",
+      "type": "hard"
+    },
+    {
+      "from": "pinctrl_mtk_common_v2_debug",
+      "to": "pinctrl_mtk_v2",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "mcDrvModule",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "ufs_mediatek_mod",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "rpmb",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "ufs_mediatek_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "blocktag",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "rpmb_mtk",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "rt_pd_manager",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "rt_pd_manager",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "musb_hdrc",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "phy_generic",
+      "type": "hard"
+    },
+    {
+      "from": "sc8989x_charger",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "charger_class",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "musb_hdrc",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "phy_generic",
+      "type": "hard"
+    },
+    {
+      "from": "sgm415xx_charger",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "smsc95xx",
+      "to": "hq_usbnet",
+      "type": "hard"
+    },
+    {
+      "from": "smsc95xx",
+      "to": "hq_mii",
+      "type": "hard"
+    },
+    {
+      "from": "smsc95xx",
+      "to": "hq_kallsyms",
+      "type": "hard"
+    },
+    {
+      "from": "spi_mt65xx",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "syscon_reboot_mode",
+      "to": "reboot_mode",
+      "type": "hard"
+    },
+    {
+      "from": "tcpc_class",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "tcpc_cps8851",
+      "to": "mm8013",
+      "type": "hard"
+    },
+    {
+      "from": "tcpc_cps8851",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "tcpc_cps8851",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "tcpci_late_sync",
+      "to": "tcpc_class",
+      "type": "hard"
+    },
+    {
+      "from": "tcpci_late_sync",
+      "to": "pd_dbg_info",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_dbg",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_dbg",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_dbg",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "rpmb",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "ufs_mediatek_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "blocktag",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "irq_dbg",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "mrdump",
+      "type": "hard"
+    },
+    {
+      "from": "ufs_mediatek_mod",
+      "to": "aee_aed",
+      "type": "hard"
+    },
+    {
+      "from": "uload_ind",
+      "to": "load_track",
+      "type": "hard"
+    },
+    {
+      "from": "usb_meta",
+      "to": "bootprof",
+      "type": "hard"
+    },
+    {
+      "from": "clkbuf",
+      "to": "mt6685_core",
+      "type": "soft_pre"
+    },
+    {
+      "from": "mtk_dvfsrc",
+      "to": "mtk_dvfsrc_devfreq",
+      "type": "soft_post"
+    }
+  ],
+  "nodes": [
+    {
+      "filename": "8250_mtk.ko",
+      "hard_dependencies": [
+        "mtk_uart_apdma"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "8250_mtk",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "adapter_class.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "adapter_class",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "aee_aed.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "aee_aed",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "aee_hangdet.ko",
+      "hard_dependencies": [
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "aee_hangdet",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "aee_rs.ko",
+      "hard_dependencies": [
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "mtk_disp_notify",
+        "mtk_panel_ext",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "aee_rs",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "arm_dsu_pmu.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "arm_dsu_pmu",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "aw35615_whole.ko",
+      "hard_dependencies": [
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "aw35615_whole",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "blocktag.ko",
+      "hard_dependencies": [
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "blocktag",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "bootprof.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "bootprof",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "cache-parity.ko",
+      "hard_dependencies": [
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "cache_parity",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "charger_class.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "charger_class",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clk-common.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clk_common",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clk-fmeter-mt6768.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clk_fmeter_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clk-mt6768.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clk_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clk-mt6768-pg.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clk_mt6768_pg",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clkbuf.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clkbuf",
+      "softdep_post": [],
+      "softdep_pre": [
+        "mt6397"
+      ]
+    },
+    {
+      "filename": "clkchk-mt6768.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clkchk_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "clkdbg-mt6768.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "clkdbg_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "cmdq_helper_inf.ko",
+      "hard_dependencies": [
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "cmdq_helper_inf",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "cmdq-platform-mt6768.ko",
+      "hard_dependencies": [
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "cmdq_platform_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "cqhci.ko",
+      "hard_dependencies": [
+        "blocktag",
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "cqhci",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "dbg_error_flag.ko",
+      "hard_dependencies": [
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "dbg_error_flag",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "device-apc-common-legacy.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "device_apc_common_legacy",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "device-apc-mt6768.ko",
+      "hard_dependencies": [
+        "device_apc_common_legacy",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "device_apc_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "drm_display_helper.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "drm_display_helper",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "drm_dma_helper.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "drm_dma_helper",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "dvfsrc-opp-mt6768.ko",
+      "hard_dependencies": [
+        "mtk_dramc"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "dvfsrc_opp_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "emi-dummy.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "emi_dummy",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "emicen.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "emicen",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "emictrl.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "emictrl",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "emiisu.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "emiisu",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "emimpu.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "emimpu",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "extcon-mtk-usb.ko",
+      "hard_dependencies": [
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "extcon_mtk_usb",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "extdev_io_class.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "extdev_io_class",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "himax_mmi.ko",
+      "hard_dependencies": [
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "hard_dependency",
+      "normalized_name": "himax_mmi",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hq_kallsyms.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "hq_kallsyms",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hq_mii.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "hq_mii",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hq_smsc.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "hq_smsc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hq_usbnet.ko",
+      "hard_dependencies": [
+        "hq_mii"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "hq_usbnet",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hqsys_misc.ko",
+      "hard_dependencies": [
+        "hqsysfs",
+        "hqsys_pcba",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "hqsys_misc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hqsys_pcba.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "hqsys_pcba",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hqsysfs.ko",
+      "hard_dependencies": [
+        "hqsys_pcba",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "hard_dependency",
+      "normalized_name": "hqsysfs",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "hx83102j_dsi_vdo_boe.ko",
+      "hard_dependencies": [
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "hx83102j_dsi_vdo_boe",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "i2c-hid.ko",
+      "hard_dependencies": [
+        "hq_kallsyms"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "i2c_hid",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "i2c-mt65xx.ko",
+      "hard_dependencies": [
+        "pinctrl_mtk_common_v2_debug",
+        "pinctrl_mtk_v2"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "i2c_mt65xx",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "iommu_debug.ko",
+      "hard_dependencies": [
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "iommu_debug",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "iommu_secure.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "iommu_secure",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "iommu_test.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "iommu_test",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "irq-dbg.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "irq_dbg",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "isee.ko",
+      "hard_dependencies": [
+        "bootprof"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "isee",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "leds-mtk.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "leds_mtk",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "leds-mtk-disp.ko",
+      "hard_dependencies": [
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "mtk_disp_notify",
+        "mtk_panel_ext",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "leds_mtk_disp",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "leds-mtk-pwm.ko",
+      "hard_dependencies": [
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "mtk_disp_notify",
+        "mtk_panel_ext",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "leds_mtk_pwm",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "load_track.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "load_track",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "log_store.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "log_store",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mcDrvModule.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mcDrvModule",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mediatek-drm.ko",
+      "hard_dependencies": [
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "mtk_disp_notify",
+        "mtk_panel_ext",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mediatek_drm",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "memory-amms.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "memory_amms",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mm8013.ko",
+      "hard_dependencies": [
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mm8013",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mme.ko",
+      "hard_dependencies": [
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mme",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mmprofile.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mmprofile",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mmqos-common.ko",
+      "hard_dependencies": [
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "clk_common",
+        "mtk_icc_core",
+        "mmprofile",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mmqos_common",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mmqos-mt6768.ko",
+      "hard_dependencies": [
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "clk_common",
+        "mtk_icc_core",
+        "mmprofile",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mmqos_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "monitor_hang.ko",
+      "hard_dependencies": [
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "monitor_hang",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mrdump.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mrdump",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6358_battery.ko",
+      "hard_dependencies": [
+        "pmic_lbat_service",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6358_battery",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6358-regulator.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6358_regulator",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt635x-auxadc.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt635x_auxadc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6370.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6370",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6370-adc.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6370_adc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6370-charger.ko",
+      "hard_dependencies": [
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6370_charger",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6370-regulator.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6370_regulator",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6397.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6397",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6577_auxadc.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6577_auxadc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6685_core.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": false,
+      "in_N": false,
+      "in_R": false,
+      "inclusion_reason": "soft_dependency",
+      "normalized_name": "mt6685_core",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mt6768_dcm.ko",
+      "hard_dependencies": [
+        "mtk_dcm"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mt6768_dcm",
+      "softdep_post": [],
+      "softdep_pre": [
+        "mtk_dcm"
+      ]
+    },
+    {
+      "filename": "mtk_battery_manager.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_battery_manager",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_battery_oc_throttling.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_battery_oc_throttling",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_charger_algorithm_class.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_charger_algorithm_class",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_charger_framework.ko",
+      "hard_dependencies": [
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_charger_framework",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_chg_type_det.ko",
+      "hard_dependencies": [
+        "mtk_pd_adapter",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_chg_type_det",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-cmdq-drv-ext.ko",
+      "hard_dependencies": [
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_cmdq_drv_ext",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_cpuhp.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_cpuhp",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_cpuidle.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_cpuidle",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-cqdma.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_cqdma",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_dcm.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_dcm",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_disp_notify.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_disp_notify",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_dramc.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_dramc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-dvfsrc.ko",
+      "hard_dependencies": [
+        "mtk_scpsys",
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_dvfsrc",
+      "softdep_post": [
+        "mtk_emi"
+      ],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_dvfsrc_devfreq.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": false,
+      "inclusion_reason": "soft_dependency",
+      "normalized_name": "mtk_dvfsrc_devfreq",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-dvfsrc-regulator.ko",
+      "hard_dependencies": [
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_dvfsrc_regulator",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_dynamic_loading_throttling.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_dynamic_loading_throttling",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-emi.ko",
+      "hard_dependencies": [
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_emi",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_hvbpc.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_hvbpc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-icc-core.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_icc_core",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_iommu.ko",
+      "hard_dependencies": [
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mtk_iommu_util",
+        "iommu_secure",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_iommu",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_iommu_util.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_iommu_util",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-kpd.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_kpd",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_low_battery_throttling.ko",
+      "hard_dependencies": [
+        "pmic_lvsys_notify",
+        "pmic_lbat_service"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_low_battery_throttling",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_mdpm_v1.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_mdpm_v1",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmc.ko",
+      "hard_dependencies": [
+        "cqhci",
+        "rpmb_mtk",
+        "mcDrvModule",
+        "ufs_mediatek_mod",
+        "rpmb",
+        "ufs_mediatek_dbg",
+        "mtk_mmc_dbg",
+        "blocktag",
+        "irq_dbg",
+        "pinctrl_mtk_common_v2_debug",
+        "pinctrl_mtk_v2",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmc-dbg.ko",
+      "hard_dependencies": [
+        "blocktag",
+        "pinctrl_mtk_common_v2_debug",
+        "pinctrl_mtk_v2",
+        "mrdump"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmc_dbg",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmc-wp.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmc_wp",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmdebug-vcp-stub.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmdebug_vcp_stub",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmdvfs.ko",
+      "hard_dependencies": [
+        "mmprofile",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmdvfs",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmdvfs-debug.ko",
+      "hard_dependencies": [
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "clk_common",
+        "mmprofile",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmdvfs_debug",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mmdvfs-ftrace.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mmdvfs_ftrace",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-mml.ko",
+      "hard_dependencies": [
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_mml",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_panel_ext.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_panel_ext",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pbm.ko",
+      "hard_dependencies": [
+        "mtk_mdpm_v1",
+        "mtk_dynamic_loading_throttling"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "mtk_pbm",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pd_adapter.ko",
+      "hard_dependencies": [
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pd_adapter",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pd_charging.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pd_charging",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pep.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pep",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pep20.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pep20",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pep40.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pep40",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pep50.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pep50",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_pep50p.ko",
+      "hard_dependencies": [
+        "mtk_charger_framework",
+        "mtk_charger_algorithm_class",
+        "adapter_class",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pep50p",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-pmic-keys.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pmic_keys",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-pmic-wrap.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_pmic_wrap",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_printk_ctrl.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_printk_ctrl",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-scpsys.ko",
+      "hard_dependencies": [
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_scpsys",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-scpsys-bringup.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_scpsys_bringup",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-scpsys-mt6768.ko",
+      "hard_dependencies": [
+        "mtk_scpsys",
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_scpsys_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-smi.ko",
+      "hard_dependencies": [
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_smi",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-smi-dbg.ko",
+      "hard_dependencies": [
+        "emicen",
+        "mtk_smi",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_smi_dbg",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-socinfo.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_socinfo",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_sync.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_sync",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk-uart-apdma.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_uart_apdma",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "mtk_wdt.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "mtk_wdt",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "musb_hdrc.ko",
+      "hard_dependencies": [
+        "phy_generic",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "musb_hdrc",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "musb_main.ko",
+      "hard_dependencies": [
+        "musb_hdrc",
+        "phy_generic",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "musb_main",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "nt36523n_dsi_vdo_boe.ko",
+      "hard_dependencies": [
+        "nvt_36523n",
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "hx83102j_dsi_vdo_boe",
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "tcpc_class",
+        "pd_dbg_info",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "nt36523n_dsi_vdo_boe",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "nt36523n_dsi_vdo_tcl.ko",
+      "hard_dependencies": [
+        "nvt_36523n",
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "hx83102j_dsi_vdo_boe",
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "tcpc_class",
+        "pd_dbg_info",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "nt36523n_dsi_vdo_tcl",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "nvmem_mtk-devinfo.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "nvmem_mtk_devinfo",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "nvt_36523n.ko",
+      "hard_dependencies": [
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "hard_dependency",
+      "normalized_name": "nvt_36523n",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pd-chk-mt6768.ko",
+      "hard_dependencies": [
+        "clkchk_mt6768",
+        "clk_common",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pd_chk_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pd_dbg_info.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pd_dbg_info",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "perf_helper.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "perf_helper",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "phy-generic.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "phy_generic",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "phy-mtk-tphy.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "phy_mtk_tphy",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pidmap.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pidmap",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pinctrl-mt6768.ko",
+      "hard_dependencies": [
+        "pinctrl_mtk_v2"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pinctrl_mt6768",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pinctrl-mtk-common-v2_debug.ko",
+      "hard_dependencies": [
+        "pinctrl_mtk_v2"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pinctrl_mtk_common_v2_debug",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pinctrl-mtk-v2.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pinctrl_mtk_v2",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pmic_lbat_service.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pmic_lbat_service",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pmic_lvsys_notify.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pmic_lvsys_notify",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "pwm-mtk-disp.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "pwm_mtk_disp",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "reboot-mode.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "reboot_mode",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "regulator-vibrator.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "regulator_vibrator",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "rpmb.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "rpmb",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "rpmb-mtk.ko",
+      "hard_dependencies": [
+        "mcDrvModule",
+        "ufs_mediatek_mod",
+        "rpmb",
+        "ufs_mediatek_dbg",
+        "blocktag",
+        "irq_dbg",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "rpmb_mtk",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "rt_pd_manager.ko",
+      "hard_dependencies": [
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "rt_pd_manager",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "rtc-mt6397.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "rtc_mt6397",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "sample_module.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "sample_module",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "sc8989x_charger.ko",
+      "hard_dependencies": [
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class",
+        "musb_hdrc",
+        "phy_generic",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "sc8989x_charger",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "sec.ko",
+      "hard_dependencies": [],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "sec",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "sec-rng.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "sec_rng",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "sgm415xx_charger.ko",
+      "hard_dependencies": [
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info",
+        "charger_class",
+        "musb_hdrc",
+        "phy_generic",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "sgm415xx_charger",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "smsc95xx.ko",
+      "hard_dependencies": [
+        "hq_usbnet",
+        "hq_mii",
+        "hq_kallsyms"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "smsc95xx",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "spi-mt65xx.ko",
+      "hard_dependencies": [
+        "irq_dbg"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "spi_mt65xx",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "spi_slave.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "spi_slave",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "syscon-reboot-mode.ko",
+      "hard_dependencies": [
+        "reboot_mode"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "syscon_reboot_mode",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "system_heap.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "system_heap",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "tcpc_class.ko",
+      "hard_dependencies": [
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "tcpc_class",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "tcpc_cps8851.ko",
+      "hard_dependencies": [
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "tcpc_cps8851",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "tcpci_late_sync.ko",
+      "hard_dependencies": [
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "tcpci_late_sync",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "teeperf.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "teeperf",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "timer-mediatek.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "timer_mediatek",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "tps65132_bias.ko",
+      "hard_dependencies": [],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "tps65132_bias",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "ufs-mediatek-dbg.ko",
+      "hard_dependencies": [
+        "irq_dbg",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "ufs_mediatek_dbg",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "ufs-mediatek-mod.ko",
+      "hard_dependencies": [
+        "rpmb",
+        "ufs_mediatek_dbg",
+        "blocktag",
+        "irq_dbg",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "ufs_mediatek_mod",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "uload_ind.ko",
+      "hard_dependencies": [
+        "load_track"
+      ],
+      "in_A": false,
+      "in_B": true,
+      "in_N": false,
+      "in_R": true,
+      "inclusion_reason": "not_in_E",
+      "normalized_name": "uload_ind",
+      "softdep_post": [],
+      "softdep_pre": []
+    },
+    {
+      "filename": "usb_meta.ko",
+      "hard_dependencies": [
+        "bootprof"
+      ],
+      "in_A": true,
+      "in_B": true,
+      "in_N": true,
+      "in_R": true,
+      "inclusion_reason": "request",
+      "normalized_name": "usb_meta",
+      "softdep_post": [],
+      "softdep_pre": []
+    }
+  ],
+  "rootprobe_failures": {
+    "hqsys_misc": {
+      "direct_hard": [
+        "hqsysfs",
+        "hqsys_pcba",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "outside_A_in_B": [
+        "hqsysfs"
+      ],
+      "outside_A_in_E": [
+        "hqsysfs"
+      ],
+      "outside_A_in_R": [
+        "hqsysfs"
+      ],
+      "outside_A_recursive": [
+        "hqsysfs"
+      ],
+      "recursive_hard": [
+        "hqsys_pcba",
+        "hqsysfs",
+        "mm8013",
+        "pd_dbg_info",
+        "tcpc_class"
+      ]
+    },
+    "hx83102j_dsi_vdo_boe": {
+      "direct_hard": [
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "tcpc_class",
+        "pd_dbg_info"
+      ],
+      "in_A": true,
+      "outside_A_in_B": [
+        "himax_mmi",
+        "hqsysfs"
+      ],
+      "outside_A_in_E": [
+        "himax_mmi",
+        "hqsysfs"
+      ],
+      "outside_A_in_R": [
+        "himax_mmi",
+        "hqsysfs"
+      ],
+      "outside_A_recursive": [
+        "himax_mmi",
+        "hqsysfs"
+      ],
+      "recursive_hard": [
+        "himax_mmi",
+        "hq_kallsyms",
+        "hqsys_pcba",
+        "hqsysfs",
+        "i2c_hid",
+        "mm8013",
+        "mtk_disp_notify",
+        "mtk_panel_ext",
+        "pd_dbg_info",
+        "tcpc_class",
+        "tps65132_bias"
+      ]
+    },
+    "nt36523n_dsi_vdo_boe": {
+      "direct_hard": [
+        "nvt_36523n",
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "hx83102j_dsi_vdo_boe",
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "tcpc_class",
+        "pd_dbg_info",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "outside_A_in_B": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_in_E": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_in_R": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_recursive": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "recursive_hard": [
+        "aee_aed",
+        "clk_common",
+        "clkbuf",
+        "cmdq_helper_inf",
+        "device_apc_common_legacy",
+        "drm_display_helper",
+        "drm_dma_helper",
+        "emicen",
+        "himax_mmi",
+        "hq_kallsyms",
+        "hqsys_pcba",
+        "hqsysfs",
+        "hx83102j_dsi_vdo_boe",
+        "i2c_hid",
+        "iommu_debug",
+        "irq_dbg",
+        "leds_mtk",
+        "mediatek_drm",
+        "mm8013",
+        "mme",
+        "mmprofile",
+        "mmqos_common",
+        "mrdump",
+        "mtk_cmdq_drv_ext",
+        "mtk_disp_notify",
+        "mtk_dramc",
+        "mtk_dvfsrc",
+        "mtk_icc_core",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdvfs_ftrace",
+        "mtk_mml",
+        "mtk_panel_ext",
+        "mtk_scpsys",
+        "mtk_smi",
+        "mtk_smi_dbg",
+        "mtk_sync",
+        "nvt_36523n",
+        "pd_dbg_info",
+        "spi_slave",
+        "system_heap",
+        "tcpc_class",
+        "tps65132_bias"
+      ]
+    },
+    "nt36523n_dsi_vdo_tcl": {
+      "direct_hard": [
+        "nvt_36523n",
+        "mediatek_drm",
+        "clkbuf",
+        "spi_slave",
+        "drm_display_helper",
+        "cmdq_helper_inf",
+        "drm_dma_helper",
+        "mmqos_common",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_ftrace",
+        "mtk_dramc",
+        "leds_mtk",
+        "mtk_dvfsrc",
+        "mtk_scpsys",
+        "clk_common",
+        "mtk_mml",
+        "system_heap",
+        "mtk_sync",
+        "mtk_icc_core",
+        "mtk_cmdq_drv_ext",
+        "device_apc_common_legacy",
+        "mmprofile",
+        "irq_dbg",
+        "mme",
+        "hx83102j_dsi_vdo_boe",
+        "himax_mmi",
+        "mtk_disp_notify",
+        "i2c_hid",
+        "hq_kallsyms",
+        "hqsysfs",
+        "hqsys_pcba",
+        "tps65132_bias",
+        "mtk_panel_ext",
+        "mm8013",
+        "iommu_debug",
+        "mtk_smi_dbg",
+        "emicen",
+        "mtk_smi",
+        "tcpc_class",
+        "pd_dbg_info",
+        "mrdump",
+        "aee_aed"
+      ],
+      "in_A": true,
+      "outside_A_in_B": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_in_E": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_in_R": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "outside_A_recursive": [
+        "himax_mmi",
+        "hqsysfs",
+        "nvt_36523n"
+      ],
+      "recursive_hard": [
+        "aee_aed",
+        "clk_common",
+        "clkbuf",
+        "cmdq_helper_inf",
+        "device_apc_common_legacy",
+        "drm_display_helper",
+        "drm_dma_helper",
+        "emicen",
+        "himax_mmi",
+        "hq_kallsyms",
+        "hqsys_pcba",
+        "hqsysfs",
+        "hx83102j_dsi_vdo_boe",
+        "i2c_hid",
+        "iommu_debug",
+        "irq_dbg",
+        "leds_mtk",
+        "mediatek_drm",
+        "mm8013",
+        "mme",
+        "mmprofile",
+        "mmqos_common",
+        "mrdump",
+        "mtk_cmdq_drv_ext",
+        "mtk_disp_notify",
+        "mtk_dramc",
+        "mtk_dvfsrc",
+        "mtk_icc_core",
+        "mtk_mmdebug_vcp_stub",
+        "mtk_mmdvfs",
+        "mtk_mmdvfs_debug",
+        "mtk_mmdvfs_ftrace",
+        "mtk_mml",
+        "mtk_panel_ext",
+        "mtk_scpsys",
+        "mtk_smi",
+        "mtk_smi_dbg",
+        "mtk_sync",
+        "nvt_36523n",
+        "pd_dbg_info",
+        "spi_slave",
+        "system_heap",
+        "tcpc_class",
+        "tps65132_bias"
+      ]
+    }
+  },
+  "sets": {
+    "A": [
+      "8250_mtk",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "aw35615_whole",
+      "blocktag",
+      "bootprof",
+      "cache_parity",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "hq_kallsyms",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "iommu_debug",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "log_store",
+      "mcDrvModule",
+      "mediatek_drm",
+      "memory_amms",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt6577_auxadc",
+      "mt6768_dcm",
+      "mtk_battery_manager",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cmdq_drv_ext",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_regulator",
+      "mtk_emi",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_kpd",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_printk_ctrl",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sync",
+      "mtk_uart_apdma",
+      "mtk_wdt",
+      "musb_hdrc",
+      "musb_main",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mtk_devinfo",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "pwm_mtk_disp",
+      "regulator_vibrator",
+      "rpmb",
+      "rpmb_mtk",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "sc8989x_charger",
+      "sec_rng",
+      "sgm415xx_charger",
+      "spi_mt65xx",
+      "spi_slave",
+      "system_heap",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "timer_mediatek",
+      "tps65132_bias",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "usb_meta"
+    ],
+    "B": [
+      "6lowpan",
+      "8021q",
+      "8250_mtk",
+      "9pnet",
+      "9pnet_fd",
+      "CPU_DVFS",
+      "MTK_INTERNAL_SPM",
+      "Upower",
+      "accel_common",
+      "accelhub",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "alsps_common",
+      "alspshub",
+      "aqc111",
+      "archcounter_timesync",
+      "arm_dsu_pmu",
+      "asix",
+      "atf_logger",
+      "aw35615_whole",
+      "ax88179_178a",
+      "blocktag",
+      "bluetooth",
+      "bootprof",
+      "bsd_comp",
+      "bt_drv_connac1x",
+      "btbcm",
+      "btif_drv",
+      "btqca",
+      "btsdio",
+      "cache_parity",
+      "cam_qos_4",
+      "camera_dpe_isp40",
+      "camera_eeprom_isp4_t",
+      "camera_fdvt_isp40",
+      "camera_isp_4_t",
+      "camera_mem",
+      "can",
+      "can_bcm",
+      "can_dev",
+      "can_gw",
+      "can_raw",
+      "cctrng",
+      "ccu_isp4",
+      "cdc_acm",
+      "cdc_eem",
+      "cdc_ether",
+      "cdc_ncm",
+      "cfg80211",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_bdg_mailbox",
+      "cmdq_bdg_test",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cmdq_sec_drv",
+      "conn_md_drv",
+      "connadp",
+      "cpufreq_sugov_ext",
+      "cpuqos_ext",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "diag",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "extend_reclaim",
+      "fhctl",
+      "flashlight",
+      "flashlights_aw3641e",
+      "fmradio_drv_mt6631",
+      "fpsgo",
+      "ftdi_sio",
+      "fusion",
+      "gamerotvechub",
+      "ged",
+      "gmagrotvechub",
+      "gps_drv_stp",
+      "gravityhub",
+      "gt1151",
+      "gyro_common",
+      "gyrohub",
+      "gz_ipc_mod",
+      "gz_irq_mod",
+      "gz_log_mod",
+      "gz_main_mod",
+      "gz_trusty_mod",
+      "gz_tz_system",
+      "gz_virtio_mod",
+      "gzvm",
+      "hall_mod",
+      "hci_uart",
+      "hidp",
+      "himax_mmi",
+      "hq_kallsyms",
+      "hq_mii",
+      "hq_smsc",
+      "hq_usbnet",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hqsysfs",
+      "hwmon",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "ieee802154",
+      "ieee802154_6lowpan",
+      "ieee802154_socket",
+      "imgsensor_isp4_t",
+      "iommu_debug",
+      "iommu_gz",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "kheaders",
+      "l2tp_core",
+      "l2tp_ppp",
+      "leds_mt6370_flash",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "lenovohyperSched",
+      "libarc4",
+      "linearacchub",
+      "load_track",
+      "log_store",
+      "mac80211",
+      "mac802154",
+      "macsec",
+      "main2af",
+      "main3af",
+      "mainaf",
+      "mali_kbase_mt6768_r49",
+      "mali_mgm_mt6768_r49",
+      "mali_prot_alloc_mt6768_r49",
+      "mcDrvModule",
+      "mcdi",
+      "mdp_drv_mt6768",
+      "mediatek_drm",
+      "mediatek_eem",
+      "mediatek_static_power",
+      "memory_amms",
+      "mii",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_accdet",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt63xx_debug",
+      "mt6577_auxadc",
+      "mt6768_dcm",
+      "mt6768_mt6358",
+      "mtk_afe_external",
+      "mtk_battery_manager",
+      "mtk_battery_oc_throttling",
+      "mtk_bp_thl",
+      "mtk_btcvsd",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cm_mgr",
+      "mtk_cm_mgr_mt6768",
+      "mtk_cmdq_drv_ext",
+      "mtk_composite",
+      "mtk_cpu_power_throttling",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_cqdma",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_disp_sec",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_devfreq",
+      "mtk_dvfsrc_helper",
+      "mtk_dvfsrc_regulator",
+      "mtk_dvfsrc_start",
+      "mtk_dynamic_loading_throttling",
+      "mtk_emi",
+      "mtk_fpsgo",
+      "mtk_gpu_hal",
+      "mtk_gpu_qos",
+      "mtk_gpufreq_mt6768",
+      "mtk_gpufreq_wrapper_legacy",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_ioctl_powerhal",
+      "mtk_ioctl_touch_boost",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_irtx_pwm",
+      "mtk_jpeg",
+      "mtk_kpd",
+      "mtk_low_battery_throttling",
+      "mtk_mbox",
+      "mtk_mdpm_v1",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pbm",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_perf_common",
+      "mtk_perf_ioctl",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_power_gs_v1",
+      "mtk_ppm_v3",
+      "mtk_printk_ctrl",
+      "mtk_pwm",
+      "mtk_qos_legacy",
+      "mtk_rpmsg_mbox",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_sec_heap",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sp_spk_amp",
+      "mtk_sync",
+      "mtk_tinysys_ipi",
+      "mtk_u_ether",
+      "mtk_uart_apdma",
+      "mtk_usb_f_rndis",
+      "mtk_vcodec_common",
+      "mtk_vcodec_dec_v1",
+      "mtk_vcodec_enc_v1",
+      "mtk_vcu",
+      "mtk_wdt",
+      "musb_boost",
+      "musb_hdrc",
+      "musb_main",
+      "nfc",
+      "nhc_dest",
+      "nhc_fragment",
+      "nhc_hop",
+      "nhc_ipv6",
+      "nhc_mobility",
+      "nhc_routing",
+      "nhc_udp",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mt635x_efuse",
+      "nvmem_mtk_devinfo",
+      "nvt_36523n",
+      "open_dice",
+      "orienthub",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "powerhal_cpu_ctrl",
+      "ppp_deflate",
+      "ppp_generic",
+      "ppp_mppe",
+      "pppox",
+      "pps_core",
+      "pptp",
+      "ptp",
+      "pwm_mtk_disp",
+      "r8152",
+      "r8153_ecm",
+      "reboot_mode",
+      "regulator_vibrator",
+      "rfcomm",
+      "rfkill",
+      "rotatvechub",
+      "rpmb",
+      "rpmb_mtk",
+      "rps_perf",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "rtl8150",
+      "sample_module",
+      "sc8989x_charger",
+      "scheduler",
+      "scp",
+      "sec",
+      "sec_rng",
+      "sensorHub",
+      "sensor_list",
+      "sensor_probe",
+      "sgm415xx_charger",
+      "situation",
+      "situationhub",
+      "slcan",
+      "slhc",
+      "smsc95xx",
+      "snd_soc_aw883xx",
+      "snd_soc_mt6358",
+      "snd_soc_mt6660",
+      "snd_soc_mt6768_afe",
+      "snd_soc_mtk_common",
+      "spi_mt65xx",
+      "spi_slave",
+      "sspm_v1",
+      "step_counter",
+      "stepsignhub",
+      "sub2af",
+      "subaf",
+      "syscon_reboot_mode",
+      "system_heap",
+      "t_base_tui",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "thermal_monitor",
+      "timer_mediatek",
+      "tipc",
+      "tls",
+      "touch_boost",
+      "tps65132_bias",
+      "trace_mmstat",
+      "trusted_mem",
+      "tui_common",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "uload_ind",
+      "uncali_acchub",
+      "uncali_gyrohub",
+      "usb_meta",
+      "usbmon",
+      "usbnet",
+      "usbserial",
+      "v4l2_flash_led_class",
+      "vcan",
+      "vcpu_stall_detector",
+      "virtio_balloon",
+      "virtio_blk",
+      "virtio_console",
+      "virtio_pci",
+      "virtio_pci_legacy_dev",
+      "virtio_pci_modern_dev",
+      "vmw_vsock_virtio_transport",
+      "widevine_driver",
+      "wlan_drv_gen4m_6768",
+      "wmt_chrdev_wifi",
+      "wmt_drv",
+      "wwan",
+      "zram",
+      "zsmalloc"
+    ],
+    "B_minus_E": [
+      "6lowpan",
+      "8021q",
+      "9pnet",
+      "9pnet_fd",
+      "CPU_DVFS",
+      "MTK_INTERNAL_SPM",
+      "Upower",
+      "accel_common",
+      "accelhub",
+      "alsps_common",
+      "alspshub",
+      "aqc111",
+      "archcounter_timesync",
+      "arm_dsu_pmu",
+      "asix",
+      "atf_logger",
+      "ax88179_178a",
+      "bluetooth",
+      "bsd_comp",
+      "bt_drv_connac1x",
+      "btbcm",
+      "btif_drv",
+      "btqca",
+      "btsdio",
+      "cam_qos_4",
+      "camera_dpe_isp40",
+      "camera_eeprom_isp4_t",
+      "camera_fdvt_isp40",
+      "camera_isp_4_t",
+      "camera_mem",
+      "can",
+      "can_bcm",
+      "can_dev",
+      "can_gw",
+      "can_raw",
+      "cctrng",
+      "ccu_isp4",
+      "cdc_acm",
+      "cdc_eem",
+      "cdc_ether",
+      "cdc_ncm",
+      "cfg80211",
+      "cmdq_bdg_mailbox",
+      "cmdq_bdg_test",
+      "cmdq_sec_drv",
+      "conn_md_drv",
+      "connadp",
+      "cpufreq_sugov_ext",
+      "cpuqos_ext",
+      "diag",
+      "extend_reclaim",
+      "fhctl",
+      "flashlight",
+      "flashlights_aw3641e",
+      "fmradio_drv_mt6631",
+      "fpsgo",
+      "ftdi_sio",
+      "fusion",
+      "gamerotvechub",
+      "ged",
+      "gmagrotvechub",
+      "gps_drv_stp",
+      "gravityhub",
+      "gt1151",
+      "gyro_common",
+      "gyrohub",
+      "gz_ipc_mod",
+      "gz_irq_mod",
+      "gz_log_mod",
+      "gz_main_mod",
+      "gz_trusty_mod",
+      "gz_tz_system",
+      "gz_virtio_mod",
+      "gzvm",
+      "hall_mod",
+      "hci_uart",
+      "hidp",
+      "hq_mii",
+      "hq_smsc",
+      "hq_usbnet",
+      "hwmon",
+      "ieee802154",
+      "ieee802154_6lowpan",
+      "ieee802154_socket",
+      "imgsensor_isp4_t",
+      "iommu_gz",
+      "kheaders",
+      "l2tp_core",
+      "l2tp_ppp",
+      "leds_mt6370_flash",
+      "lenovohyperSched",
+      "libarc4",
+      "linearacchub",
+      "load_track",
+      "mac80211",
+      "mac802154",
+      "macsec",
+      "main2af",
+      "main3af",
+      "mainaf",
+      "mali_kbase_mt6768_r49",
+      "mali_mgm_mt6768_r49",
+      "mali_prot_alloc_mt6768_r49",
+      "mcdi",
+      "mdp_drv_mt6768",
+      "mediatek_eem",
+      "mediatek_static_power",
+      "mii",
+      "mt6358_accdet",
+      "mt63xx_debug",
+      "mt6768_mt6358",
+      "mtk_afe_external",
+      "mtk_battery_oc_throttling",
+      "mtk_bp_thl",
+      "mtk_btcvsd",
+      "mtk_cm_mgr",
+      "mtk_cm_mgr_mt6768",
+      "mtk_composite",
+      "mtk_cpu_power_throttling",
+      "mtk_cqdma",
+      "mtk_disp_sec",
+      "mtk_dvfsrc_helper",
+      "mtk_dvfsrc_start",
+      "mtk_dynamic_loading_throttling",
+      "mtk_fpsgo",
+      "mtk_gpu_hal",
+      "mtk_gpu_qos",
+      "mtk_gpufreq_mt6768",
+      "mtk_gpufreq_wrapper_legacy",
+      "mtk_ioctl_powerhal",
+      "mtk_ioctl_touch_boost",
+      "mtk_irtx_pwm",
+      "mtk_jpeg",
+      "mtk_low_battery_throttling",
+      "mtk_mbox",
+      "mtk_mdpm_v1",
+      "mtk_pbm",
+      "mtk_perf_common",
+      "mtk_perf_ioctl",
+      "mtk_power_gs_v1",
+      "mtk_ppm_v3",
+      "mtk_pwm",
+      "mtk_qos_legacy",
+      "mtk_rpmsg_mbox",
+      "mtk_sec_heap",
+      "mtk_sp_spk_amp",
+      "mtk_tinysys_ipi",
+      "mtk_u_ether",
+      "mtk_usb_f_rndis",
+      "mtk_vcodec_common",
+      "mtk_vcodec_dec_v1",
+      "mtk_vcodec_enc_v1",
+      "mtk_vcu",
+      "musb_boost",
+      "nfc",
+      "nhc_dest",
+      "nhc_fragment",
+      "nhc_hop",
+      "nhc_ipv6",
+      "nhc_mobility",
+      "nhc_routing",
+      "nhc_udp",
+      "nvmem_mt635x_efuse",
+      "open_dice",
+      "orienthub",
+      "powerhal_cpu_ctrl",
+      "ppp_deflate",
+      "ppp_generic",
+      "ppp_mppe",
+      "pppox",
+      "pps_core",
+      "pptp",
+      "ptp",
+      "r8152",
+      "r8153_ecm",
+      "reboot_mode",
+      "rfcomm",
+      "rfkill",
+      "rotatvechub",
+      "rps_perf",
+      "rtl8150",
+      "sample_module",
+      "scheduler",
+      "scp",
+      "sec",
+      "sensorHub",
+      "sensor_list",
+      "sensor_probe",
+      "situation",
+      "situationhub",
+      "slcan",
+      "slhc",
+      "smsc95xx",
+      "snd_soc_aw883xx",
+      "snd_soc_mt6358",
+      "snd_soc_mt6660",
+      "snd_soc_mt6768_afe",
+      "snd_soc_mtk_common",
+      "sspm_v1",
+      "step_counter",
+      "stepsignhub",
+      "sub2af",
+      "subaf",
+      "syscon_reboot_mode",
+      "t_base_tui",
+      "thermal_monitor",
+      "tipc",
+      "tls",
+      "touch_boost",
+      "trace_mmstat",
+      "trusted_mem",
+      "tui_common",
+      "uload_ind",
+      "uncali_acchub",
+      "uncali_gyrohub",
+      "usbmon",
+      "usbnet",
+      "usbserial",
+      "v4l2_flash_led_class",
+      "vcan",
+      "vcpu_stall_detector",
+      "virtio_balloon",
+      "virtio_blk",
+      "virtio_console",
+      "virtio_pci",
+      "virtio_pci_legacy_dev",
+      "virtio_pci_modern_dev",
+      "vmw_vsock_virtio_transport",
+      "widevine_driver",
+      "wlan_drv_gen4m_6768",
+      "wmt_chrdev_wifi",
+      "wmt_drv",
+      "wwan",
+      "zram",
+      "zsmalloc"
+    ],
+    "E": [
+      "8250_mtk",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "aw35615_whole",
+      "blocktag",
+      "bootprof",
+      "cache_parity",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "himax_mmi",
+      "hq_kallsyms",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hqsysfs",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "iommu_debug",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "log_store",
+      "mcDrvModule",
+      "mediatek_drm",
+      "memory_amms",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt6577_auxadc",
+      "mt6685_core",
+      "mt6768_dcm",
+      "mtk_battery_manager",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cmdq_drv_ext",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_devfreq",
+      "mtk_dvfsrc_regulator",
+      "mtk_emi",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_kpd",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_printk_ctrl",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sync",
+      "mtk_uart_apdma",
+      "mtk_wdt",
+      "musb_hdrc",
+      "musb_main",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mtk_devinfo",
+      "nvt_36523n",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "pwm_mtk_disp",
+      "regulator_vibrator",
+      "rpmb",
+      "rpmb_mtk",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "sc8989x_charger",
+      "sec_rng",
+      "sgm415xx_charger",
+      "spi_mt65xx",
+      "spi_slave",
+      "system_heap",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "timer_mediatek",
+      "tps65132_bias",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "usb_meta"
+    ],
+    "E_inter_B_minus_A": [
+      "himax_mmi",
+      "hqsysfs",
+      "mtk_dvfsrc_devfreq",
+      "nvt_36523n"
+    ],
+    "E_minus_A": [
+      "himax_mmi",
+      "hqsysfs",
+      "mt6685_core",
+      "mtk_dvfsrc_devfreq",
+      "nvt_36523n"
+    ],
+    "E_minus_B": [
+      "mt6685_core"
+    ],
+    "E_minus_N": [
+      "himax_mmi",
+      "hqsysfs",
+      "mt6685_core",
+      "mtk_dvfsrc_devfreq",
+      "nvt_36523n"
+    ],
+    "E_minus_R": [
+      "mt6685_core",
+      "mtk_dvfsrc_devfreq"
+    ],
+    "H": [
+      "8250_mtk",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "aw35615_whole",
+      "blocktag",
+      "bootprof",
+      "cache_parity",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "himax_mmi",
+      "hq_kallsyms",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hqsysfs",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "iommu_debug",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "log_store",
+      "mcDrvModule",
+      "mediatek_drm",
+      "memory_amms",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt6577_auxadc",
+      "mt6768_dcm",
+      "mtk_battery_manager",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cmdq_drv_ext",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_regulator",
+      "mtk_emi",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_kpd",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_printk_ctrl",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sync",
+      "mtk_uart_apdma",
+      "mtk_wdt",
+      "musb_hdrc",
+      "musb_main",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mtk_devinfo",
+      "nvt_36523n",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "pwm_mtk_disp",
+      "regulator_vibrator",
+      "rpmb",
+      "rpmb_mtk",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "sc8989x_charger",
+      "sec_rng",
+      "sgm415xx_charger",
+      "spi_mt65xx",
+      "spi_slave",
+      "system_heap",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "timer_mediatek",
+      "tps65132_bias",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "usb_meta"
+    ],
+    "H_minus_A": [
+      "himax_mmi",
+      "hqsysfs",
+      "nvt_36523n"
+    ],
+    "N": [
+      "8250_mtk",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "aw35615_whole",
+      "blocktag",
+      "bootprof",
+      "cache_parity",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "hq_kallsyms",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "iommu_debug",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "log_store",
+      "mcDrvModule",
+      "mediatek_drm",
+      "memory_amms",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt6577_auxadc",
+      "mt6768_dcm",
+      "mtk_battery_manager",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cmdq_drv_ext",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_regulator",
+      "mtk_emi",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_kpd",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_printk_ctrl",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sync",
+      "mtk_uart_apdma",
+      "mtk_wdt",
+      "musb_hdrc",
+      "musb_main",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mtk_devinfo",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "pwm_mtk_disp",
+      "regulator_vibrator",
+      "rpmb",
+      "rpmb_mtk",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "sc8989x_charger",
+      "sec_rng",
+      "sgm415xx_charger",
+      "spi_mt65xx",
+      "spi_slave",
+      "system_heap",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "timer_mediatek",
+      "tps65132_bias",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "usb_meta"
+    ],
+    "N_minus_E": [],
+    "R": [
+      "8250_mtk",
+      "adapter_class",
+      "aee_aed",
+      "aee_hangdet",
+      "aee_rs",
+      "arm_dsu_pmu",
+      "aw35615_whole",
+      "blocktag",
+      "bootprof",
+      "cache_parity",
+      "charger_class",
+      "clk_common",
+      "clk_fmeter_mt6768",
+      "clk_mt6768",
+      "clk_mt6768_pg",
+      "clkbuf",
+      "clkchk_mt6768",
+      "clkdbg_mt6768",
+      "cmdq_helper_inf",
+      "cmdq_platform_mt6768",
+      "cqhci",
+      "dbg_error_flag",
+      "device_apc_common_legacy",
+      "device_apc_mt6768",
+      "drm_display_helper",
+      "drm_dma_helper",
+      "dvfsrc_opp_mt6768",
+      "emi_dummy",
+      "emicen",
+      "emictrl",
+      "emiisu",
+      "emimpu",
+      "extcon_mtk_usb",
+      "extdev_io_class",
+      "himax_mmi",
+      "hq_kallsyms",
+      "hq_mii",
+      "hq_smsc",
+      "hq_usbnet",
+      "hqsys_misc",
+      "hqsys_pcba",
+      "hqsysfs",
+      "hx83102j_dsi_vdo_boe",
+      "i2c_hid",
+      "i2c_mt65xx",
+      "iommu_debug",
+      "iommu_secure",
+      "iommu_test",
+      "irq_dbg",
+      "isee",
+      "leds_mtk",
+      "leds_mtk_disp",
+      "leds_mtk_pwm",
+      "load_track",
+      "log_store",
+      "mcDrvModule",
+      "mediatek_drm",
+      "memory_amms",
+      "mm8013",
+      "mme",
+      "mmprofile",
+      "mmqos_common",
+      "mmqos_mt6768",
+      "monitor_hang",
+      "mrdump",
+      "mt6358_battery",
+      "mt6358_regulator",
+      "mt635x_auxadc",
+      "mt6370",
+      "mt6370_adc",
+      "mt6370_charger",
+      "mt6370_regulator",
+      "mt6397",
+      "mt6577_auxadc",
+      "mt6768_dcm",
+      "mtk_battery_manager",
+      "mtk_battery_oc_throttling",
+      "mtk_charger_algorithm_class",
+      "mtk_charger_framework",
+      "mtk_chg_type_det",
+      "mtk_cmdq_drv_ext",
+      "mtk_cpuhp",
+      "mtk_cpuidle",
+      "mtk_cqdma",
+      "mtk_dcm",
+      "mtk_disp_notify",
+      "mtk_dramc",
+      "mtk_dvfsrc",
+      "mtk_dvfsrc_regulator",
+      "mtk_dynamic_loading_throttling",
+      "mtk_emi",
+      "mtk_hvbpc",
+      "mtk_icc_core",
+      "mtk_iommu",
+      "mtk_iommu_util",
+      "mtk_kpd",
+      "mtk_low_battery_throttling",
+      "mtk_mdpm_v1",
+      "mtk_mmc",
+      "mtk_mmc_dbg",
+      "mtk_mmc_wp",
+      "mtk_mmdebug_vcp_stub",
+      "mtk_mmdvfs",
+      "mtk_mmdvfs_debug",
+      "mtk_mmdvfs_ftrace",
+      "mtk_mml",
+      "mtk_panel_ext",
+      "mtk_pbm",
+      "mtk_pd_adapter",
+      "mtk_pd_charging",
+      "mtk_pep",
+      "mtk_pep20",
+      "mtk_pep40",
+      "mtk_pep50",
+      "mtk_pep50p",
+      "mtk_pmic_keys",
+      "mtk_pmic_wrap",
+      "mtk_printk_ctrl",
+      "mtk_scpsys",
+      "mtk_scpsys_bringup",
+      "mtk_scpsys_mt6768",
+      "mtk_smi",
+      "mtk_smi_dbg",
+      "mtk_socinfo",
+      "mtk_sync",
+      "mtk_uart_apdma",
+      "mtk_wdt",
+      "musb_hdrc",
+      "musb_main",
+      "nt36523n_dsi_vdo_boe",
+      "nt36523n_dsi_vdo_tcl",
+      "nvmem_mtk_devinfo",
+      "nvt_36523n",
+      "pd_chk_mt6768",
+      "pd_dbg_info",
+      "perf_helper",
+      "phy_generic",
+      "phy_mtk_tphy",
+      "pidmap",
+      "pinctrl_mt6768",
+      "pinctrl_mtk_common_v2_debug",
+      "pinctrl_mtk_v2",
+      "pmic_lbat_service",
+      "pmic_lvsys_notify",
+      "pwm_mtk_disp",
+      "reboot_mode",
+      "regulator_vibrator",
+      "rpmb",
+      "rpmb_mtk",
+      "rt_pd_manager",
+      "rtc_mt6397",
+      "sample_module",
+      "sc8989x_charger",
+      "sec",
+      "sec_rng",
+      "sgm415xx_charger",
+      "smsc95xx",
+      "spi_mt65xx",
+      "spi_slave",
+      "syscon_reboot_mode",
+      "system_heap",
+      "tcpc_class",
+      "tcpc_cps8851",
+      "tcpci_late_sync",
+      "teeperf",
+      "timer_mediatek",
+      "tps65132_bias",
+      "ufs_mediatek_dbg",
+      "ufs_mediatek_mod",
+      "uload_ind",
+      "usb_meta"
+    ],
+    "R_minus_E": [
+      "arm_dsu_pmu",
+      "hq_mii",
+      "hq_smsc",
+      "hq_usbnet",
+      "load_track",
+      "mtk_battery_oc_throttling",
+      "mtk_cqdma",
+      "mtk_dynamic_loading_throttling",
+      "mtk_low_battery_throttling",
+      "mtk_mdpm_v1",
+      "mtk_pbm",
+      "reboot_mode",
+      "sample_module",
+      "sec",
+      "smsc95xx",
+      "syscon_reboot_mode",
+      "uload_ind"
+    ],
+    "S": [
+      "mt6685_core",
+      "mtk_dvfsrc_devfreq"
+    ],
+    "S_soft_only": [
+      "mt6685_core",
+      "mtk_dvfsrc_devfreq"
+    ],
+    "metadata_references_missing_from_R": []
+  },
+  "sources": {
+    "modules.alias": "1d558214811c9e24c20373dfa7691ccb8b581b9c246247626c38d899b4538440",
+    "modules.dep": "e26cf83c1bb8c359b90cf071445f4d89174fe3e7d6e5baad066192b7fc056e02",
+    "modules.load": "75c121d783209380e94b51228261e01cccdb5653ca311fb5ed73a5b31afc5983",
+    "modules.softdep": "45ebd04e87ee94f7d9090b71ec4ec1852b6c9a1a24cb09745063213a3a71353a"
+  },
+  "symbol_providers": {
+    "bootparams": [
+      "hx83102j_dsi_vdo_boe"
+    ],
+    "himax_resume_by_ddi": [
+      "himax_mmi"
+    ],
+    "hq_regiser_hw_info": [
+      "hqsysfs"
+    ],
+    "hx_gesture_flag": [
+      "himax_mmi"
+    ],
+    "nvt_gesture_flag": [
+      "nvt_36523n"
+    ],
+    "register_kboj_under_hqsysfs": [
+      "hqsysfs"
+    ],
+    "update_firmware_for_lcm_esd": [
+      "nvt_36523n"
+    ]
+  }
+}

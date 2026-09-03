@@ -31,7 +31,7 @@ outside this repository.
 Start with:
 
 - `docs/ARCHITECTURE.md` — system architecture and ownership boundaries.
-- `docs/BOOT.md` — boot path from vendor_boot to systemd.
+- `docs/BOOT.md` — custom vendor ramdisk, stage1, and vendor_boot build.
 - `docs/BUILD.md` — build and deployment procedures.
 - `docs/RECOVERY.md` — recovery-critical artifacts and procedures.
 - `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
