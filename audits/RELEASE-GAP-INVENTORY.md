@@ -68,14 +68,15 @@ source file and is intentionally excluded; it is produced from the corpus.
 * Current evidence: the retained deployment inventory records
   `tb330fu-usb-gadget.service` as active/exited and the late management gadget
   as part of the boot path.
-* Release coverage: no native USB gadget source, unit, or network companion is
-  present. The vendor corpus and graph contain Android USB actions, but they
-  are not a substitute for the native configfs NCM helper. The old
-  `native-boot/usb-role-recon/` ACM/NCM helpers are separate diagnostic and
+* Release coverage: promoted to `src/usb/tb330fu-usb-gadget`,
+  `systemd/tb330fu-usb-gadget.service`, and `docs/USB.md`. The vendor corpus
+  and graph still contain Android USB actions, but they are not a substitute
+  for or dependency of the native configfs NCM helper. The old
+  `native-boot/usb-role-recon/` ACM/NCM helpers remain separate diagnostic and
   role-reconfiguration experiments.
-* Action: promote the exact deployed gadget source/unit and its network
-  contract, or document it as an external deployment prerequisite. Keep USB
-  role experiments archived. Do not migrate policy in this pass.
+* Action: complete for source/documentation promotion. Keep USB role
+  experiments archived. Do not migrate retained Android USB policy in this
+  pass.
 
 No other meaningful current subsystem was found without a release
 counterpart. USB/network helpers in `native-boot/usb-role-recon/` are older

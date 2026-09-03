@@ -1,0 +1,12 @@
+[Unit]
+Description=TB330FU late USB NCM management gadget
+Wants=systemd-udev-settle.service
+After=systemd-udev-settle.service network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/tb330fu-usb-gadget
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

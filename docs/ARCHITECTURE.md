@@ -133,6 +133,11 @@ producer, consumer, ABI/VINTF contract, and runtime call path justify that
 change. The graph remains the current execution path for the actions that
 still require it.
 
+The native USB management path is separate from the retained graph.
+`tb330fu-usb-gadget.service` creates the `tb330fu_ncm` configfs gadget,
+binds its NCM function to the discovered UDC, and configures `usb0` at
+`192.168.7.2/24`. NetworkManager leaves `usb0` unmanaged. See [USB.md](USB.md).
+
 ## Bluetooth
 
 The retained MediaTek/WMT path reaches the stock Bluetooth AIDL HAL through
@@ -179,6 +184,7 @@ part of the hardware-facing compatibility path.
 | Input | touchscreen, stylus, `hall_irq` drivers | folio lid uinput proxy | libinput, logind, desktop policy |
 | Power policy | vendor power modules | vendor power services | systemd, PowerDevil |
 | Wi-Fi | MediaTek Wi-Fi/BSP support | connectivity graph and vendor support | mixed; native finalizer is active |
+| USB NCM management | MediaTek USB/`musb-hdrc` UDC and kernel NCM support | retained Android USB actions for Android modes | `tb330fu-usb-gadget.service`, configfs, `usb0` |
 | Bluetooth | stock Bluetooth/WMT modules | HCI shim and Android AIDL bridge | BlueZ/`bluetoothd` |
 | GNSS | MediaTek GNSS/BSP support | GNSS AIDL service and `mnld` | unknown |
 | Camera | MediaTek camera/ISP drivers | Android camera HAL path and bridge | native camera daemon/V4L2 |

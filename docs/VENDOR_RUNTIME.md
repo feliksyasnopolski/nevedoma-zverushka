@@ -202,12 +202,14 @@ is a separate oneshot that runs after the readiness gate and writes one ASCII
 `1` to `/dev/wmtWifi`. It is a post-graph hardware action, not a compiler
 action and not Rediska ownership.
 
-The promoted units require only release-tree units that exist: Rediska
-property service, `tb330fu-devd.service`, and the readiness unit. Historical
-references to absent USB-gadget and Bluetooth-target units were not retained.
-The graph still contains known mixed-ownership actions such as USB, network,
+The promoted graph units require only release-tree units that exist: Rediska
+property service, `tb330fu-devd.service`, and the readiness unit. The native
+USB management gadget is now provided separately by
+`tb330fu-usb-gadget.service`; it is not a graph dependency. The graph still
+contains known mixed-ownership actions such as Android USB modes, network,
 and generic sysfs policy. Zram is excluded from the graph and owned by
-`tb330fu-zram.service`; see [ZRAM.md](ZRAM.md).
+`tb330fu-zram.service`; see [ZRAM.md](ZRAM.md). See [USB.md](USB.md) for the
+native USB boundary.
 
 ## Build and verification
 

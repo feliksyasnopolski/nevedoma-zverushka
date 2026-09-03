@@ -1,0 +1,77 @@
+#!/bin/sh
+set -eu
+
+TAG='TB330FU late USB gadget:'
+G=/sys/kernel/config/usb_gadget/tb330fu_ncm
+CFG=$G/configs/c.1
+UDC=
+
+log() { echo "$TAG $*"; }
+fail() { log "failed: $*"; exit 1; }
+
+log 'starting late USB gadget'
+sleep 8
+
+ROLE_STATE='unavailable'
+for role in /sys/class/usb_role/*/role /sys/class/typec/*/data_role \
+            /sys/class/typec/*/power_role; do
+    [ -r "$role" ] || continue
+    ROLE_STATE="$role=$(cat "$role" 2>/dev/null || echo unreadable) $ROLE_STATE"
+done
+log "current USB role/type-c state: $ROLE_STATE"
+
+mkdir -p /sys/kernel/config
+if ! grep -q ' /sys/kernel/config configfs ' /proc/mounts; then
+    mount -t configfs configfs /sys/kernel/config || fail 'could not mount configfs'
+fi
+[ -d /sys/kernel/config/usb_gadget ] || fail 'configfs usb_gadget directory unavailable'
+log 'configfs mounted/available'
+
+for entry in /sys/class/udc/*; do
+    [ -e "$entry" ] || continue
+    UDC=${entry##*/}
+    break
+done
+[ -n "$UDC" ] || fail 'no USB device controller found'
+log "discovered UDC $UDC"
+
+[ ! -e "$G" ] || fail "$G already exists; refusing to reconfigure or rebind it"
+mkdir -p "$G/strings/0x409" "$CFG/strings/0x409"
+printf '%s' 0x1d6b > "$G/idVendor"
+printf '%s' 0x0104 > "$G/idProduct"
+printf '%s' 0x0200 > "$G/bcdUSB"
+printf '%s' 0x0100 > "$G/bcdDevice"
+printf '%s' tb330fu-linux-ncm-001 > "$G/strings/0x409/serialnumber"
+printf '%s' Lenovo > "$G/strings/0x409/manufacturer"
+printf '%s' 'TB330FU Ubuntu NCM' > "$G/strings/0x409/product"
+printf '%s' 'NCM network' > "$CFG/strings/0x409/configuration"
+printf '%s' 250 > "$CFG/MaxPower"
+log 'gadget created'
+
+mkdir -p "$G/functions/ncm.usb0"
+printf '%s' 02:00:00:00:00:01 > "$G/functions/ncm.usb0/dev_addr"
+printf '%s' 02:00:00:00:00:02 > "$G/functions/ncm.usb0/host_addr"
+ln -s "$G/functions/ncm.usb0" "$CFG/ncm.usb0"
+log 'function created: NCM usb0'
+
+log "UDC bind attempted: $UDC"
+printf '%s' "$UDC" > "$G/UDC" || fail 'could not bind UDC'
+
+i=0
+while [ ! -e /sys/class/net/usb0 ]; do
+    i=$((i + 1))
+    [ "$i" -lt 101 ] || fail 'usb0 did not appear within 10 seconds'
+    sleep 0.1
+done
+log 'interface appeared: usb0'
+
+ip addr replace 192.168.7.2/24 dev usb0 || fail 'could not configure 192.168.7.2/24'
+ip link set usb0 up || fail 'could not bring usb0 up'
+log 'address configured: 192.168.7.2/24'
+
+systemctl start ssh.service || systemctl start sshd.service || fail 'could not start sshd'
+systemctl is-active --quiet ssh.service 2>/dev/null || \
+    systemctl is-active --quiet sshd.service 2>/dev/null || fail 'sshd is not active'
+ss -ltn | grep -Eq '[.:]22[[:space:]]' || fail 'sshd is not listening on TCP port 22'
+log 'sshd state: active and listening on TCP port 22'
+log 'late USB gadget complete'
