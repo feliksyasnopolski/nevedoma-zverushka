@@ -1080,12 +1080,6 @@ on boot
     write /proc/sys/vm/overcommit_memory 1
     write /proc/sys/vm/min_free_order_shift 4
 
-    # System server manages zram writeback
-    chown root system /sys/block/zram0/idle
-    chmod 0664 /sys/block/zram0/idle
-    chown root system /sys/block/zram0/writeback
-    chmod 0664 /sys/block/zram0/writeback
-
     # to access F2FS sysfs on dm-<num> directly
     mkdir /dev/sys/fs/by-name 0755 system system
     symlink /sys/fs/f2fs/${dev.mnt.dev.data} /dev/sys/fs/by-name/userdata

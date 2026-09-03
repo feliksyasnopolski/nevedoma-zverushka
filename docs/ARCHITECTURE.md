@@ -114,10 +114,9 @@ modules and services remain below that layer for platform support. Suspend is
 functional. Display DPMS and physical backlight control are distinct on this
 platform and must not be treated as one interface.
 
-The deployed `tb330fu-zram.service` activates `/dev/zram0` as swap. The
-device is currently initialized elsewhere during boot, and the connectivity
-graph contains zram configuration and tuning actions. Zram ownership is
-therefore mixed and is scheduled for migration to a native systemd owner.
+`tb330fu-zram.service` is the sole native owner of `/dev/zram0` setup and swap
+activation. It runs after `tb330fu-devd.service`, which owns block-node
+lifecycle on this no-devtmpfs kernel. See [ZRAM.md](ZRAM.md).
 
 ## Connectivity
 

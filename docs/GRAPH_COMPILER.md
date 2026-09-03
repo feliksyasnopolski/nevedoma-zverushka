@@ -143,7 +143,9 @@ selected `/dev/memcg` setup, the reviewed APEX bootstrap/session lifecycle,
 the conntrack-helper sysctl in `networksetting.rc`, and `update_verifier`.
 Each removed record includes a reason and source provenance. Filtering occurs
 before module suppression and class-start expansion. Ambiguous matches are not
-removed. Known ownership-drift candidates such as zram, USB, network policy, and generic sysfs tuning remain in the corpus pending migration to native owners.
+removed. Zram setup and activation are excluded from the mutable corpus and
+owned by `tb330fu-zram.service`; USB, network policy, and generic sysfs tuning
+remain pending separate migrations.
 
 ## Output contract
 

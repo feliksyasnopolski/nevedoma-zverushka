@@ -47,21 +47,19 @@ source file and is intentionally excluded; it is produced from the corpus.
   document, or explicitly mark audio as an external deployment dependency.
   Do not copy it automatically in this inventory.
 
-### Native zram activation source — category A/E boundary, P0/P2
+### Native zram activation source — promoted
 
 * Deployed location: `/usr/local/libexec/tb330fu-zram`; the retained inventory
   records `tb330fu-zram.service` active/exited and zstd 2 GiB zram swap.
-* Old/release source search: no retained `tb330fu-zram` source, unit, or
-  configuration was found in either tree. The old Android-init corpus contains
-  graph-owned zram configuration/tuning actions, but that is not the native
-  activation helper.
-* Why uncovered: the release repository documents mixed ownership in
-  `docs/ARCHITECTURE.md` but contains neither side as a native zram source
-  package or primary document.
-* Action: recover and provenance the deployed helper before treating it as
-  promotable. Then decide whether to make native systemd the sole owner of
-  activation/tuning. Until then classify the helper as a current deployed
-  dependency with missing source, and the ownership cleanup as planned.
+* The deployed helper and unit were recovered read-only and are now represented
+  by `src/zram/tb330fu-zram`, `systemd/tb330fu-zram.service`, and
+  `docs/ZRAM.md`.
+* The mutable Android-init corpus no longer contains zram setup, tuning,
+  writeback ownership, or swap activation. The generated graph is compiled
+  from that mutable corpus and contains no zram records.
+* The native policy preserves the deployed 2G request and priority 100 while
+  selecting `lz4`; it does not use writeback or a backing device. Live tablet
+  swap was not changed by this task.
 
 ### Late USB NCM gadget — category A, P0
 

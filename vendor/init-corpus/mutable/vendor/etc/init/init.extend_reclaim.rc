@@ -1,13 +1,5 @@
 on property:sys.boot_completed=1
-    # System server manages zram writeback limits
-    chown root system /sys/block/zram0/writeback_limit
-    chmod 0664 /sys/block/zram0/writeback_limit
-    chown root system /sys/block/zram0/writeback_limit_enable
-    chmod 0664 /sys/block/zram0/writeback_limit_enable
-
     # System server trigger extend reclaim
     chown root system /sys/kernel/extend_reclaim/reclaim
     chmod 0664 /sys/kernel/extend_reclaim/reclaim
-
-#    trigger swapon_zram
 

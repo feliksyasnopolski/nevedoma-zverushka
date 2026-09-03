@@ -205,9 +205,9 @@ action and not Rediska ownership.
 The promoted units require only release-tree units that exist: Rediska
 property service, `tb330fu-devd.service`, and the readiness unit. Historical
 references to absent USB-gadget and Bluetooth-target units were not retained.
-The graph still contains known mixed-ownership actions such as zram, USB,
-network, and generic sysfs policy; migration of those actions is outside this
-promotion.
+The graph still contains known mixed-ownership actions such as USB, network,
+and generic sysfs policy. Zram is excluded from the graph and owned by
+`tb330fu-zram.service`; see [ZRAM.md](ZRAM.md).
 
 ## Build and verification
 

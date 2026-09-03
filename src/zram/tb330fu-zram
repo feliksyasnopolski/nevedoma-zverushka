@@ -1,0 +1,83 @@
+#!/bin/sh
+set -eu
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+DEV=/dev/zram0
+CONTROL=/sys/class/zram-control
+SYSFS=/sys/block/zram0
+ALGORITHM=zstd
+# The deployed `zramctl --size 2G` configuration is rounded by this kernel.
+DISKSIZE=1999634432
+TIMEOUT=5
+
+fail() { echo "tb330fu-zram: $*" >&2; exit 1; }
+
+active() {
+    swapon --show=NAME --noheadings 2>/dev/null |
+        awk -v dev="$DEV" '$1 == dev { found = 1 } END { exit !found }'
+}
+
+selected_algorithm() {
+    [ -r "$SYSFS/comp_algorithm" ] || return 1
+    sed -n 's/.*\[\([^]]*\)\].*/\1/p' "$SYSFS/comp_algorithm"
+}
+
+current_disksize() {
+    [ -r "$SYSFS/disksize" ] || return 1
+    tr -d '[:space:]' < "$SYSFS/disksize"
+}
+
+wait_for_node() {
+    i=0
+    while [ "$i" -lt "$TIMEOUT" ]; do
+        [ -b "$DEV" ] && return 0
+        i=$((i + 1))
+        sleep 1
+    done
+    fail "$DEV did not appear through tb330fu-devd"
+}
+
+ensure_device() {
+    if [ -b "$DEV" ] && [ -d "$SYSFS" ]; then return 0; fi
+    if [ ! -d /sys/module/zram ]; then
+        /sbin/modprobe zram || fail "unable to load zram.ko"
+    fi
+    if [ ! -d "$SYSFS" ]; then
+        for existing in /sys/block/zram*; do
+            [ -e "$existing" ] || continue
+            fail "zram device exists at $(basename "$existing"); cannot create zram0"
+        done
+        [ -w "$CONTROL/hot_add" ] || fail "zram-control hot_add is unavailable"
+        printf '0\n' > "$CONTROL/hot_add" || fail "unable to create zram0"
+        [ -d "$SYSFS" ] || fail "zram-control created no zram0 device"
+    fi
+    wait_for_node
+}
+
+start() {
+    ensure_device
+    if active; then
+        [ "$(selected_algorithm)" = "$ALGORITHM" ] ||
+            fail "active zram has incompatible compression algorithm"
+        [ "$(current_disksize)" = "$DISKSIZE" ] ||
+            fail "active zram has incompatible disksize"
+        exit 0
+    fi
+    if [ "$(current_disksize)" != 0 ]; then
+        [ -w "$SYSFS/reset" ] || fail "inactive stale zram cannot be reset"
+        printf '1\n' > "$SYSFS/reset" || fail "unable to reset inactive zram"
+    fi
+    /usr/sbin/zramctl --algorithm "$ALGORITHM" --size 2G "$DEV" ||
+        fail "unable to configure $DEV"
+    [ "$(selected_algorithm)" = "$ALGORITHM" ] || fail "compression algorithm was not applied"
+    [ "$(current_disksize)" = "$DISKSIZE" ] || fail "unexpected configured disksize"
+    /usr/sbin/mkswap "$DEV" >/dev/null || fail "mkswap failed"
+    /usr/sbin/swapon -p 100 "$DEV" || fail "swapon failed"
+}
+
+case "${1:-start}" in
+    start) start ;;
+    *) echo "usage: $0 start" >&2; exit 2 ;;
+esac

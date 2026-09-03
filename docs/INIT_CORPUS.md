@@ -78,9 +78,11 @@ being silently substituted.
 ## Ownership drift
 
 Some generic policy remains in the mutable corpus because it has not yet been
-migrated. These actions remain until a native owner and equivalent ordering are established. Known candidates include zram setup,
+migrated. These actions remain until a native owner and equivalent ordering are established. Known candidates include
 generic network policy, USB policy, and generic sysfs tuning. Their presence
-does not make them vendor-substrate ownership. Future cleanup must establish
+does not make them vendor-substrate ownership. Zram setup and activation have
+been removed from the mutable corpus and are owned by `tb330fu-zram.service`.
+Future cleanup must establish
 the native owner and verify ordering before removal.
 
 ## Ordering and imports

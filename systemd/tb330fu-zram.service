@@ -1,0 +1,13 @@
+[Unit]
+Description=TB330FU native zram swap
+Requires=tb330fu-devd.service
+After=local-fs.target tb330fu-devd.service
+Before=swap.target graphical.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/libexec/tb330fu-zram start
+
+[Install]
+WantedBy=multi-user.target

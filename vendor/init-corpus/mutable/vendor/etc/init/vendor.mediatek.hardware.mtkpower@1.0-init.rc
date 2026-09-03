@@ -1044,8 +1044,6 @@ on property:ro.vendor.magt.mtk_magt_support=1
 on property:sys.sysctl.extra_free_kbytes=*
     setprop vendor.sys.vm.extrafreekbytes ${sys.sysctl.extra_free_kbytes}
 
-on property:vendor.sys.vm.swappiness=*
-    write /proc/sys/vm/swappiness ${vendor.sys.vm.swappiness}
 on property:vendor.sys.vm.dropcaches=*
     write /proc/sys/vm/drop_caches ${vendor.sys.vm.dropcaches}
 on property:vendor.sys.vm.extrafreekbytesadj=*

@@ -29,7 +29,7 @@ afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/ini
 afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/init/hw/init.boringssl.zygote32.rc
 dbad9c5c5b6dbb16615f893c03ccb3be700e1054ebd90ad92bac82c1e50a1284  system/etc/init/hw/init.boringssl.zygote64.rc
 afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/init/hw/init.boringssl.zygote64_32.rc
-35aa9c815fd08dcf0c244bbc6ccce08646f8067b8917554a3da497e1079c5bab  system/etc/init/hw/init.rc
+bf025f095efb075ed75a25239283d76356708cc497db333658c74a041feeaeb8  system/etc/init/hw/init.rc
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  system/etc/init/hw/init.zygote32.rc
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  system/etc/init/hw/init.zygote64.rc
 7a961148a2d04e759c1008209a9e588a6980f733b5011f0c51a5f0e604045c76  system/etc/init/hw/init.zygote64_32.rc
@@ -131,13 +131,13 @@ a09021175637f73d790f1015b849e3a6c441dba05477fbcde33fa35ce64fb1b6  vendor/etc/ini
 4d501e6c758892297c4c951f4b715b1af607c9f74e9f7fa5c46349541b2bbbbb  vendor/etc/init/hw/factory_init.project.rc
 0077189e93150e8633b936e9f60a601bd49c2e8005d8c6de352a2b4df5a5b1fc  vendor/etc/init/hw/factory_init.rc
 06fe2dc669382c0311665d7e3496f5b5ce9ea1a6db4409894d4019fb7bc08433  vendor/etc/init/hw/init.aee.rc
-07d1bd8f163b0491b80cafaac0cb0b85299578f5ddf9357cd00cb072a51d705c  vendor/etc/init/hw/init.ago.rc
+d128aab1f102717350232df96e8245a7d547f761f46da659735ef3ea8ec2f99b  vendor/etc/init/hw/init.ago.rc
 13b4c694ee1a0ad3d90a64bae892e15bc3eae10ffa851f5be98f8d6d989d2968  vendor/etc/init/hw/init.cgroup.rc
 2ba78f62c2202af4843113d92a46fb89878613dd383753f20b922fd3266d3ce9  vendor/etc/init/hw/init.connectivity.common.rc
 cc0617b482eb856dee21c2632ce774e608cf8a06a8ed175193722c6ce02e462b  vendor/etc/init/hw/init.connectivity.rc
-14e6f8b158b13df41a72122440c4fbc37c7af732aab5088f4e6fa2f63321eb17  vendor/etc/init/hw/init.mt6768.rc
+f56c3ae91d6417be49266c747626b002ea2af844fca073a819c12896407a04c1  vendor/etc/init/hw/init.mt6768.rc
 d41bf5cd885d46284101e1f7c134a432feae84a270ddca2a13e27b06d105f6e0  vendor/etc/init/hw/init.mt6768.usb.rc
-6a29b48438cd006f248607ae8eef02d19e3aaafca7e75fd9ae31c4de3f73fcd7  vendor/etc/init/hw/init.mt8786.rc
+73e26eaa1ba909a269547aa42797bc6e951c33ec283ddf6d35036591f25fafd5  vendor/etc/init/hw/init.mt8786.rc
 0c676a47dcac01e30dca4bf5dd7debff613cbb804b13553d7f4befe820e567ec  vendor/etc/init/hw/init.mtkgki.rc
 393bf33de741d41b918d42cfc614e8e35185fec9230ba893313d79ef70bd8d79  vendor/etc/init/hw/init.project.rc
 64a1b5ac6c6849816d9060d8fc8b5b102325fe0f75cf1a0d41b7a3f3ba3fd172  vendor/etc/init/hw/init.sensor_1_0.rc
@@ -151,7 +151,7 @@ fb71d4f17a1fe1bc6bc0bcc971b6d827176248418d2a4cfa882d3a3897daae38  vendor/etc/ini
 f5f182163199fa51891c76e7b353cff164847eaa1f86da3cb945289fd1349f78  vendor/etc/init/hw/multi_init.rc
 a14fe92a3282e271791fb5d1e6002dc5ab315acdcda2408d52aae40712537a89  vendor/etc/init/init.bt_drv.rc
 55d9accaf005626e8339b99315daac144cd66d512d8e9919f0f5c06f425a42db  vendor/etc/init/init.connfem.rc
-295f51b212dab1fefa5e6d04b953e75e259ff792d87938ad60e1ffc68b1c9126  vendor/etc/init/init.extend_reclaim.rc
+ecd4e24b97cab9240f475e74bd53d6f784d58509b1d1d702bc970393bb964dae  vendor/etc/init/init.extend_reclaim.rc
 569af9d2a9f28de31016b2cb9c5f686065d735041f9c0aac8411e619d3e673bf  vendor/etc/init/init.fmradio_drv.rc
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  vendor/etc/init/init.fpsgo.rc
 4cfe0a8f1b30acaf6c1d9365dedd56755d23f1892e0bf0b702404b4ca42814ac  vendor/etc/init/init.gps_drv.rc
@@ -190,7 +190,7 @@ d5f238b48f04eafa2dd23cd068d9d8b2320e2cb0eb32d97003d853bc4e31e091  vendor/etc/ini
 c7761e9056c9a4b005c70192ab3c800327fa54477df38fa4797ca440e0f99cf7  vendor/etc/init/vendor.mediatek.hardware.aee@V1-service.rc
 d78e9be542460ba5f04651201b1ae874f3c79bd119153a791a1bacf69c077f77  vendor/etc/init/vendor.mediatek.hardware.mmagent-service.rc
 6f54840f7a0045c5210749076e1a408f95a0bc807ababd3b002c94729c8eaf42  vendor/etc/init/vendor.mediatek.hardware.mms-service.rc
-31ac6f2963e7fc16372a0b08f5a618119fe4ca872f034f4aa7afd1dcf1635fd4  vendor/etc/init/vendor.mediatek.hardware.mtkpower@1.0-init.rc
+e67a3a368e92437cf18c2a6cad0c035442464b67f50eb0189de947ff129893bc  vendor/etc/init/vendor.mediatek.hardware.mtkpower@1.0-init.rc
 393b576374e2097e7c9bff905f801da4e74a1c78820c5396964bcb015140caf6  vendor/etc/init/vendor.mediatek.hardware.mtkpower@1.0-service.rc
 9193fa8c0932fdcdd13a8e12f3c45a0d160ea6cfbae575800a133874b43f4873  vendor/etc/init/vendor.mediatek.hardware.nvram-sevice.rc
 dd0b263917a1cfd3a2f6997d33d5c82ad52d8d547ea6c19b71bf93eef7ea0f46  vendor/etc/init/vendor.mediatek.hardware.pq_aidl-service.rc
