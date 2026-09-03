@@ -1,0 +1,16 @@
+[Unit]
+Description=TB330FU production camera bridge
+Requires=tb330fu-camera-module.service
+After=tb330fu-camera-module.service tb330fu-android-boot-complete.service
+
+[Service]
+Type=simple
+User=felix
+SupplementaryGroups=video render
+ExecStart=/usr/local/lib/tb330fu/tb330fu-camera-daemon
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

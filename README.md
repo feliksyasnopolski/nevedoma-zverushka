@@ -42,6 +42,7 @@ Start with:
 - `docs/GRAPH_COMPILER.md` — parser, compiler transformations, and graph contract.
 - `docs/VENDOR_RUNTIME.md` — graph executor, retained vendor services, and readiness gate.
 - `docs/BLUETOOTH.md` — retained MediaTek Bluetooth path, HCI bridge, and BlueZ interface.
+- `docs/CAMERA.md` — retained Camera3 hardware exposed through standard V4L2.
 
 Subsystem documentation lives under `docs/`.
 

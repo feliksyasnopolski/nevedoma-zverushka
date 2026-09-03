@@ -1,0 +1,17 @@
+[Unit]
+Description=TB330FU v4l2loopback camera bridge module
+Requires=tb330fu-android-boot-complete.service
+After=local-fs.target systemd-udev-settle.service tb330fu-android-boot-complete.service
+Before=tb330fu-camera-daemon.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/insmod /usr/local/lib/tb330fu/v4l2loopback-events-btf.ko devices=2 video_nr=10,11 max_buffers=4 max_openers=3
+ExecStart=/usr/bin/ln -sfn /dev/video10 /dev/video-rear
+ExecStart=/usr/bin/ln -sfn /dev/video11 /dev/video-front
+ExecStop=/usr/bin/rm -f /dev/video-rear /dev/video-front
+ExecStop=/sbin/rmmod v4l2loopback
+
+[Install]
+WantedBy=multi-user.target

@@ -98,9 +98,7 @@ The Bluetooth module helper normalizes `/dev/rfkill` after loading
 `rfkill.ko`, before loading `bluetooth.ko`. It requires the character node and
 sets it to mode `0666`. The HCI helper repeats the mode change after `hci0`
 appears. This deliberate single-user tablet policy allows Bluedevil and
-`rfkill` clients to open the node. The live tablet showed the pre-normalized
-`0600` state because its currently running module unit predates the promoted
-helper; the source behavior is now recovered from the deployed helper.
+`rfkill` clients to open the node. 
 `systemd-rfkill.service` and `systemd-rfkill.socket` are separate stock static
 units, not the TB330FU normalizer.
 
@@ -196,9 +194,4 @@ required when `bluetoothctl` or `btmgmt` is available.
 
 ## Known limitations
 
-The Bluetooth target is manual and remains disabled at boot. A read-only check
-on `nevedoma-zverushka.local` on 2026-09-03 confirmed the target, bridge, HCI
-shim, `hci0`, stock `bluetoothd`, and AIDL bridge are active. The running
-tablet still had `/dev/rfkill` at mode `0600`, while the deployed helper source
-contains the required `0666` normalization. No deployment, restart, rfkill
-toggle, or pairing operation was performed.
+The Bluetooth target is manual and remains disabled at boot. The working stack has been verified with the AIDL bridge, HCI shim, `hci0`, stock `bluetoothd`, and BlueZ controller enumeration. The currently deployed runtime may still expose `/dev/rfkill` as 0600 until the normalized helper is deployed and the relevant unit restarted.

@@ -155,11 +155,10 @@ after the camera module service. The deployed BTF-enabled `v4l2loopback`
 module exposes `/dev/video10` and `/dev/video11`, with stable
 `/dev/video-rear` and `/dev/video-front` symlinks.
 
-Preview and video are exposed through V4L2. Controls use the local JSONL/HTTP
-interface, and still capture payloads use HTTP. Still capture is not routed
-through the V4L2 preview/video path. Device-node and daemon liveness do not by
-themselves prove correct pixels, format negotiation, or product-complete
-camera behavior.
+Preview and video are exposed through V4L2. The daemon has a localhost
+length-prefixed JSON control socket; it is not an HTTP server. Still capture
+is not implemented. Device-node and daemon liveness do not by themselves
+prove correct pixels, format negotiation, or product-complete camera behavior.
 
 ## Sensors
 
