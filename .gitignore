@@ -9,6 +9,12 @@
 Module.symvers
 modules.order
 
+# Project-owned systemd drop-ins (directory names intentionally end in .d).
+!/systemd/systemd-suspend.service.d/
+!/systemd/systemd-suspend.service.d/10-tb330fu-preflight.conf
+!/systemd/logind.conf.d/
+!/systemd/logind.conf.d/10-tb330fu-power-button.conf
+
 # Conventional native build directories. Keep source-side generated files
 # visible unless they are inside one of these explicitly named directories.
 /build/

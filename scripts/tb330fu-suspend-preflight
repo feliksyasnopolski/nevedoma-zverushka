@@ -1,0 +1,142 @@
+#!/bin/bash
+set -u
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+LOCK=/run/tb330fu-suspend.lock
+WAKEUPS=/sys/kernel/debug/wakeup_sources
+WAKEUP_COUNT=/sys/power/wakeup_count
+log() { logger -t tb330fu-suspend-preflight -- "$*"; }
+fail() { echo "Suspend preflight refused: $*" >&2; log "preflight failure: $*"; exit 1; }
+
+[ "$(id -u)" -eq 0 ] || fail "helper must run as root"
+exec 9>"$LOCK" || fail "cannot open transaction lock"
+flock -n 9 || fail "another suspend transaction is already running"
+
+log "preflight requested"
+[ -r "$WAKEUPS" ] || fail "$WAKEUPS is unavailable"
+
+wakeup_active() {
+    local wanted=$1
+    awk -v wanted="$wanted" '
+        NR == 1 {
+            header_fields=NF
+            for (i=1; i<=NF; i++) column[$i]=i
+            next
+        }
+        NR > 1 && column["active_since"] {
+            offset=NF-header_fields
+            since_column=column["active_since"]+offset
+            name_end=column["active_count"]+offset
+            name=$1
+            for (i=2; i<name_end; i++) name=name " " $i
+            if (name == wanted && $(since_column) ~ /^[0-9]+$/ && $(since_column) != 0) { found=1 }
+        }
+        END { exit(found ? 0 : 1) }
+    ' "$WAKEUPS"
+}
+
+active_sources() {
+    awk '
+    NR == 1 { header_fields=NF; for (i=1; i<=NF; i++) column[$i]=i; next }
+    NR > 1 && column["active_since"] {
+        offset=NF-header_fields
+        since_column=column["active_since"]+offset
+        count_column=column["active_count"]+offset
+        name=$1; for (i=2; i<count_column; i++) name=name " " $i
+        if ($(since_column) ~ /^[0-9]+$/ && $(since_column) != 0)
+            print name " active_since=" $(since_column) " active_count=" $(count_column)
+    }' "$WAKEUPS"
+}
+
+if wakeup_active "USB suspend lock"; then
+    log "USB gate result: active"
+    fail "USB suspend lock is active. Disconnect USB and retry."
+fi
+log "USB gate result: inactive"
+
+session_id=
+session_uid=
+session_user=
+while read -r sid uid user seat rest; do
+    [ -n "${sid:-}" ] || continue
+    type=$(loginctl show-session "$sid" -p Type --value 2>/dev/null || true)
+    class=$(loginctl show-session "$sid" -p Class --value 2>/dev/null || true)
+    state=$(loginctl show-session "$sid" -p State --value 2>/dev/null || true)
+    if [ "$type" = wayland ] && [ "$class" = user ] && [ "$state" = active ]; then
+        session_id=$sid; session_uid=$uid; session_user=$user; break
+    fi
+done < <(loginctl list-sessions --no-legend 2>/dev/null)
+[ -n "$session_id" ] || fail "no active graphical Wayland session found"
+log "selected session: id=$session_id user=$session_user uid=$session_uid"
+
+runtime=/run/user/$session_uid
+bus=$runtime/bus
+wayland_display=
+kwin_pid=$(pgrep -u "$session_uid" -x kwin_wayland | head -n 1 || true)
+if [ -n "$kwin_pid" ] && [ -r "/proc/$kwin_pid/environ" ]; then
+    wayland_display=$(tr '\0' '\n' < "/proc/$kwin_pid/environ" | sed -n 's/^WAYLAND_DISPLAY=//p' | head -n 1)
+fi
+[ -n "$wayland_display" ] || wayland_display=wayland-0
+export XDG_RUNTIME_DIR="$runtime" DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" WAYLAND_DISPLAY="$wayland_display"
+
+kscreen=$(command -v kscreen-doctor || true)
+[ -x "$kscreen" ] || fail "kscreen-doctor is unavailable"
+run_kscreen() {
+    sudo -u "$session_user" env \
+        XDG_RUNTIME_DIR="$runtime" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" \
+        WAYLAND_DISPLAY="$wayland_display" \
+        TERM=dumb "$kscreen" "$@"
+}
+output_id=
+output=
+while read -r candidate_id candidate_name; do
+    [ -n "$candidate_id" ] || continue
+    output_id=$candidate_id
+    output=$candidate_name
+    break
+done < <(run_kscreen -o 2>/dev/null | awk '/Output:/{id=$2; name=$3} /Panel/{if (id != "") {print id, name; exit}}')
+[ -n "$output_id" ] && [ -n "$output" ] || fail "no connected internal KWin panel output found"
+log "selected KWin output: $output"
+
+if ! run_kscreen --dpms off >/dev/null 2>&1; then
+    fail "KWin refused to disable output $output"
+fi
+log "DPMS off result: requested"
+
+display_off=0
+for _ in $(seq 1 50); do
+    state=$(run_kscreen --dpms show 2>/dev/null | awk -v wanted="$output" '
+        $0 ~ "dpms mode for screen " wanted ": off" {print "off"; exit}
+    ')
+    if [ "$state" = off ]; then display_off=1; break; fi
+    sleep 0.1
+done
+[ "$display_off" -eq 1 ] || fail "KWin DPMS state for output $output did not verify off"
+log "DPMS off result: verified"
+
+released=0
+for _ in $(seq 1 50); do
+    if ! wakeup_active "disp_crtc0_wakelock"; then released=1; break; fi
+    sleep 0.1
+done
+if [ "$released" -ne 1 ]; then
+    log "disp_crtc0_wakelock result: still active"
+    fail "disp_crtc0_wakelock remained active; active sources: $(active_sources | tr '\n' ';')"
+fi
+log "disp_crtc0_wakelock result: inactive"
+
+count_file=$(mktemp /run/tb330fu-wakeup-count.XXXXXX) || fail "cannot create wakeup_count temp file"
+trap 'rm -f "$count_file"' EXIT
+if timeout --foreground 8s cat "$WAKEUP_COUNT" >"$count_file" 2>/dev/null; then
+    wakeup_value=$(tr -d '\n' < "$count_file")
+    log "wakeup_count result: readable value=$wakeup_value"
+else
+    log "wakeup_count result: timeout or read failure"
+    fail "wakeup_count did not return; active sources: $(active_sources | tr '\n' ';')"
+fi
+
+log "preflight success"
+echo "Suspend preflight passed; systemd-suspend.service will continue."
+exit 0

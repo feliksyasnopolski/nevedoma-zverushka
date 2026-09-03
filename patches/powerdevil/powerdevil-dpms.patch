@@ -1,0 +1,109 @@
+diff --git a/daemon/actions/bundled/dpms.h b/daemon/actions/bundled/dpms.h
+index 0000000..0000000 100644
+--- a/daemon/actions/bundled/dpms.h
++++ b/daemon/actions/bundled/dpms.h
+@@ -38,3 +38,5 @@ private Q_SLOTS:
+ private:
+     void setKeyboardBrightnessHelper(int brightness);
++    void turnOffScreen();
++    void turnOnScreen();
+     void registerStandardIdleTimeout();
+@@ -56,5 +58,8 @@ private:
+     PowerDevil::PolicyAgent::RequiredPolicies m_inhibitScreen = PowerDevil::PolicyAgent::None;
+ 
+     int m_oldKeyboardBrightness = 0;
++    int m_oldScreenBrightness = 0;
++    bool m_screenBrightnessManagedOff = false;
++    bool m_settingScreenBrightness = false;
+     QScopedPointer<KScreen::Dpms> m_dpms;
+ 
+     bool m_lockBeforeTurnOff = false;
+diff --git a/daemon/actions/bundled/dpms.cpp b/daemon/actions/bundled/dpms.cpp
+index 0000000..0000000 100644
+--- a/daemon/actions/bundled/dpms.cpp
++++ b/daemon/actions/bundled/dpms.cpp
+@@ -68,6 +68,17 @@ DPMS::DPMS(QObject *parent)
+     connect(core()->suspendController(), &SuspendController::aboutToSuspend, this, &DPMS::onAboutToSuspend);
+     connect(core()->suspendController(), &SuspendController::resumeFromSuspend, this, &DPMS::onResumeFromSuspend);
++
++    connect(core()->screenBrightnessController(),
++            &ScreenBrightnessController::legacyBrightnessInfoChanged,
++            this,
++            [this](const BrightnessLogic::BrightnessInfo &brightnessInfo, ScreenBrightnessController::IndicatorHint) {
++                // A brightness change made while the display is off is a deliberate
++                // user/configuration change and must survive the eventual wakeup.
++                if (m_screenBrightnessManagedOff && !m_settingScreenBrightness) {
++                    m_oldScreenBrightness = brightnessInfo.value;
++                }
++            });
+@@ -78,7 +89,7 @@ DPMS::DPMS(QObject *parent)
+         if (m_lockBeforeTurnOff) {
+             lockScreen();
+         }
+-        m_dpms->switchMode(KScreen::Dpms::Off);
++        turnOffScreen();
+@@ -135,9 +146,46 @@ void DPMS::turnOffOnIdleTimeout()
+         setKeyboardBrightnessHelper(0);
+     }
+-    if (isSupported()) {
+-        m_dpms->switchMode(KScreen::Dpms::Off);
++    turnOffScreen();
++}
++
++void DPMS::turnOffScreen()
++{
++    if (!isSupported()) {
++        return;
++    }
++
++    if (!m_screenBrightnessManagedOff) {
++        const int brightness = core()->screenBrightnessController()->brightness();
++        if (brightness > 0) {
++            m_oldScreenBrightness = brightness;
++            m_screenBrightnessManagedOff = true;
++            m_settingScreenBrightness = true;
++            core()->screenBrightnessController()->setBrightness(0);
++            m_settingScreenBrightness = false;
++        }
+     }
++
++    m_dpms->switchMode(KScreen::Dpms::Off);
++}
++
++void DPMS::turnOnScreen()
++{
++    if (!isSupported()) {
++        return;
++    }
++
++    m_dpms->switchMode(KScreen::Dpms::On);
++
++    if (m_screenBrightnessManagedOff) {
++        m_settingScreenBrightness = true;
++        core()->screenBrightnessController()->setBrightness(m_oldScreenBrightness);
++        m_settingScreenBrightness = false;
++        m_oldScreenBrightness = 0;
++        m_screenBrightnessManagedOff = false;
++    }
+ }
+@@ -157,7 +195,13 @@ void DPMS::triggerImpl(const QVariantMap &args)
+     KScreen::Dpms::Mode level = KScreen::Dpms::Mode::On;
+     if (type == QLatin1String("ToggleOnOff")) {
+-        level = KScreen::Dpms::Toggle;
++        if (m_screenBrightnessManagedOff) {
++            turnOnScreen();
++        } else {
++            turnOffScreen();
++        }
++        return;
+     } else if (type == QLatin1String("TurnOff")) {
+         level = KScreen::Dpms::Off;
+@@ -166,7 +210,8 @@ void DPMS::triggerImpl(const QVariantMap &args)
+         level = KScreen::Dpms::Suspend;
+     } else {
+-        level = KScreen::Dpms::On;
++        turnOnScreen();
++        return;
+     }
+     m_dpms->switchMode(level);
+ }
