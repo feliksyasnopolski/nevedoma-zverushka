@@ -37,6 +37,7 @@ Start with:
 - `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
 - `docs/SENSORS.md` — Android sensor HAL to Linux IIO integration.
 - `docs/CHARGER.md` — native early-boot charger-mode runtime.
+- `docs/PLYMOUTH.md` — early native graphical startup and SDDM handoff.
 
 Subsystem documentation lives under `docs/`.
 

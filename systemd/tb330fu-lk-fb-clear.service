@@ -1,0 +1,12 @@
+[Unit]
+Description=TB330FU one-shot LK framebuffer clear
+After=local-fs.target
+Before=plymouth-start.service display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'if grep -q "^tb330fu_lk_fb_clear " /proc/modules; then exit 0; fi; exec /sbin/insmod /usr/lib/tb330fu/native-modules/tb330fu_lk_fb_clear.ko'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target
