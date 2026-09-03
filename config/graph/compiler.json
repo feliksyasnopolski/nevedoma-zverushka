@@ -1,0 +1,9 @@
+{
+  "properties": {
+    "ro.hardware": "mt6768",
+    "ro.zygote": "zygote64_32",
+    "ro.vendor.rc": "/vendor/etc/init/hw/"
+  },
+  "early_module_manifest": "manifests/stock-early-module-closure.json",
+  "early_module_set": "H"
+}

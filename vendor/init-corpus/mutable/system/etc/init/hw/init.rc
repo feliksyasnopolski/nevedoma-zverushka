@@ -5,7 +5,6 @@
 #
 
 import /init.environ.rc
-import /init.${ro.hardware}.rc
 import /vendor/etc/init/hw/init.${ro.hardware}.rc
 import /system/etc/init/hw/init.${ro.zygote}.rc
 

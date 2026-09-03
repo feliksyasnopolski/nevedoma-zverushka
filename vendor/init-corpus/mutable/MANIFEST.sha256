@@ -29,7 +29,7 @@ afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/ini
 afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/init/hw/init.boringssl.zygote32.rc
 dbad9c5c5b6dbb16615f893c03ccb3be700e1054ebd90ad92bac82c1e50a1284  system/etc/init/hw/init.boringssl.zygote64.rc
 afeaef2628f6ab1e7352f49274aa8e745ea2ceb4555f7216e732856b56b61c32  system/etc/init/hw/init.boringssl.zygote64_32.rc
-9a5ea7999d872693831c021f598972fbd78ad6dca7299552003f84d09596b033  system/etc/init/hw/init.rc
+35aa9c815fd08dcf0c244bbc6ccce08646f8067b8917554a3da497e1079c5bab  system/etc/init/hw/init.rc
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  system/etc/init/hw/init.zygote32.rc
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  system/etc/init/hw/init.zygote64.rc
 7a961148a2d04e759c1008209a9e588a6980f733b5011f0c51a5f0e604045c76  system/etc/init/hw/init.zygote64_32.rc
@@ -135,7 +135,7 @@ a09021175637f73d790f1015b849e3a6c441dba05477fbcde33fa35ce64fb1b6  vendor/etc/ini
 13b4c694ee1a0ad3d90a64bae892e15bc3eae10ffa851f5be98f8d6d989d2968  vendor/etc/init/hw/init.cgroup.rc
 2ba78f62c2202af4843113d92a46fb89878613dd383753f20b922fd3266d3ce9  vendor/etc/init/hw/init.connectivity.common.rc
 cc0617b482eb856dee21c2632ce774e608cf8a06a8ed175193722c6ce02e462b  vendor/etc/init/hw/init.connectivity.rc
-dbffd8cea4be7e45cf67fdf33a06f67965561c932b6fd25d331ccb2bb394c307  vendor/etc/init/hw/init.mt6768.rc
+14e6f8b158b13df41a72122440c4fbc37c7af732aab5088f4e6fa2f63321eb17  vendor/etc/init/hw/init.mt6768.rc
 d41bf5cd885d46284101e1f7c134a432feae84a270ddca2a13e27b06d105f6e0  vendor/etc/init/hw/init.mt6768.usb.rc
 6a29b48438cd006f248607ae8eef02d19e3aaafca7e75fd9ae31c4de3f73fcd7  vendor/etc/init/hw/init.mt8786.rc
 0c676a47dcac01e30dca4bf5dd7debff613cbb804b13553d7f4befe820e567ec  vendor/etc/init/hw/init.mtkgki.rc

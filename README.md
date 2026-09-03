@@ -39,6 +39,7 @@ Start with:
 - `docs/CHARGER.md` — native early-boot charger-mode runtime.
 - `docs/PLYMOUTH.md` — early native graphical startup and SDDM handoff.
 - `docs/INIT_CORPUS.md` — Android init corpus provenance and graph carving.
+- `docs/GRAPH_COMPILER.md` — parser, compiler transformations, and graph contract.
 
 Subsystem documentation lives under `docs/`.
 

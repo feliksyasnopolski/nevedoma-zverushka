@@ -49,7 +49,9 @@ are deterministic but are not a second tracked corpus.
 VINTF and Binder interface evidence can establish why a vendor endpoint is
 retained; it does not make Android the owner of the desktop or generic Linux
 policy. Runtime traces and service-call evidence support liveness decisions,
-but do not by themselves authorize unrelated branches.
+but do not by themselves authorize unrelated branches. The mutable carve
+omits absent optional and non-normal-boot imports; an absent import that is
+present in the carve remains a compiler diagnostic.
 
 ## Retained behavior
 
