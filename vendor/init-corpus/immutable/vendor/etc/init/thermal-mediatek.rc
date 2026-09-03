@@ -1,0 +1,5 @@
+service vendor.thermal-mediatek /vendor/bin/hw/android.hardware.thermal-service.mediatek
+    socket thermal_hal_socket stream 660 root system
+    class hal
+    user system
+    group system

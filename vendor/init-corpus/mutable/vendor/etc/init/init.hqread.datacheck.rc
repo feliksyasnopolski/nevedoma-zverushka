@@ -1,0 +1,10 @@
+service hqreadsvc /vendor/bin/hqread_vndr atcmd
+    class main
+    user root
+    disabled
+    oneshot
+    group root system
+
+on property:sys.hqread.trigger=1
+    start hqreadsvc
+

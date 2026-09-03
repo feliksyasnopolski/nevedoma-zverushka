@@ -1,0 +1,19 @@
+# Limit SELinux denial generation, defaulting to 5/second
+service logd-auditctl /system/bin/auditctl -r ${persist.logd.audit.rate:-5}
+    oneshot
+    disabled
+    user logd
+    group logd
+    capabilities AUDIT_CONTROL
+
+on fs
+    write /dev/event-log-tags "# content owned by logd
+"
+    chown logd logd /dev/event-log-tags
+    chmod 0644 /dev/event-log-tags
+
+on property:sys.boot_completed=1
+    start logd-auditctl
+
+on property:persist.logd.audit.rate=*
+    start logd-auditctl

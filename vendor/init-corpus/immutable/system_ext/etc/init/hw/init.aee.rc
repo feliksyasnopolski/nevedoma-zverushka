@@ -1,0 +1,107 @@
+on post-fs-data
+    mkdir /data/dumpsys 0775 system system
+    mkdir /data/core 0775 system system
+    mkdir /data/misc/aee_interim 0775 system system
+    mkdir /data/aee_exp 0777 root root encryption=None
+
+on post-fs && property:ro.vendor.aee.convert64=0
+    start aee_aed
+    start aee_aed64
+
+on post-fs && property:ro.vendor.aee.convert64=1
+    start aee_aed64_v2
+
+on property:ro.build.type=eng && property:ro.vendor.aee.convert64=0
+    write /proc/sys/fs/suid_dumpable 1
+    write /proc/sys/kernel/core_pattern "|/system_ext/bin/aee_core_forwarder /data/core/ %p %s TID=%I UID=%u GID=%g EXE_PATH=%E"
+    write /proc/sys/kernel/core_pipe_limit 3
+
+on property:ro.build.type=userdebug && property:ro.vendor.aee.convert64=0
+    write /proc/sys/fs/suid_dumpable 1
+    write /proc/sys/kernel/core_pattern "|/system_ext/bin/aee_core_forwarder /data/core/ %p %s TID=%I UID=%u GID=%g EXE_PATH=%E"
+    write /proc/sys/kernel/core_pipe_limit 3
+
+on property:ro.build.type=eng && property:ro.vendor.aee.convert64=1
+    write /proc/sys/fs/suid_dumpable 1
+    write /proc/sys/kernel/core_pattern "|/system_ext/bin/aee_core_forwarder_v2 /data/core/ %p %s TID=%I UID=%u GID=%g EXE_PATH=%E"
+    write /proc/sys/kernel/core_pipe_limit 3
+
+on property:ro.build.type=userdebug && property:ro.vendor.aee.convert64=1
+    write /proc/sys/fs/suid_dumpable 1
+    write /proc/sys/kernel/core_pattern "|/system_ext/bin/aee_core_forwarder_v2 /data/core/ %p %s TID=%I UID=%u GID=%g EXE_PATH=%E"
+    write /proc/sys/kernel/core_pipe_limit 3
+
+on property:persist.vendor.aeev.core.dump=enable && property:ro.vendor.aee.convert64=0
+    write /proc/sys/fs/suid_dumpable 1
+    write /proc/sys/kernel/core_pattern "|/system_ext/bin/aee_core_forwarder /data/core/ %p %s TID=%I UID=%u GID=%g EXE_PATH=%E"
+    write /proc/sys/kernel/core_pipe_limit 3
+
+on property:ro.build.type=eng && property:persist.vendor.aee.tracing_on=0
+    write /sys/kernel/debug/tracing/tracing_on 0
+
+on property:ro.build.type=eng && property:persist.vendor.aee.tracing_on=1
+    write /sys/kernel/debug/tracing/tracing_on 1
+
+on property:ro.build.type=userdebug && property:persist.vendor.aee.tracing_on=0
+    write /sys/kernel/debug/tracing/tracing_on 0
+
+on property:ro.build.type=userdebug && property:persist.vendor.aee.tracing_on=1
+    write /sys/kernel/debug/tracing/tracing_on 1
+
+on property:persist.vendor.aeev.core.direct=disable
+    setprop debug.debuggerd.disable 0
+
+on property:persist.vendor.aeev.core.direct=enable
+    setprop debug.debuggerd.disable 1
+
+on property:persist.vendor.aeev.ncore.dump=enable
+    setprop ro.hw_timeout_multiplier 10
+
+on property:persist.vendor.aeev.slog_dump=1 && property:ro.vendor.aee.convert64=0
+    start aeedump
+
+on property:persist.vendor.aeev.slog_dump=1 && property:ro.vendor.aee.convert64=1
+    start aeedump_v2
+
+on init
+    write /proc/self/coredump_filter 39
+
+on property:sys.boot_completed=1 && property:ro.vendor.aee.convert64=0
+    start aee-reinit
+    setprop persist.vendor.aee.log.status 1
+
+on property:sys.boot_completed=1 && property:ro.vendor.aee.convert64=1
+    start aee-reinit_v2
+    setprop persist.vendor.aee.log.status 1
+
+on property:sys.boot.reason.last=*
+    setprop persist.vendor.aeev.last.boot.reason ${sys.boot.reason.last}
+    setprop persist.vendor.aeev.boot.reason.status done
+
+on property:ro.vendor.aeev.dynamic.switch=disable && property:ro.vendor.aee.convert64=0
+    stop aee_aed
+    stop aee_aed64
+
+on property:ro.vendor.aeev.dynamic.switch=disable && property:ro.vendor.aee.convert64=1
+    stop aee_aed64_v2
+
+on property:gsm.version.baseband=* && property:ro.vendor.aee.convert64=0
+    start aee_set_md_ver_prop
+
+on property:gsm.version.baseband=* && property:ro.vendor.aee.convert64=1
+    start aee_set_md_ver_prop_v2
+
+on property:vendor.debug.mtk.aeev.exp.record=done && property:ro.vendor.aee.convert64=0
+    start aee_callback
+
+on property:vendor.debug.mtk.aeev.exp.record=done && property:ro.vendor.aee.convert64=1
+    start aee_callback_v2
+
+on property:init.svc.zygote=stopped
+    write /dev/RT_Monitor 0
+
+on property:init.svc.zygote=running
+    write /dev/RT_Monitor 1
+
+on property:ro.build.type=user
+    setprop ro.vendor.aee.enforcing default

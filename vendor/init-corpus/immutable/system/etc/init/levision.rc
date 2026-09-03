@@ -1,0 +1,5 @@
+on post-fs-data
+    # add by weijl1 for faces
+    mkdir /data/vendor/face 0777 system system
+    # end by weijl1
+

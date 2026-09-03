@@ -1,0 +1,6 @@
+# Native Ubuntu replaces the framework/system_server boot-completion contract.
+# This is parsed after the system, system_ext, vendor, and odm init trees and
+# runs after the normal nonencrypted bring-up actions.
+on nonencrypted
+    setprop sys.boot_completed 1
+    setprop dev.bootcomplete 1

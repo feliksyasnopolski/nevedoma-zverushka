@@ -1,0 +1,14 @@
+service dumpmeminfo /system/bin/zuidebug_dump_meminfo.sh
+    user root
+    group system
+    oneshot
+    disabled
+
+on property:sys.zuidebug.dump_meminfo=1
+    start dumpmeminfo
+    setprop sys.zuidebug.dump_meminfo 0
+
+# BEGIN, framework, leiyang11, 2023-07-25, LGSIU-147 convert lmkd count to persist.debug.killcnt property for UE used
+on property:sys.lmk.killcnt=*
+  setprop persist.debug.killcnt ${sys.lmk.killcnt}
+# END, LGSIU-147

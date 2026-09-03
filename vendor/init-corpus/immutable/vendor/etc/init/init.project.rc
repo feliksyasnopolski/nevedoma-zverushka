@@ -1,0 +1,100 @@
+import /vendor/etc/init/hw/init.mtkgki.rc
+
+# MTK project .rc configure
+
+on early-init
+    exec_background u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules trace_mmstat.ko
+
+on init
+    mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
+    mkdir /storage/usbotg 0700 root root
+    chown system system /sys/devices/virtual/sensor/m_situ_misc/testcali
+
+on post-fs-data
+
+#Camera
+    chmod 0660 /dev/MAINAF
+    chown system camera /dev/MAINAF
+
+    chmod 0660 /dev/MAINAF2
+    chown system camera /dev/MAINAF2
+
+    chmod 0660 /dev/SUBAF
+    chown system camera /dev/SUBAF
+
+    chmod 0660 /dev/GAF001AF
+    chown system camera /dev/GAF001AF
+
+    chmod 0660 /dev/DW9714AF
+    chown system camera /dev/DW9714AF
+
+    chmod 0660 /dev/LC898212AF
+    chown system camera /dev/LC898212AF
+
+    chmod 0660 /dev/BU64745GWZAF
+    chown system camera /dev/BU64745GWZAF
+
+#SMB
+    chown system system /proc/smb/ScreenComm
+    chmod 0660 /proc/smb/ScreenComm
+
+    chmod 0660 /dev/spm
+    chown system system /dev/spm
+
+#Barley code for OBARLEY-103 by zhangjy77 at 20230606 start
+#Audio
+    mkdir /mnt/vendor/persist
+    mkdir /mnt/vendor/persist/factory
+    mkdir /mnt/vendor/persist/factory/audio
+    chmod 0777 /mnt/vendor/persist/factory/audio
+    chmod 0664 /mnt/vendor/persist/factory/audio/aw_cali.bin
+    chown system system /mnt/vendor/persist/factory/audio/aw_cali.bin
+    chmod 0777 /dev/aw883xx_smartpa
+    chmod 0666 /sys/class/smartpa/re25_calib
+#Barley code for OBARLEY-103 by zhangjy77 at 20230606 end
+
+# Barley-U code for OBARLEYU-5586 by wanglc13 at 2024/08/26 start
+    mkdir /mnt/vendor/persist
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw wait
+    chown system system /mnt/vendor/persist
+    chmod 0777 /mnt/vendor/persist
+    restorecon_recursive /mnt/vendor/persist
+    mkdir /mnt/vendor/persist/mtk_battery_cmd
+    chown root system  /mnt/vendor/persist/mtk_battery_cmd/nuovo_flag
+    chmod 0755 /mnt/vendor/persist/mtk_battery_cmd/nuovo_flag
+# Barley-U code for OBARLEYU-5586 by wanglc13 at 2024/08/26 end
+
+# Barley-U code for OBARLEYU-5586 by wanglc13 at 2024/08/26 start
+on property:persist.vendor.battery.nuovo_flag.enabled=1
+    write /mnt/vendor/persist/mtk_battery_cmd/nuovo_flag 1
+on property:persist.vendor.battery.nuovo_flag.enabled=0
+    write /mnt/vendor/persist/mtk_battery_cmd/nuovo_flag 0
+# Barley-U code for OBARLEYU-5586 by wanglc13 at 2024/08/26 end
+
+on init
+    # Refer to http://source.android.com/devices/tech/storage/index.html
+    # It said, "Starting in Android 4.4, multiple external storage devices are surfaced to developers through
+    #           Context.getExternalFilesDirs(), Context.getExternalCacheDirs(), and Context.getObbDirs().
+    #           External storage devices surfaced through these APIs must be a semi-permanent part of the device (such as an SD card slot in a battery compartment).
+    #           Developers expect data stored in these locations to be available over long periods of time."
+    # Therefore, if the target doesn't support sd hot-plugging (Ex: the SD card slot in a battery compartment), we need to export SECONDARY_STORAGE in 'boot' section
+    #
+    # export SECONDARY_STORAGE /storage/sdcard1
+
+service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usbotg /storage/usbotg
+    class late_start
+    disabled
+
+# start mmstat
+on property:sys.boot_completed=1
+    mkdir /sys/kernel/tracing/instances/mmstat 711
+    write /sys/kernel/tracing/instances/mmstat/tracing_on 0
+    write /sys/kernel/tracing/instances/mmstat/buffer_size_kb 16
+    write /sys/kernel/tracing/instances/mmstat/events/mmstat/enable 1
+    write /sys/kernel/tracing/instances/mmstat/tracing_on 1
+
+# Barley code for OBARLEY-957 by zenghui4 at 2023/07/19 start
+# pen
+on property:sys.boot_completed=1
+    chmod 0444 /dev/lenovo_penraw
+# Barley code for OBARLEY-957 by zenghui4 at 2023/07/19 end

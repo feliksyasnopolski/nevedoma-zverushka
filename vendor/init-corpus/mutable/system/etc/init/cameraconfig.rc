@@ -1,0 +1,7 @@
+# For cameraserver save file check, add by liujc10.
+
+on post-fs-data
+    mkdir /data/camera/ 0777 cameraserver cameraserver
+    restorecon_recursive /data/camera/
+    mkdir /data/camera/Morpho/ 0777 cameraserver cameraserver
+

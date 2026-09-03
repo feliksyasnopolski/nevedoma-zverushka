@@ -1,0 +1,7 @@
+# Motorola, add for IKZUIPRC-78 by wangwq14
+# When system upgrade from 'preload' to 'preinstall'
+# we shoule make file preloadapp.cfg readable in new system
+on post-fs-data
+    mkdir /data/app-lib2 0771 system system
+    chmod 644 /data/app/preloadapp.cfg
+

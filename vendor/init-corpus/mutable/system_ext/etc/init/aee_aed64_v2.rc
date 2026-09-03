@@ -1,0 +1,29 @@
+service aee-reinit_v2 /system_ext/bin/aee_aed64_v2 --reinit
+    oneshot
+    disabled
+    user root
+    group root
+
+service anrdump_v2 /system_ext/bin/aee_v2 -q
+    oneshot
+    disabled
+    user root
+    group root
+
+service aee_set_md_ver_prop_v2 /system_ext/bin/aee_v2 -P
+    oneshot
+    disabled
+    user root
+    group root
+
+service aee_callback_v2 /system_ext/bin/aee_v2 -C
+    oneshot
+    disabled
+    user root
+    group root
+
+service aeedump_v2 /system_ext/bin/aee_v2 -g 1
+    oneshot
+    disabled
+    user root
+    group root

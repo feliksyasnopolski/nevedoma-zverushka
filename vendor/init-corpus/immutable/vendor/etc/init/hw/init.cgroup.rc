@@ -1,0 +1,72 @@
+
+on post-fs
+    # boot perf. tune
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 1800000
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 2000000
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 5500000000
+
+on late-fs
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 1800000
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 2000000
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 5500000000
+
+on early-init
+    # boot perf. tune
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 1800000
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 2000000
+    write /sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_req_ddr_opp 0
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 5500000000
+
+on charger
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 0
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 0
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 0
+    write /sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_req_ddr_opp 255
+on late-fs
+    write /sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_req_ddr_opp 0
+
+on post-fs-data
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_governor sugov_ext
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_governor sugov_ext
+    write /proc/sys/kernel/sched_pelt_multiplier 4
+    write /proc/sys/kernel/sched_util_clamp_min_rt_default 0
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 1800000
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 2000000
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 5500000000
+
+on boot
+    # boot perf. tune
+    write /dev/cpuctl/system/cpu.uclamp.min 100
+    write /dev/cpuctl/system/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/system-background/cpu.uclamp.min 100
+    write /dev/cpuctl/system-background/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/foreground/cpu.uclamp.min 100
+    write /dev/cpuctl/foreground/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/top-app/cpu.uclamp.min 100
+    write /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive 1
+    write /dev/cpuctl/background/cpu.uclamp.min 100
+    write /dev/cpuctl/background/cpu.uclamp.latency_sensitive 1
+
+    #widevine driver node
+    chmod 0660 /dev/drm_wv
+    chown media system /dev/drm_wv
+
+on property:sys.boot_completed=1
+    write /sys/kernel/debug/sched/migration_cost_ns 200000
+    write /sys/devices/platform/10012000.dvfsrc/helio-dvfsrc/dvfsrc_req_ddr_opp 255
+    # restore boot perf. tune
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 0
+    write /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq 0
+
+    write /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq 0
+
+    write /dev/cpuctl/system/cpu.uclamp.min 0
+    write /dev/cpuctl/system/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/system-background/cpu.uclamp.min 0
+    write /dev/cpuctl/system-background/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/foreground/cpu.uclamp.min 0
+    write /dev/cpuctl/foreground/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/top-app/cpu.uclamp.min 0
+    write /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive 0
+    write /dev/cpuctl/background/cpu.uclamp.min 0
+    write /dev/cpuctl/background/cpu.uclamp.latency_sensitive 0

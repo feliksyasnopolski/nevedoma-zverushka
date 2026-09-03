@@ -1,0 +1,20 @@
+on boot
+    chown system system /sys/class/typec/port0/power_role
+    chown system system /sys/class/typec/port0/data_role
+    chown system system /sys/class/typec/port0/port_type
+    chmod 664 /sys/class/typec/port0/power_role
+    chmod 664 /sys/class/typec/port0/data_role
+    chmod 664 /sys/class/typec/port0/port_type
+    chown root system /config/usb_gadget/
+    chown root system /config/usb_gadget/g1
+    chown root system /config/usb_gadget/g1/UDC
+    chmod 664 /config/usb_gadget/g1/UDC
+    chown system system /sys/devices/platform/charger/enable_power_path
+    chown system system /sys/devices/platform/extcon-usb/vbus_limit_cur
+    chown system system /sys/devices/platform/soc/${sys.usb.controller}/mode
+    chown system system /sys/devices/platform/extcon-usb/vbus_switch
+
+service vendor.usb_default /vendor/bin/hw/android.hardware.usb-aidl-service.mediatekv1.0
+    class hal
+    user system
+    group system

@@ -1,0 +1,50 @@
+service vendor.dynamicdata /vendor/bin/dynamicdata
+	priority -20
+	user root
+	group root system
+	oneshot
+	disabled
+
+on early-init
+	wait /dev/block/by-name/userdata
+	write /proc/bootprof "INIT:on early-init vendor.dynamicdata start"
+	exec_start vendor.dynamicdata
+	write /proc/bootprof "INIT:on early-init vendor.dynamicdata end"
+
+on fs && property:vendor.storage.dynamicdata.type=userdata && property:ro.board.platform=mt6877
+	mount_all /vendor/etc/fstab.mt6877 --early
+	exec /system/bin/e2fsck -v -f -y /dev/block/platform/11270000.ufshci/by-name/userdata
+	exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/platform/11270000.ufshci/by-name/userdata
+
+on late-fs && property:vendor.storage.dynamicdata.type=userdata && property:ro.board.platform=mt6877
+	mount_all /vendor/etc/fstab.mt6877 --late
+
+on fs && property:vendor.storage.dynamicdata.type=dmuserdata && property:ro.board.platform=mt6877
+	exec /system/bin/e2fsck -v -f -y /dev/block/dm-userdata
+	exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/dm-userdata
+	mount_all /vendor/etc/fstab.mt6877dm --early
+
+on late-fs && property:vendor.storage.dynamicdata.type=dmuserdata && property:ro.board.platform=mt6877
+	mount_all /vendor/etc/fstab.mt6877dm --late
+
+on fs && property:vendor.storage.dynamicdata.type=userdata && property:ro.board.platform=mt6768
+	mount_all /vendor/etc/fstab.mt6768 --early
+	exec /system/bin/e2fsck -v -f -y /dev/block/platform/11230000.mmc/by-name/userdata
+	exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/platform/11230000.mmc/by-name/userdata
+
+on late-fs && property:vendor.storage.dynamicdata.type=userdata && property:ro.board.platform=mt6768
+	mount_all /vendor/etc/fstab.mt6768 --late
+
+on fs && property:vendor.storage.dynamicdata.type=dmuserdata && property:ro.board.platform=mt6768
+	exec /system/bin/e2fsck -v -f -y /dev/block/dm-userdata
+	exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/dm-userdata
+	mount_all /vendor/etc/fstab.mt6768dm --early
+
+on late-fs && property:vendor.storage.dynamicdata.type=dmuserdata && property:ro.board.platform=mt6768
+	mount_all /vendor/etc/fstab.mt6768dm --late
+
+on post-fs-data && property:vendor.storage.dynamicdata.type=dmuserdata
+	mkdir /mnt/lenovobackup
+	restorecon_recursive /mnt/lenovobackup
+	chown system system /mnt/lenovobackup
+	chmod 0771 /mnt/lenovobackup

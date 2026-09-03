@@ -1,0 +1,62 @@
+on post-fs-data
+    mkdir /data/log_temp 0755 system system
+    mkdir /data/log_wifi_temp 0770 system system
+#   mkdir /data/log_test 0755 system system
+    mkdir /data/misc/mblog 0755 system system
+    mkdir /data/debuglogger 0770 shell log
+    copy /sys/fs/pstore/console-ramoops-0 /data/debuglogger/console-ramoops-0
+    chown shell log /data/debuglogger/console-ramoops-0
+    chmod 0440 /data/debuglogger/console-ramoops-0
+
+service mobile_log_d /system_ext/bin/mobile_log_d
+    class main
+    user root
+
+service bsplogstart /system_ext/bin/mobile_log_d --ftrace bsp
+    oneshot
+    disabled
+    user root
+
+service cplogstart /system_ext/bin/mobile_log_d --ftrace connsyspicus
+    oneshot
+    disabled
+    user root
+
+service trace_buf_off /system_ext/bin/mobile_log_d --ftrace off
+    oneshot
+    disabled
+    user root
+
+service mobile_log_d_contorl /system_ext/bin/mobile_log_d --control copy
+    oneshot
+    disabled
+    user root
+
+service mobile_log_d_sublog_config /system_ext/bin/mobile_log_d --control sublog_config
+    oneshot
+    disabled
+    user root
+
+on property:vendor.MB.control=copy
+    start mobile_log_d_contorl
+
+on property:vendor.MB.sublog_config=*
+    start mobile_log_d_sublog_config
+
+on property:vendor.MB.ftrace.log=bsp
+    start bsplogstart
+
+on property:vendor.MB.ftrace.log=connsyspicus
+    start cplogstart
+
+on property:vendor.MB.ftrace.log=off
+    start trace_buf_off
+
+# MTK PR_DEBUG SWITCH
+on property:vendor.MB.prdebug=1
+    write /proc/mtprintk "2"
+    write /proc/dynamic_debug/control "file *mediatek* +p"
+    write /proc/dynamic_debug/control "file *gpu* -p"
+    write /proc/mtprintk "3"
+on property:vendor.MB.prdebug=0
+    write /proc/dynamic_debug/control "file *mediatek* -p"

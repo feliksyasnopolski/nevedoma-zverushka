@@ -1,0 +1,8 @@
+service vendor.gpuserv-default /vendor/bin/hw/vendor.mediatek.hardware.gpuserv-service
+    disabled
+    class hal
+    user system
+    group system
+
+on boot && property:ro.vendor.mtk.gpu.service=1
+    start vendor.gpuserv-default

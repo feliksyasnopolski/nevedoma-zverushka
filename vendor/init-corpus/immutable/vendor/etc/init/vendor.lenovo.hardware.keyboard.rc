@@ -1,0 +1,9 @@
+on post-fs-data
+    chown system system /dev/hidraw*
+    chmod 0660 /dev/hidraw*
+
+service keyboard_hal_service /vendor/bin/hw/vendor.lenovo.hardware.keyboard-service
+    interface aidl vendor.lenovo.hardware.keyboard.IKeyboard/default
+    class hal
+    user system
+    group system

@@ -1,0 +1,25 @@
+service smartpa_cali /vendor/bin/smartpa_cali.sh
+    class main
+    user system
+    group system
+    oneshot
+
+#app
+on property:persist.vendor.smartpa=cali
+    start smartpa_cali
+
+#shell
+on property:persist.vendor.smartpa.cali_re=*
+    setprop persist.vendor.smartpa.re ${persist.vendor.smartpa.cali_re}
+
+#shell
+on property:persist.vendor.smartpa.cali_f0=*
+    setprop persist.vendor.smartpa.f0 ${persist.vendor.smartpa.cali_f0}
+
+#shell
+on property:vendor.smartpa.flag.re=*
+    setprop persist.vendor.re.log ${vendor.smartpa.flag.re}
+
+#shell
+on property:vendor.smartpa.flag.f0=*
+    setprop persist.vendor.f0.log ${vendor.smartpa.flag.f0}

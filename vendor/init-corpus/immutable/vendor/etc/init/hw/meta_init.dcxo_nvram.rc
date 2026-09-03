@@ -1,0 +1,8 @@
+# 26M Clock calibration
+service dcxosetcap /vendor/bin/dcxosetcap
+    class main
+    oneshot
+    disabled
+
+on property:vendor.service.nvram_init=Ready
+    start dcxosetcap

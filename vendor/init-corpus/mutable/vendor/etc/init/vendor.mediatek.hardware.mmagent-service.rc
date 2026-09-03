@@ -1,0 +1,8 @@
+service vendor.mediatek.hardware.mmagent-default /vendor/bin/hw/vendor.mediatek.hardware.mmagent-service
+    interface aidl vendor.mediatek.hardware.mmagent.IMMAgent/default
+    class main
+    user system
+    oneshot
+    disabled
+    group system graphics
+    capabilities SYS_NICE

@@ -38,6 +38,7 @@ Start with:
 - `docs/SENSORS.md` — Android sensor HAL to Linux IIO integration.
 - `docs/CHARGER.md` — native early-boot charger-mode runtime.
 - `docs/PLYMOUTH.md` — early native graphical startup and SDDM handoff.
+- `docs/INIT_CORPUS.md` — Android init corpus provenance and graph carving.
 
 Subsystem documentation lives under `docs/`.
 

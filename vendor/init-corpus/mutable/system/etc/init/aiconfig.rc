@@ -1,0 +1,3 @@
+on post-fs-data
+    mkdir /data/ai 0777 system system
+    restorecon_recursive /data/ai

@@ -1,0 +1,4 @@
+service aee_aedv64 /vendor/bin/aee_aedv64
+    group root readproc system debuggerd log radio
+    writepid /dev/cpuset/system-background/tasks
+    user root

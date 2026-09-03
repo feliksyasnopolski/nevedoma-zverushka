@@ -1,0 +1,4 @@
+service thermald /system_ext/bin/thermald
+    class main
+    user system
+    group system

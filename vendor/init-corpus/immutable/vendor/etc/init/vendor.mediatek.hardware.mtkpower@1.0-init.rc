@@ -1,0 +1,1105 @@
+on property:sys.boot_completed=1
+    setprop vendor.powerhal.boot_complete 1
+
+on post-fs-data
+    mkdir /data/vendor/powerhal 0775 system system
+
+# EAS. sched
+    chown system system /dev/stune/schedtune.boost
+    chmod 0664 /dev/stune/schedtune.boost
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_fg_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_fg_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_bg_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_bg_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ta_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ta_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perf_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perf_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perf_fg_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perf_fg_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perf_bg_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perf_bg_uclamp_min
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perf_ta_uclamp_min
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perf_ta_uclamp_min
+    chown system system /sys/devices/system/cpu/sched/idle_prefer
+    chmod 0664 /sys/devices/system/cpu/sched/idle_prefer
+    chown system system /dev/stune/top-app/schedtune.prefer_idle
+    chmod 0664 /dev/stune/top-app/schedtune.prefer_idle
+    chown system system /dev/stune/foreground/schedtune.prefer_idle
+    chmod 0664 /dev/stune/foreground/schedtune.prefer_idle
+    chown system system /sys/devices/system/cpu/sched/sched_boost
+    chmod 0664 /sys/devices/system/cpu/sched/sched_boost
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/sched_boost
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/sched_boost
+    chown system system /dev/stune/background/schedtune.boost
+    chmod 0664 /dev/stune/background/schedtune.boost
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_down_throttle
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_down_throttle
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_up_throttle
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_up_throttle
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_sync_flag
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_schedplus_sync_flag
+    chown system system /sys/devices/system/cpu/sched/cpu_prefer
+    chmod 0664 /sys/devices/system/cpu/sched/cpu_prefer
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/cpu_prefer
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/cpu_prefer
+    chown system system /dev/cpuset/foreground/prefer_cpu
+    chmod 0664 /dev/cpuset/foreground/prefer_cpu
+    chown system system /dev/cpuset/background/prefer_cpu
+    chmod 0664 /dev/cpuset/background/prefer_cpu
+    chown system system /dev/cpuset/top-app/prefer_cpu
+    chmod 0664 /dev/cpuset/top-app/prefer_cpu
+    chown system system /dev/cpuset/system-background/prefer_cpu
+    chmod 0664 /dev/cpuset/system-background/prefer_cpu
+    chown system system /sys/module/cache_ctrl/parameters/enable
+    chmod 0664 /sys/module/cache_ctrl/parameters/enable
+    chown system system /sys/devices/system/cpu/cpu4/core_ctl/offline_throttle_ms
+    chmod 0660 /sys/devices/system/cpu/cpu4/core_ctl/offline_throttle_ms
+    chown system system /sys/devices/system/cpu/cpu7/core_ctl/offline_throttle_ms
+    chmod 0660 /sys/devices/system/cpu/cpu7/core_ctl/offline_throttle_ms
+    chown system system /sys/devices/system/cpu/cpu0/core_ctl/btask_up_thresh
+    chmod 0660 /sys/devices/system/cpu/cpu0/core_ctl/btask_up_thresh
+    chown system system /sys/devices/system/cpu/cpu4/core_ctl/btask_up_thresh
+    chmod 0660 /sys/devices/system/cpu/cpu4/core_ctl/btask_up_thresh
+    chown system system /sys/devices/system/cpu/cpu7/core_ctl/cpu_tj_degree
+    chmod 0660 /sys/devices/system/cpu/cpu7/core_ctl/cpu_tj_degree
+    chown system system /sys/devices/system/cpu/cpu7/core_ctl/cpu_tj_btask_thresh
+    chmod 0660 /sys/devices/system/cpu/cpu7/core_ctl/cpu_tj_btask_thresh
+    chown system system /sys/devices/system/cpu/cpu4/core_ctl/thermal_up_thres
+    chmod 0660 /sys/devices/system/cpu/cpu4/core_ctl/thermal_up_thres
+    chown system system /sys/devices/system/cpu/cpufreq/schedutil/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/schedutil/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/schedutil/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/schedutil/down_rate_limit_us
+    chown system system /dev/stune/foreground/schedtune.uclamp.min
+    chmod 0660 /dev/stune/foreground/schedtune.uclamp.min
+    chown system system /dev/stune/background/schedtune.uclamp.min
+    chmod 0660 /dev/stune/foreground/schedtune.uclamp.max
+    chown system system /dev/stune/foreground/schedtune.uclamp.max
+    chmod 0660 /dev/stune/background/schedtune.uclamp.min
+    chown system system /dev/stune/top-app/schedtune.uclamp.min
+    chmod 0660 /dev/stune/top-app/schedtune.uclamp.min
+    chown system system /dev/cpuctl/foreground/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/foreground/cpu.uclamp.min
+    chown system system /dev/cpuctl/background/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/background/cpu.uclamp.min
+    chown system system /dev/cpuctl/top-app/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/top-app/cpu.uclamp.min
+    chown system system /dev/cpuctl/system/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/system/cpu.uclamp.min
+    chown system system /dev/cpuctl/system-background/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/system-background/cpu.uclamp.min
+    chown system system /dev/cpuctl/rt/cpu.uclamp.min
+    chmod 0660 /dev/cpuctl/rt/cpu.uclamp.min
+    chown system system /dev/cpuctl/foreground/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/foreground/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/background/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/background/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/system/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/system/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/system-background/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/system-background/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/rt/cpu.uclamp.latency_sensitive
+    chmod 0660 /dev/cpuctl/rt/cpu.uclamp.latency_sensitive
+    chown system system /dev/cpuctl/foreground/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/foreground/cpu.uclamp.max
+    chown system system /dev/cpuctl/background/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/background/cpu.uclamp.max
+    chown system system /dev/cpuctl/top-app/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/top-app/cpu.uclamp.max
+    chown system system /dev/cpuctl/rt/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/rt/cpu.uclamp.max
+    chown system system /dev/cpuctl/system/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/system/cpu.uclamp.max
+    chown system system /dev/cpuctl/system-background/cpu.uclamp.max
+    chmod 0660 /dev/cpuctl/system-background/cpu.uclamp.max
+    chown system system /dev/cpuset/top-app/cpus
+    chmod 0660 /dev/cpuset/top-app/cpus
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy1/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy1/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy1/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy1/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy2/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy2/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy2/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy2/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy3/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy3/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy3/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy3/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/sugov_ext/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/sugov_ext/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/sugov_ext/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/sugov_ext/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/sugov_ext/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/sugov_ext/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/sugov_ext/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy6/sugov_ext/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/sugov_ext/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/sugov_ext/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/sugov_ext/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/sugov_ext/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/sugov_ext/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy6/sugov_ext/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/sugov_ext/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/sugov_ext/down_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpu0/online
+    chmod 0660 /sys/devices/system/cpu/cpu0/online
+    chown system system /sys/devices/system/cpu/cpu1/online
+    chmod 0660 /sys/devices/system/cpu/cpu1/online
+    chown system system /sys/devices/system/cpu/cpu2/online
+    chmod 0660 /sys/devices/system/cpu/cpu2/online
+    chown system system /sys/devices/system/cpu/cpu3/online
+    chmod 0660 /sys/devices/system/cpu/cpu3/online
+    chown system system /sys/devices/system/cpu/cpu4/online
+    chmod 0660 /sys/devices/system/cpu/cpu4/online
+    chown system system /sys/devices/system/cpu/cpu5/online
+    chmod 0660 /sys/devices/system/cpu/cpu5/online
+    chown system system /sys/devices/system/cpu/cpu6/online
+    chmod 0660 /sys/devices/system/cpu/cpu6/online
+    chown system system /sys/devices/system/cpu/cpu7/online
+    chmod 0660 /sys/devices/system/cpu/cpu7/online
+    chown system system /sys/module/mtk_core_ctl/parameters/policy_enable
+    chmod 0660 /sys/module/mtk_core_ctl/parameters/policy_enable
+    chown system system /sys/devices/system/cpu/sched_ctl/sched_core_pause_info
+    chmod 0660 /sys/devices/system/cpu/sched_ctl/sched_core_pause_info
+
+# Task turbo
+    chown system system /sys/module/task_turbo/parameters/feats
+    chmod 0664 /sys/module/task_turbo/parameters/feats
+    chown system system /sys/module/task_turbo/parameters/update_win_pid_status
+    chmod 0664 /sys/module/task_turbo/parameters/update_win_pid_status
+    chown system system /sys/module/task_turbo/parameters/enforce_ct_to_vip_param
+    chmod 0664 /sys/module/task_turbo/parameters/enforce_ct_to_vip_param
+    chown system system /sys/module/task_turbo/parameters/enable_tgid_debug
+    chmod 0664 /sys/module/task_turbo/parameters/enable_tgid_debug
+    chown system system /sys/module/task_turbo/parameters/set_tgid_debug
+    chmod 0664 /sys/module/task_turbo/parameters/set_tgid_debug
+    chown system system /sys/module/task_turbo/parameters/unset_tgid_debug
+    chmod 0664 /sys/module/task_turbo/parameters/unset_tgid_debug
+
+# BW monitor
+    chown system system /proc/fliperfs/cg_enable
+    chmod 0664 /proc/fliperfs/cg_enable
+    chown system system /proc/fliperfs/cg_threshold
+    chmod 0664 /proc/fliperfs/cg_threshold
+    chown system system /proc/fliperfs/cg_threshold_ddr3
+    chmod 0664 /proc/fliperfs/cg_threshold_ddr3
+    chown system system /proc/fliperfs/perf
+    chmod 0664 /proc/fliperfs/perf
+    chown system system /proc/fliperfs/perf_ddr3
+    chmod 0664 /proc/fliperfs/perf_ddr3
+    chown system system /proc/fliperfs/emi
+    chmod 0664 /proc/fliperfs/emi
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/emi
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/emi
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/ddr
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/ddr
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/ddr_lp5
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/ddr_lp5
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/ddr_lp5_hfr
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/ddr_lp5_hfr
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/vcore
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/vcore
+    chown system system /proc/perfmgr/boost_ctrl/dram_ctrl/vcore_lp3
+    chmod 0664 /proc/perfmgr/boost_ctrl/dram_ctrl/vcore_lp3
+    chown system system /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq
+    chmod 0664 /sys/class/devfreq/mtk-dvfsrc-devfreq/userspace/set_freq
+
+# CPU freq
+    chown system system /proc/cpufreq/cpufreq_cci_mode
+    chmod 0664 /proc/cpufreq/cpufreq_cci_mode
+    chown system system /proc/cpuhvfs/cpufreq_cci_mode
+    chmod 0664 /proc/cpuhvfs/cpufreq_cci_mode
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/sugov_ext/up_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/sugov_ext/up_rate_limit_us
+    chown system system /sys/devices/system/cpu/cpufreq/sugov_ext/down_rate_limit_us
+    chmod 0660 /sys/devices/system/cpu/cpufreq/sugov_ext/down_rate_limit_us
+
+# perfmgr
+    chown system system /proc/perfmgr/smart/app_is_sports
+    chmod 0660 /proc/perfmgr/smart/app_is_sports
+    chown system system /proc/perfmgr/legacy/perfserv_core
+    chmod 0664 /proc/perfmgr/legacy/perfserv_core
+    chown system system /proc/perfmgr/legacy/perfserv_freq
+    chmod 0664 /proc/perfmgr/legacy/perfserv_freq
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ta_boost
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ta_boost
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_fg_boost
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_fg_boost
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_bg_boost
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_bg_boost
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_freq
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_freq
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_core
+    chmod 0660 /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_core
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ext_launch_mon
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_ext_launch_mon
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/m_sched_migrate_cost_n
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/m_sched_migrate_cost_n
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/sched_big_task_rotation
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/sched_big_task_rotation
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/sched_stune_task_thresh
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/sched_stune_task_thresh
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_prefer_idle
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perfserv_prefer_idle
+    chown system system /proc/perfmgr/boost_ctrl/eas_ctrl/perf_prefer_idle
+    chmod 0664 /proc/perfmgr/boost_ctrl/eas_ctrl/perf_prefer_idle
+    chown system system /proc/perfmgr/boost_ctrl/topo_ctrl/is_big_little
+    chmod 0664 /proc/perfmgr/boost_ctrl/topo_ctrl/is_big_little
+    chown system system /proc/perfmgr/boost_ctrl/topo_ctrl/nr_clusters
+    chmod 0664 /proc/perfmgr/boost_ctrl/topo_ctrl/nr_clusters
+    chown system system /proc/perfmgr/boost_ctrl/topo_ctrl/cpus_per_cluster
+    chmod 0664 /proc/perfmgr/boost_ctrl/topo_ctrl/cpus_per_cluster
+    chown system system /proc/perfmgr/tchbst/user/usrtch
+    chmod 0664 /proc/perfmgr/tchbst/user/usrtch
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_onoff
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_onoff
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_polling_ms
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_polling_ms
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_up_loading
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_up_loading
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_up_time
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_up_time
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_down_time
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_down_time
+    chown system system /sys/module/mtk_fpsgo/parameters/cfp_down_loading
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cfp_down_loading
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_enable
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_enable
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_polling_ms
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_polling_ms
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_loading
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_loading
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_loading
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_loading
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_time
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_time
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_time
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_time
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_opp
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_up_opp
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_opp
+    chmod 0664 /proc/perfmgr/boost_ctrl/cpu_ctrl/cfp_down_opp
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_iso_cpu
+    chmod 0660 /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_iso_cpu
+    chown system system /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_all_cpu_deisolated
+    chmod 0660 /proc/perfmgr/boost_ctrl/cpu_ctrl/perfserv_all_cpu_deisolated
+    chown system system /proc/perfmgr/syslimiter/syslimiter_force_disable
+    chmod 0664 /proc/perfmgr/syslimiter/syslimiter_force_disable
+    chown system system /proc/perfmgr/syslimiter/syslimiter_tolerance_percent
+    chmod 0664 /proc/perfmgr/syslimiter/syslimiter_tolerance_percent
+    chown system system /proc/perfmgr/syslimiter/syslimiter_limit_freq
+    chmod 0660 /proc/perfmgr/syslimiter/syslimiter_limit_freq
+    chown system system /proc/powerhal_cpu_ctrl/perfserv_freq
+    chmod 0660 /proc/powerhal_cpu_ctrl/perfserv_freq
+    chown system system /proc/touch_boost/enable
+    chmod 0660 /proc/touch_boost/enable
+    chown system system /proc/touch_boost/gas_for_ta
+    chmod 0660 /proc/touch_boost/gas_for_ta
+    chown system system /proc/touch_boost/gas_threshold_for_ta
+    chmod 0660 /proc/touch_boost/gas_threshold_for_ta
+    chown system system /proc/touch_boost/boost_opp_cluster_0
+    chmod 0660 /proc/touch_boost/boost_opp_cluster_0
+    chown system system /proc/touch_boost/boost_opp_cluster_1
+    chmod 0660 /proc/touch_boost/boost_opp_cluster_1
+    chown system system /proc/touch_boost/boost_opp_cluster_2
+    chmod 0660 /proc/touch_boost/boost_opp_cluster_2
+    chown system system /proc/touch_boost/boost_duration
+    chmod 0660 /proc/touch_boost/boost_duration
+    chown system system /proc/touch_boost/active_time
+    chmod 0660 /proc/touch_boost/active_time
+    chown system system /proc/touch_boost/boost_ta
+    chmod 0660 /proc/touch_boost/boost_ta
+    chown system system /proc/touch_boost/boost_fg
+    chmod 0660 /proc/touch_boost/boost_fg
+    chown system system /proc/touch_boost/idleprefer_ta
+    chmod 0660 /proc/touch_boost/idleprefer_ta
+    chown system system /proc/touch_boost/idleprefer_fg
+    chmod 0660 /proc/touch_boost/idleprefer_fg
+    chown system system /proc/touch_boost/deboost_when_render
+    chmod 0660 /proc/touch_boost/deboost_when_render
+    chown system system /proc/touch_boost/force_stop_boost
+    chmod 0660 /proc/touch_boost/force_stop_boost
+    chown system system /proc/touch_boost/boost_up
+    chmod 0660 /proc/touch_boost/boost_up
+    chown system system /proc/touch_boost/boost_down
+    chmod 0660 /proc/touch_boost/boost_down
+    chown system system /sys/kernel/fpsgo/common/kfps_cpu_mask
+    chmod 0664 /sys/kernel/fpsgo/common/kfps_cpu_mask
+    chown system system /sys/kernel/fpsgo/fbt/jank_min_cap_ratio
+    chmod 0664 /sys/kernel/fpsgo/fbt/jank_min_cap_ratio
+    chown system system /sys/kernel/fpsgo/fbt/jank_max_cap_ratio
+    chmod 0664 /sys/kernel/fpsgo/fbt/jank_max_cap_ratio
+    chown system system /sys/kernel/fpsgo/fbt/jank_priority
+    chmod 0664 /sys/kernel/fpsgo/fbt/jank_priority
+    chown system system /sys/kernel/fpsgo/fbt/jank_cpu_mask
+    chmod 0664 /sys/kernel/fpsgo/fbt/jank_cpu_mask
+    chown system system /sys/kernel/fpsgo/composer/dep_loading_thr_by_pid
+    chmod 0664 /sys/kernel/fpsgo/composer/dep_loading_thr_by_pid
+    chown system system /sys/kernel/fpsgo/composer/cam_bypass_window_ms_by_pid
+    chmod 0664 /sys/kernel/fpsgo/composer/cam_bypass_window_ms_by_pid
+
+# GED, GPU
+    chown system system /sys/module/ged/parameters/gx_top_app_pid
+    chmod 0660 /sys/module/ged/parameters/gx_top_app_pid
+    chown system system /sys/module/ged/parameters/gx_force_cpu_boost
+    chmod 0660 /sys/module/ged/parameters/gx_force_cpu_boost
+    chown system system /sys/kernel/ged/hal/timer_base_dvfs_margin
+    chmod 0664 /sys/kernel/ged/hal/timer_base_dvfs_margin
+    chown system system /sys/kernel/ged/hal/loading_base_dvfs_step
+    chmod 0664 /sys/kernel/ged/hal/loading_base_dvfs_step
+    chown system system /sys/kernel/ged/hal/dvfs_margin_value
+    chmod 0664 /sys/kernel/ged/hal/dvfs_margin_value
+    chown system system /sys/kernel/ged/hal/dvfs_cwaitg
+    chmod 0664 /sys/kernel/ged/hal/dvfs_cwaitg
+    chown system system /sys/kernel/ged/hal/dvfs_loading_mode
+    chmod 0664 /sys/kernel/ged/hal/dvfs_loading_mode
+    chown system system /sys/kernel/ged/hal/dvfs_workload_mode
+    chmod 0664 /sys/kernel/ged/hal/dvfs_workload_mode
+    chown system system /sys/class/misc/mali0/device/power_policy
+    chmod 0664 /sys/class/misc/mali0/device/power_policy
+    chown system system /sys/class/misc/mali0/device/pm_poweroff
+    chmod 0660 /sys/class/misc/mali0/device/pm_poweroff
+    chown system system /sys/kernel/ged/hal/total_gpu_freq_level_count
+    chmod 0664 /sys/kernel/ged/hal/total_gpu_freq_level_count
+    chown system system /sys/kernel/ged/hal/custom_boost_gpu_freq
+    chmod 0664 /sys/kernel/ged/hal/custom_boost_gpu_freq
+    chown system system /sys/kernel/ged/hal/custom_upbound_gpu_freq
+    chmod 0664 /sys/kernel/ged/hal/custom_upbound_gpu_freq
+    chown system system /proc/mgq/job_status
+    chmod 0664 /proc/mgq/job_status
+    chown system system /sys/kernel/ged/hal/dcs_mode
+    chmod 0664 /sys/kernel/ged/hal/dcs_mode
+    chown system system /sys/kernel/ged/hal/fw_idle
+    chmod 0664 /sys/kernel/ged/hal/fw_idle
+    chown system system /sys/kernel/ged/hal/gpu_boost_level
+    chmod 0664 /sys/kernel/ged/hal/gpu_boost_level
+    chown system system /sys/kernel/ged/hal/loading_window_size
+    chmod 0664 /sys/kernel/ged/hal/loading_window_size
+    chown system system /sys/kernel/ged/hal/loading_stride_size
+    chmod 0664 /sys/kernel/ged/hal/loading_stride_size
+    chown system system /sys/kernel/ged/hal/fallback_timing
+    chmod 0664 /sys/kernel/ged/hal/fallback_timing
+    chown system system /sys/kernel/ged/hal/fallback_interval
+    chmod 0664 /sys/kernel/ged/hal/fallback_interval
+    chown system system /sys/kernel/ged/hal/fallback_window_size
+    chmod 0664 /sys/kernel/ged/hal/fallback_window_size
+    chown system system /sys/kernel/ged/hal/fallback_frequency_adjust
+    chmod 0664 /sys/kernel/ged/hal/fallback_frequency_adjust
+    chown system system /sys/module/ged/parameters/g_fb_dvfs_threshold
+    chmod 0664 /sys/module/ged/parameters/g_fb_dvfs_threshold
+    chown system system /sys/kernel/ged/hal/force_loading_base
+    chmod 0664 /sys/kernel/ged/hal/force_loading_base
+
+# PPM
+    chown system system /proc/ppm/policy_status
+    chmod 0664 /proc/ppm/policy_status
+    chown system system /proc/ppm/policy/userlimit_boost
+    chmod 0664 /proc/ppm/policy/userlimit_boost
+    chown system system /proc/ppm/policy/hard_userlimit_cpu_freq
+    chmod 0664 /proc/ppm/policy/hard_userlimit_cpu_freq
+
+# Cache
+    chown system system /sys/module/ca_drv/parameters/enable
+    chmod 0664 /sys/module/ca_drv/parameters/enable
+    chown system system /sys/module/pftch_qos/parameters/enable
+    chmod 0664 /sys/module/pftch_qos/parameters/enable
+
+# FPSGO
+    chown system system /sys/module/fbt_cpu/parameters/bhr_opp
+    chmod 0664 /sys/module/fbt_cpu/parameters/bhr_opp
+    chown system system /sys/module/fbt_cpu/parameters/bhr
+    chmod 0664 /sys/module/fbt_cpu/parameters/bhr
+    chown system system /sys/module/fbt_cpu/parameters/floor_bound
+    chmod 0664 /sys/module/fbt_cpu/parameters/floor_bound
+    chown system system /sys/module/fbt_cpu/parameters/kmin
+    chmod 0664 /sys/module/fbt_cpu/parameters/kmin
+    chown system system /sys/module/fbt_cpu/parameters/variance
+    chmod 0660 /sys/module/fbt_cpu/parameters/variance
+    chown system system /sys/module/mtk_fpsgo/parameters/bhr_opp
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/bhr_opp
+    chown system system /sys/module/mtk_fpsgo/parameters/bhr
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/bhr
+    chown system system /sys/module/mtk_fpsgo/parameters/floor_bound
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/floor_bound
+    chown system system /sys/module/mtk_fpsgo/parameters/kmin
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/kmin
+    chown system system /sys/kernel/fpsgo/fstb/fstb_tune_dfps_ceiling
+    chmod 0664 /sys/kernel/fpsgo/fstb/fstb_tune_dfps_ceiling
+    chown system system /sys/kernel/fpsgo/fstb/fstb_soft_level
+    chmod 0664 /sys/kernel/fpsgo/fstb/fstb_soft_level
+    chown system system /sys/kernel/fpsgo/fstb/fstb_fps_list
+    chmod 0664 /sys/kernel/fpsgo/fstb/fstb_fps_list
+    chown system system /proc/cm_mgr/dbg_cm_mgr
+    chmod 0664 /proc/cm_mgr/dbg_cm_mgr
+    chown system system /sys/kernel/cm_mgr/dbg_cm_mgr
+    chmod 0664 /sys/kernel/cm_mgr/dbg_cm_mgr
+    chown system system /sys/kernel/fpsgo/minitop/enable
+    chmod 0664 /sys/kernel/fpsgo/minitop/enable
+    chown system system /sys/kernel/fpsgo/minitop/thrs_heavy
+    chmod 0664 /sys/kernel/fpsgo/minitop/thrs_heavy
+    chown system system /sys/kernel/fpsgo/fstb/fstb_fteh_list
+    chmod 0664 /sys/kernel/fpsgo/fstb/fstb_fteh_list
+    chown system system /sys/kernel/fpsgo/eara/ai_bench
+    chmod 0664 /sys/kernel/fpsgo/eara/ai_bench
+    chown system system /sys/kernel/fpsgo/common/gpu_block_boost
+    chmod 0664 /sys/kernel/fpsgo/common/gpu_block_boost
+    chown system system /sys/kernel/fpsgo/fbt/boost_ta
+    chmod 0664 /sys/kernel/fpsgo/fbt/boost_ta
+    chown system system /sys/kernel/fpsgo/fbt/boost_VIP
+    chmod 0664 /sys/kernel/fpsgo/fbt/boost_VIP
+    chown system system /sys/kernel/fpsgo/fbt/RT_prio1
+    chmod 0664 /sys/kernel/fpsgo/fbt/RT_prio1
+    chown system system /sys/kernel/fpsgo/fbt/RT_prio2
+    chmod 0664 /sys/kernel/fpsgo/fbt/RT_prio2
+    chown system system /sys/kernel/fpsgo/fbt/RT_prio3
+    chmod 0664 /sys/kernel/fpsgo/fbt/RT_prio3
+    chown system system /sys/kernel/fpsgo/fbt/group_by_lr
+    chmod 0664 /sys/kernel/fpsgo/fbt/group_by_lr
+    chown system system /sys/kernel/fpsgo/fbt/heavy_group_num
+    chmod 0664 /sys/kernel/fpsgo/fbt/heavy_group_num
+    chown system system /sys/kernel/fpsgo/fbt/second_group_num
+    chmod 0664 /sys/kernel/fpsgo/fbt/second_group_num
+    chown system system /sys/kernel/fpsgo/fbt/set_ls
+    chmod 0664 /sys/kernel/fpsgo/fbt/set_ls
+    chown system system /sys/kernel/fpsgo/fbt/ls_groupmask
+    chmod 0664 /sys/kernel/fpsgo/fbt/ls_groupmask
+    chown system system /sys/kernel/fpsgo/fbt/vip_mask
+    chmod 0664 /sys/kernel/fpsgo/fbt/vip_mask
+    chown system system /sys/kernel/fpsgo/fbt/set_vvip
+    chmod 0664 /sys/kernel/fpsgo/fbt/set_vvip
+    chown system system /sys/kernel/fpsgo/fbt/vip_throttle
+    chmod 0664 /sys/kernel/fpsgo/fbt/vip_throttle
+    chown system system /sys/kernel/fpsgo/fbt/light_loading_policy_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fbt/light_loading_policy_by_pid
+    chown system system /sys/kernel/fpsgo/fbt/llf_task_policy_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fbt/llf_task_policy_by_pid
+    chown system system /sys/kernel/fpsgo/fbt/loading_th_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fbt/loading_th_by_pid
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode_dbnc_a
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode_dbnc_a
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode_dbnc_b
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode_dbnc_b
+    chown system system /sys/kernel/fpsgo/fstb/fstb_reset_tolerence
+    chmod 0664 /sys/kernel/fpsgo/fstb/fstb_reset_tolerence
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode_gpu
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode_gpu
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode_gpu_dbnc_a
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode_gpu_dbnc_a
+    chown system system /sys/kernel/fpsgo/fstb/margin_mode_gpu_dbnc_b
+    chmod 0664 /sys/kernel/fpsgo/fstb/margin_mode_gpu_dbnc_b
+    chown system system /sys/kernel/fpsgo/fstb/jump_check_num
+    chmod 0664 /sys/kernel/fpsgo/fstb/jump_check_num
+    chown system system /sys/kernel/fpsgo/fstb/jump_check_q_pct
+    chmod 0664 /sys/kernel/fpsgo/fstb/jump_check_q_pct
+    chown system system /sys/kernel/fpsgo/fstb/set_render_max_fps
+    chown system system /sys/kernel/fpsgo/fstb/set_render_no_ctrl
+    chown system system /sys/kernel/fpsgo/fstb/set_ui_ctrl
+    chown system system /sys/kernel/fpsgo/composer/set_ui_ctrl
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_render_max_fps
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_render_no_ctrl
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_ui_ctrl
+    chmod 0660  /sys/kernel/fpsgo/composer/set_ui_ctrl
+    chown system system /sys/kernel/eara_thermal/enable
+    chmod 0660 /sys/kernel/eara_thermal/enable
+    chown system system /sys/kernel/fpsgo/fbt/rescue_enable
+    chmod 0664 /sys/kernel/fpsgo/fbt/rescue_enable
+    chown system system /sys/module/fbt_cpu/parameters/rescue_percent
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_percent
+    chown system system /sys/module/fbt_cpu/parameters/rescue_enhance_f
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_enhance_f
+    chown system system /sys/module/fbt_cpu/parameters/rescue_opp_c
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_opp_c
+    chown system system /sys/module/fbt_cpu/parameters/rescue_second_enable
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_second_enable
+    chown system system /sys/module/fbt_cpu/parameters/rescue_second_time
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_second_time
+    chown system system /sys/module/fbt_cpu/parameters/rescue_second_group
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_second_group
+    chown system system /sys/module/fbt_cpu/parameters/rescue_second_enhance_f
+    chmod 0664 /sys/module/fbt_cpu/parameters/rescue_second_enhance_f
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_percent
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_percent
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_enhance_f
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_enhance_f
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_opp_c
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_opp_c
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_opp_f
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_opp_f
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_second_enable
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_second_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_second_time
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_second_time
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_second_group
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_second_group
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_second_enhance_f
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_second_enhance_f
+    chown system system /sys/module/mtk_fpsgo/parameters/check_running
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/check_running
+    chown system system /sys/module/mtk_fpsgo/parameters/rescue_second_g_enable
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/rescue_second_g_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_enable
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_enable
+    chown system system /sys/kernel/fpsgo/fbt/ultra_rescue
+    chmod 0664 /sys/kernel/fpsgo/fbt/ultra_rescue
+    chown system system /sys/module/fbt_cpu/parameters/deqtime_bound
+    chmod 0664 /sys/module/fbt_cpu/parameters/deqtime_bound
+    chown system system /sys/module/fbt_cpu/parameters/short_rescue_ns
+    chmod 0664 /sys/module/fbt_cpu/parameters/short_rescue_ns
+    chown system system /sys/module/fbt_cpu/parameters/min_rescue_percent
+    chmod 0664 /sys/module/fbt_cpu/parameters/min_rescue_percent
+    chown system system /sys/module/fbt_cpu/parameters/adjust_loading
+    chmod 0664 /sys/module/fbt_cpu/parameters/adjust_loading
+    chown system system /sys/module/fbt_cpu/parameters/loading_adj_cnt
+    chmod 0664 /sys/module/fbt_cpu/parameters/loading_adj_cnt
+    chown system system /sys/module/fbt_cpu/parameters/loading_debnc_cnt
+    chmod 0664 /sys/module/fbt_cpu/parameters/loading_debnc_cnt
+    chown system system /sys/module/fbt_cpu/parameters/loading_time_diff
+    chmod 0664 /sys/module/fbt_cpu/parameters/loading_time_diff
+    chown system system /sys/module/fbt_cpu/parameters/loading_th
+    chmod 0664 /sys/module/fbt_cpu/parameters/loading_th
+    chown system system /sys/module/mtk_fpsgo/parameters/deqtime_bound
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/deqtime_bound
+    chown system system /sys/module/mtk_fpsgo/parameters/short_rescue_ns
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/short_rescue_ns
+    chown system system /sys/module/mtk_fpsgo/parameters/short_min_rescue_p
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/short_min_rescue_p
+    chown system system /sys/module/mtk_fpsgo/parameters/min_rescue_percent
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/min_rescue_percent
+    chown system system /sys/module/mtk_fpsgo/parameters/adjust_loading
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/adjust_loading
+    chown system system /sys/module/mtk_fpsgo/parameters/adjust_loading_hwui_hint
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/adjust_loading_hwui_hint
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_adj_cnt
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_adj_cnt
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_debnc_cnt
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_debnc_cnt
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_time_diff
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_time_diff
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_th
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_th
+    chown system system /sys/kernel/fpsgo/fbt/llf_task_policy
+    chmod 0664 /sys/kernel/fpsgo/fbt/llf_task_policy
+    chown system system /sys/kernel/fpsgo/fbt/light_loading_policy
+    chmod 0664 /sys/kernel/fpsgo/fbt/light_loading_policy
+    chown system system /sys/module/mtk_fpsgo/parameters/loading_ignore_enable
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/loading_ignore_enable
+    chown system system /sys/kernel/fpsgo/fbt/thrm_temp_th
+    chmod 0664 /sys/kernel/fpsgo/fbt/thrm_temp_th
+    chown system system /sys/kernel/fpsgo/fbt/thrm_limit_cpu
+    chmod 0664 /sys/kernel/fpsgo/fbt/thrm_limit_cpu
+    chown system system /sys/kernel/fpsgo/fbt/thrm_sub_cpu
+    chmod 0664 /sys/kernel/fpsgo/fbt/thrm_sub_cpu
+    chown system system /sys/kernel/fpsgo/fbt/thrm_activate_fps
+    chmod 0664 /sys/kernel/fpsgo/fbt/thrm_activate_fps
+    chown system system /sys/module/fbt_cpu/parameters/cm_big_cap
+    chmod 0664 /sys/module/fbt_cpu/parameters/cm_big_cap
+    chown system system /sys/module/fbt_cpu/parameters/cm_tdiff
+    chmod 0664 /sys/module/fbt_cpu/parameters/cm_tdiff
+    chown system system /sys/module/mtk_fpsgo/parameters/cm_big_cap
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cm_big_cap
+    chown system system /sys/module/mtk_fpsgo/parameters/cm_tdiff
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/cm_tdiff
+    chown system system /sys/module/fbt_cpu/parameters/boost_affinity
+    chmod 0664 /sys/module/fbt_cpu/parameters/boost_affinity
+    chown system system /sys/module/mtk_fpsgo/parameters/boost_affinity
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/boost_affinity
+    chown system system /sys/module/mtk_fpsgo/parameters/boost_LR
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/boost_LR
+    chown system system /sys/kernel/fpsgo/fbt/cpumask_heavy
+    chmod 0664 /sys/kernel/fpsgo/fbt/cpumask_heavy
+    chown system system /sys/kernel/fpsgo/fbt/cpumask_second
+    chmod 0664 /sys/kernel/fpsgo/fbt/cpumask_second
+    chown system system /sys/kernel/fpsgo/fbt/cpumask_others
+    chmod 0664 /sys/kernel/fpsgo/fbt/cpumask_others
+    chown system system /sys/kernel/fpsgo/xgf/xgf_dep_frames
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_dep_frames
+    chown system system /sys/kernel/fpsgo/xgf/xgf_extra_sub
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_extra_sub
+    chown system system /sys/kernel/fpsgo/xgf/xgf_ema_dividend
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_ema_dividend
+    chown system system /sys/kernel/fpsgo/xgf/xgf_force_no_extra_sub
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_force_no_extra_sub
+    chown system system /sys/kernel/fpsgo/xgf/xgf_spid_list
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_spid_list
+    chown system system /sys/kernel/gbe/gbe_enable1
+    chmod 0664 /sys/kernel/gbe/gbe_enable1
+    chown system system /sys/kernel/gbe/gbe_boost_list1
+    chmod 0664 /sys/kernel/gbe/gbe_boost_list1
+    chown system system /sys/kernel/gbe/gbe_enable2
+    chmod 0664 /sys/kernel/gbe/gbe_enable2
+    chown system system /sys/kernel/gbe/gbe2_timer2
+    chmod 0664 /sys/kernel/gbe/gbe2_timer2
+    chown system system /sys/kernel/gbe/gbe2_loading_th
+    chmod 0664 /sys/kernel/gbe/gbe2_loading_th
+    chown system system /sys/kernel/gbe/gbe2_fg_pid
+    chmod 0664 /sys/kernel/gbe/gbe2_fg_pid
+    chown system system /sys/kernel/gbe/gbe2_max_boost_cnt
+    chmod 0664 /sys/kernel/gbe/gbe2_max_boost_cnt
+    chown system system /sys/kernel/gbe/gbe_policy_mask
+    chmod 0664 /sys/kernel/gbe/gbe_policy_mask
+    chown system system /sys/kernel/gbe/gbe2_timer1
+    chmod 0664 /sys/kernel/gbe/gbe2_timer1
+    chown system system /sys/kernel/gbe/gbe_thrm_hdrm_thrs
+    chmod 0664 /sys/kernel/gbe/gbe_thrm_hdrm_thrs
+    chown system system /sys/kernel/gbe/gbe_cpu_1
+    chmod 0664 /sys/kernel/gbe/gbe_cpu_1
+    chown system system /sys/kernel/gbe/gbe_cpu_0
+    chmod 0664 /sys/kernel/gbe/gbe_cpu_0
+    chown system system /sys/kernel/fpsgo/fbt/switch_idleprefer
+    chmod 0664 /sys/kernel/fpsgo/fbt/switch_idleprefer
+    chown system system /sys/kernel/fpsgo/xgf/xgf_sp_name_id
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_sp_name_id
+    chown system system /sys/kernel/fpsgo/xgf/xgf_spid_sub
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_spid_sub
+    chown system system /sys/kernel/fpsgo/xgf/xgf_spid_ck_period
+    chmod 0664 /sys/kernel/fpsgo/xgf/xgf_spid_ck_period
+    chown system system /sys/kernel/fpsgo/common/fpsgo_enable
+    chmod 0664 /sys/kernel/fpsgo/common/fpsgo_enable
+    chown system system /sys/kernel/fpsgo/common/fpsgo_get_acquire_hint_enable
+    chmod 0664 /sys/kernel/fpsgo/common/fpsgo_get_acquire_hint_enable
+    chown system system /sys/kernel/fpsgo/common/force_onoff
+    chmod 0660 /sys/kernel/fpsgo/common/force_onoff
+    chown system system /sys/kernel/fpsgo/composer/fpsgo_control
+    chmod 0660 /sys/kernel/fpsgo/composer/fpsgo_control
+    chown system system /sys/kernel/fpsgo/composer/control_api_mask
+    chmod 0660 /sys/kernel/fpsgo/composer/control_api_mask
+    chown system system /sys/kernel/fpsgo/composer/bypass_non_SF
+    chmod 0660 /sys/kernel/fpsgo/composer/bypass_non_SF
+    chown system system /sys/kernel/fpsgo/composer/control_hwui
+    chmod 0660 /sys/kernel/fpsgo/composer/control_hwui
+    chown system system /sys/kernel/fpsgo/composer/mfrc_active
+    chmod 0660 /sys/kernel/fpsgo/composer/mfrc_active
+    chown system system /sys/kernel/fpsgo/common/perfserv_ta
+    chmod 0660 /sys/kernel/fpsgo/common/perfserv_ta
+    chown system system /sys/kernel/fpsgo/common/stop_boost
+    chmod 0664 /sys/kernel/fpsgo/common/stop_boost
+    chown system system /sys/kernel/fpsgo/common/kfps_cpu_mask
+    chmod 0664 /sys/kernel/fpsgo/common/kfps_cpu_mask
+    chown system system /sys/module/xgf/parameters/xgf_stddev_multi
+    chmod 0664 /sys/module/xgf/parameters/xgf_stddev_multi
+    chown system system /sys/module/mtk_fpsgo/parameters/xgf_stddev_multi
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/xgf_stddev_multi
+    chown system system /sys/module/mtk_fpsgo/parameters/xgf_uboost
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/xgf_uboost
+    chown system system /sys/module/mtk_fpsgo/parameters/uboost_enhance_f
+    chmod 0664 /sys/module/mtk_fpsgo/parameters/uboost_enhance_f
+    chown system system /sys/module/fbt_cpu/parameters/qr_enable
+    chmod 0660 /sys/module/fbt_cpu/parameters/qr_enable
+    chown system system /sys/module/fbt_cpu/parameters/qr_hwui_hint
+    chmod 0660 /sys/module/fbt_cpu/parameters/qr_hwui_hint
+    chown system system /sys/module/fbt_cpu/parameters/qr_t2wnt_x
+    chmod 0660 /sys/module/fbt_cpu/parameters/qr_t2wnt_x
+    chown system system /sys/module/fbt_cpu/parameters/qr_t2wnt_y_p
+    chmod 0660 /sys/module/fbt_cpu/parameters/qr_t2wnt_y_p
+    chown system system /sys/module/fbt_cpu/parameters/qr_t2wnt_y_n
+    chmod 0660 /sys/module/fbt_cpu/parameters/qr_t2wnt_y_n
+    chown system system /sys/module/fbt_cpu/parameters/gcc_enq_bound_thrs
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_enq_bound_thrs
+    chown system system /sys/module/fbt_cpu/parameters/gcc_enq_bound_quota
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_enq_bound_quota
+    chown system system /sys/module/fbt_cpu/parameters/gcc_deq_bound_thrs
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_deq_bound_thrs
+    chown system system /sys/module/fbt_cpu/parameters/gcc_deq_bound_quota
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_deq_bound_quota
+    chown system system /sys/module/fbt_cpu/parameters/gcc_fps_margin
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_fps_margin
+    chown system system /sys/module/fbt_cpu/parameters/gcc_up_sec_pct
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_up_sec_pct
+    chown system system /sys/module/fbt_cpu/parameters/gcc_down_sec_pct
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_down_sec_pct
+    chown system system /sys/module/fbt_cpu/parameters/gcc_up_step
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_up_step
+    chown system system /sys/module/fbt_cpu/parameters/gcc_down_step
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_down_step
+    chown system system /sys/module/fbt_cpu/parameters/gcc_upper_clamp
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_upper_clamp
+    chown system system /sys/module/fbt_cpu/parameters/gcc_reserved_up_quota_pct
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_reserved_up_quota_pct
+    chown system system /sys/module/fbt_cpu/parameters/gcc_reserved_down_quota_pct
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_reserved_down_quota_pct
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_enable
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_enable
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_hwui_hint
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_hwui_hint
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_t2wnt_x
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_t2wnt_x
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_t2wnt_y_p
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_t2wnt_y_p
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_t2wnt_y_n
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_t2wnt_y_n
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_hwui_hint
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_hwui_hint
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_enq_bound_thrs
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_enq_bound_thrs
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_enq_bound_quota
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_enq_bound_quota
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_deq_bound_thrs
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_deq_bound_thrs
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_deq_bound_quota
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_deq_bound_quota
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_fps_margin
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_fps_margin
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_up_sec_pct
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_up_sec_pct
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_down_sec_pct
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_down_sec_pct
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_up_step
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_up_step
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_down_step
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_down_step
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_upper_clamp
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_upper_clamp
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_reserved_up_quota_pct
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_reserved_up_quota_pct
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_reserved_down_quota_pct
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_reserved_down_quota_pct
+    chown system system /sys/kernel/fpsgo/xgf/xgf_cfg_spid
+    chmod 0660 /sys/kernel/fpsgo/xgf/xgf_cfg_spid
+    chown system system /sys/kernel/fpsgo/xgf/set_cam_hal_pid
+    chmod 0660 /sys/kernel/fpsgo/xgf/set_cam_hal_pid
+    chown system system /sys/kernel/fpsgo/xgf/set_cam_server_pid
+    chmod 0660 /sys/kernel/fpsgo/xgf/set_cam_server_pid
+    chown system system /sys/kernel/fpsgo/xgf/xgf_filter_dep_task_enable
+    chmod 0660 /sys/kernel/fpsgo/xgf/xgf_filter_dep_task_enable
+    chown system system /sys/kernel/fpsgo/xgf/xgf_force_set_perf_min
+    chmod 0660 /sys/kernel/fpsgo/xgf/xgf_force_set_perf_min
+    chown system system /sys/module/fbt_cpu/parameters/gcc_positive_clamp
+    chmod 0660 /sys/module/fbt_cpu/parameters/gcc_positive_clamp
+    chown system system /sys/module/mtk_fpsgo/parameters/gcc_positive_clamp
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/gcc_positive_clamp
+    chown system system /sys/kernel/fpsgo/fbt/limit_cfreq
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_cfreq
+    chown system system /sys/module/mtk_fpsgo/parameters/ceiling_min_B_EARA
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/ceiling_min_B_EARA
+    chown system system /sys/module/mtk_fpsgo/parameters/ceiling_min_M_EARA
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/ceiling_min_M_EARA
+    chown system system /sys/module/mtk_fpsgo/parameters/ceiling_min_enable_EARA
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/ceiling_min_enable_EARA
+    chown system system /sys/kernel/fpsgo/fbt/limit_rfreq
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_rfreq
+    chown system system /sys/kernel/fpsgo/fbt/limit_cfreq_m
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_cfreq_m
+    chown system system /sys/kernel/fpsgo/fbt/limit_rfreq_m
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_rfreq_m
+    chown system system /sys/kernel/fpsgo/fbt/enable_ceiling
+    chmod 0660 /sys/kernel/fpsgo/fbt/enable_ceiling
+    chown system system /sys/module/mtk_fpsgo/parameters/L_min_cap_enable
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/L_min_cap_enable
+    chown system system /sys/kernel/fpsgo/fbt/thrm_enable
+    chmod 0660 /sys/kernel/fpsgo/fbt/thrm_enable
+    chown system system /sys/kernel/fpsgo/fstb/adopt_low_fps
+    chmod 0660 /sys/kernel/fpsgo/fstb/adopt_low_fps
+    chown system system /sys/kernel/fpsgo/fstb/set_cam_active
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_cam_active
+    chown system system /sys/kernel/fpsgo/fstb/set_cam_active_fpsgo_off
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_cam_active_fpsgo_off
+    chown system system /sys/kernel/fpsgo/xgf/xgf_ema2_enable
+    chmod 0660 /sys/kernel/fpsgo/xgf/xgf_ema2_enable
+    chown system system /sys/kernel/fpsgo/fstb/fstb_self_ctrl_fps_enable
+    chmod 0660 /sys/kernel/fpsgo/fstb/fstb_self_ctrl_fps_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/fstb_consider_deq
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/fstb_consider_deq
+    chown system system /sys/kernel/fpsgo/fstb/tfps_to_powerhal_enable
+    chmod 0660 /sys/kernel/fpsgo/fstb/tfps_to_powerhal_enable
+    chown system system /sys/kernel/fpsgo/fstb/set_video_pid
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_video_pid
+    chown system system /sys/kernel/fpsgo/fstb/clear_video_pid
+    chmod 0660 /sys/kernel/fpsgo/fstb/clear_video_pid
+    chown system system /sys/module/mtk_fpsgo/parameters/sbe_enhance_f
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/sbe_enhance_f
+    chown system system /sys/module/mtk_fpsgo/parameters/sbe_dy_frame_threshold
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/sbe_dy_frame_threshold
+    chown system system /sys/module/mtk_fpsgo/parameters/sbe_dy_max_enhance
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/sbe_dy_max_enhance
+    chown system system /sys/module/mtk_fpsgo/parameters/sbe_dy_rescue_enable
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/sbe_dy_rescue_enable
+    chown system system /sys/module/mtk_fpsgo/parameters/scroll_cnt
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/scroll_cnt
+    chown system system /sys/kernel/fpsgo/composer/fpsgo_control_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/fpsgo_control_pid
+    chown system system /sys/kernel/fpsgo/xgf/xgf_ema2_enable_by_pid
+    chmod 0660 /sys/kernel/fpsgo/xgf/xgf_ema2_enable_by_pid
+    chown system system /sys/kernel/fpsgo/fstb/fstb_self_ctrl_fps_enable_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fstb/fstb_self_ctrl_fps_enable_by_pid
+    chown system system /sys/kernel/fpsgo/fbt/fbt_attr_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fbt/fbt_attr_by_pid
+    chown system system /sys/kernel/fpsgo/fstb/notify_fstb_target_fps_by_pid
+    chmod 0660 /sys/kernel/fpsgo/fstb/notify_fstb_target_fps_by_pid
+    chown system system /sys/kernel/fpsgo/fbt/enable_separate_aa
+    chmod 0660 /sys/kernel/fpsgo/fbt/enable_separate_aa
+    chown system system /sys/kernel/fpsgo/fbt/switch_filter_frame
+    chmod 0660 /sys/kernel/fpsgo/fbt/switch_filter_frame
+    chown system system /sys/kernel/fpsgo/fbt/limit_uclamp
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_uclamp
+    chown system system /sys/kernel/fpsgo/fbt/limit_ruclamp
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_ruclamp
+    chown system system /sys/kernel/fpsgo/fbt/limit_uclamp_m
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_uclamp_m
+    chown system system /sys/kernel/fpsgo/fbt/limit_ruclamp_m
+    chmod 0660 /sys/kernel/fpsgo/fbt/limit_ruclamp_m
+    chown system system /sys/kernel/fpsgo/fbt/separate_release_sec
+    chmod 0660 /sys/kernel/fpsgo/fbt/separate_release_sec
+    chown system system /sys/kernel/fpsgo/fbt/separate_pct_m
+    chmod 0660 /sys/kernel/fpsgo/fbt/separate_pct_m
+    chown system system /sys/kernel/fpsgo/fbt/separate_pct_b
+    chmod 0660 /sys/kernel/fpsgo/fbt/separate_pct_b
+    chown system system /sys/kernel/fpsgo/fbt/separate_pct_other
+    chmod 0660 /sys/kernel/fpsgo/fbt/separate_pct_other
+    chown system system /sys/kernel/fpsgo/fbt/blc_boost
+    chmod 0660 /sys/kernel/fpsgo/fbt/blc_boost
+    chown system system /sys/kernel/fpsgo/fbt/target_time_up_bound
+    chmod 0660 /sys/kernel/fpsgo/fbt/target_time_up_bound
+    chown system system /sys/kernel/fpsgo/fbt/boost_VIP
+    chmod 0660 /sys/kernel/fpsgo/fbt/boost_VIP
+    chown system system /sys/kernel/fpsgo/fbt/group_by_lr
+    chmod 0660 /sys/kernel/fpsgo/fbt/group_by_lr
+    chown system system /sys/kernel/fpsgo/fbt/heavy_group_num
+    chmod 0660 /sys/kernel/fpsgo/fbt/heavy_group_num
+    chown system system /sys/kernel/fpsgo/fbt/second_group_num
+    chmod 0660 /sys/kernel/fpsgo/fbt/second_group_num
+    chown system system /sys/kernel/fpsgo/fbt/set_ls
+    chmod 0660 /sys/kernel/fpsgo/fbt/set_ls
+    chown system system /sys/kernel/fpsgo/fbt/ls_groupmask
+    chmod 0660 /sys/kernel/fpsgo/fbt/ls_groupmask
+    chown system system /sys/kernel/fpsgo/fbt/vip_mask
+    chmod 0660 /sys/kernel/fpsgo/fbt/vip_mask
+    chown system system /sys/kernel/fpsgo/fbt/set_vvip
+    chmod 0660 /sys/kernel/fpsgo/fbt/set_vvip
+    chown system system /sys/kernel/fpsgo/fbt/bm_th
+    chmod 0660 /sys/kernel/fpsgo/fbt/bm_th
+    chown system system /sys/kernel/fpsgo/fbt/ml_th
+    chmod 0660 /sys/kernel/fpsgo/fbt/ml_th
+    chown system system /sys/kernel/fpsgo/fbt/tp_policy
+    chmod 0660 /sys/kernel/fpsgo/fbt/tp_policy
+    chown system system /sys/kernel/fpsgo/fbt/gh_prefer
+    chmod 0660 /sys/kernel/fpsgo/fbt/gh_prefer
+    chown system system /sys/kernel/fpsgo/fbt/vip_follow_gh
+    chmod 0660 /sys/kernel/fpsgo/fbt/vip_follow_gh
+    chown system system /sys/module/mtk_fpsgo/parameters/qr_filter_outlier
+    chmod 0660 /sys/module/mtk_fpsgo/parameters/qr_filter_outlier
+    chown system system /sys/kernel/fpsgo/fstb/gpu_slowdown_check
+    chmod 0660 /sys/kernel/fpsgo/fstb/gpu_slowdown_check
+    chown system system /sys/kernel/fpsgo/composer/bypass_non_SF_by_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/bypass_non_SF_by_pid
+    chown system system /sys/kernel/fpsgo/composer/control_api_mask_by_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/control_api_mask_by_pid
+    chown system system /sys/kernel/fpsgo/composer/control_hwui_by_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/control_hwui_by_pid
+    chown system system /sys/kernel/fpsgo/composer/app_cam_fps_align_margin_by_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/app_cam_fps_align_margin_by_pid
+    chown system system /sys/kernel/fpsgo/composer/app_cam_time_align_ratio_by_pid
+    chmod 0660 /sys/kernel/fpsgo/composer/app_cam_time_align_ratio_by_pid
+    chown system system /sys/kernel/fpsgo/fstb/set_cam_fps
+    chmod 0660 /sys/kernel/fpsgo/fstb/set_cam_fps
+
+# Jank Detection
+    chown system system /sys/kernel/jank_detection/jank_detection
+    chmod 0660 /sys/kernel/jank_detection/jank_detection
+
+# Camera FPSGO
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_pct_1
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_pct_1
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_pct_2
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_pct_2
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_f_1
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_f_1
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_f_2
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_rescue_f_2
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_history_window
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_history_window
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_std_filter
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_std_filter
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_check
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_check
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_thrs
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_thrs
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_step
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_up_step
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_check
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_check
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_thrs
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_thrs
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_step
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_down_step
+    chown system system /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_enable
+    chmod 0660 /sys/kernel/fpsgo/fbt_cam/fbt_cam_gcc_enable
+
+# IO
+    chown system system /sys/devices/platform/soc/112b0000.ufshci/clkscale/clkscale_control
+    chmod 0664 /sys/devices/platform/soc/112b0000.ufshci/clkscale/clkscale_control
+
+# NET
+    chown system system /proc/net/wlan/setCAM
+    chmod 0664 /proc/net/wlan/setCAM
+    chown system system /proc/net/wlan/twt_smart_sta
+    chmod 0664 /proc/net/wlan/twt_smart_sta
+
+# BLKDEV
+    chown system system /sys/block/sdc/queue/read_ahead_kb
+    chmod 0664 /sys/block/sdc/queue/read_ahead_kb
+    chown system system /sys/block/dm-2/queue/read_ahead_kb
+    chmod 0664 /sys/block/dm-2/queue/read_ahead_kb
+    chown system system /sys/block/mmcblk0/queue/read_ahead_kb
+    chmod 0664 /sys/block/mmcblk0/queue/read_ahead_kb
+
+# TOUCH
+    chown system system /sys/devices/platform/mtk-tpd2.0/change_rate
+    chmod 0664 /sys/devices/platform/mtk-tpd2.0/change_rate
+
+# DISP
+    chown system system /proc/displowpower/idletime
+    chmod 0660 /proc/displowpower/idletime
+    chown system system /proc/displowpower/hrt_lp
+    chmod 0660 /proc/displowpower/hrt_lp
+
+# CPUIDLE
+    chown system system /proc/cpuidle/enable
+    chmod 0664 /proc/cpuidle/enable
+    chown system system /proc/mcdi/state
+    chmod 0660 /proc/mcdi/state
+    chown system system /dev/cpu_dma_latency
+    chmod 0660 /dev/cpu_dma_latency
+
+# APU
+    chown system system /sys/kernel/apusys/mnoc_apu_qos_boost
+    chmod 0664 /sys/kernel/apusys/mnoc_apu_qos_boost
+
+# CG policy
+    chown system system /sys/kernel/thermal/sports_mode
+    chmod 0664 /sys/kernel/thermal/sports_mode
+    chown system system /sys/module/pgboost/parameters/kick_pgboost
+    chmod 0664 /sys/module/pgboost/parameters/kick_pgboost
+
+# G/D policy
+    chown system system /proc/mgq/job_status
+    chmod 0664 /proc/mgq/job_status
+
+# MAGT
+on property:ro.vendor.magt.mtk_magt_support=1
+    chown system system /proc/perfmgr_magt/magt_ioctl
+    chmod 0440 /proc/perfmgr_magt/magt_ioctl
+    chown system system /sys/kernel/fpsgo/xgf/xgf_runtime
+    chmod 0440 /sys/kernel/fpsgo/xgf/xgf_runtime
+    chown system system /sys/kernel/fpsgo/minitop/list
+    chmod 0440 /sys/kernel/fpsgo/minitop/list
+    chown system system /sys/kernel/fpsgo/common/render_loading
+    chmod 0440 /sys/kernel/fpsgo/common/render_loading
+    chown system system /sys/kernel/fpsgo/fbt/fbt_info
+    chmod 0440 /sys/kernel/fpsgo/fbt/fbt_info
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/thermal_aware_threshold
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/thermal_aware_threshold
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/fpsdrop_aware_threshold
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/fpsdrop_aware_threshold
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/advice_bat_avg_current
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/advice_bat_avg_current
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/advice_bat_max_current
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/advice_bat_max_current
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/targetfps_throttling_temp
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/targetfps_throttling_temp
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/thermal_aware_light_threshold
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/thermal_aware_light_threshold
+    chown system system /sys/module/mtk_perf_ioctl_magt/parameters/game_suggestion_jobworker
+    chmod 0660 /sys/module/mtk_perf_ioctl_magt/parameters/game_suggestion_jobworker
+
+
+#memory performance
+on property:sys.sysctl.extra_free_kbytes=*
+    setprop vendor.sys.vm.extrafreekbytes ${sys.sysctl.extra_free_kbytes}
+
+on property:vendor.sys.vm.swappiness=*
+    write /proc/sys/vm/swappiness ${vendor.sys.vm.swappiness}
+on property:vendor.sys.vm.dropcaches=*
+    write /proc/sys/vm/drop_caches ${vendor.sys.vm.dropcaches}
+on property:vendor.sys.vm.extrafreekbytesadj=*
+    write /proc/sys/vm/extra_free_kbytes ${vendor.sys.vm.extrafreekbytesadj}
+on property:vendor.sys.vm.watermarkscalefactor=*
+    write /proc/sys/vm/watermark_scale_factor ${vendor.sys.vm.watermarkscalefactor}
+
+on property:vendor.sys.vm.thrashinglimit=*
+    exec_background /system/bin/lmkd --update thrashinglimit ${vendor.sys.vm.thrashinglimit}
+on property:vendor.sys.vm.swaplow=*
+    exec_background /system/bin/lmkd --update swaplow ${vendor.sys.vm.swaplow}
+on property:vendor.sys.vm.killtimeout=*
+    exec_background /system/bin/lmkd --update killtimeout ${vendor.sys.vm.killtimeout}
+
+# Camera Power Performance Scheduling (C2PS)
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_regulator_process_mode
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_regulator_process_mode
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_uclamp_up_margin
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_uclamp_up_margin
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_uclamp_down_margin
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_uclamp_down_margin
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_regulator_base_update_uclamp
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_regulator_base_update_uclamp
+    chown system system /sys/module/mtk_c2ps/parameters/proc_time_window_size
+    chmod 0664 /sys/module/mtk_c2ps/parameters/proc_time_window_size
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster0
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster0
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster1
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster1
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster2
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_uclamp_bg_up_margin_cluster2
+    chown system system /sys/module/mtk_c2ps/parameters/background_idlerate_alert
+    chmod 0664 /sys/module/mtk_c2ps/parameters/background_idlerate_alert
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_regulator_bg_update_uclamp
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_regulator_bg_update_uclamp
+    chown system system /sys/module/mtk_c2ps/parameters/background_monitor_duration
+    chmod 0664 /sys/module/mtk_c2ps/parameters/background_monitor_duration
+    chown system system /sys/module/mtk_c2ps/parameters/background_idlerate_dangerous
+    chmod 0664 /sys/module/mtk_c2ps/parameters/background_idlerate_dangerous
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_regulator_bg_update_uclamp_fast
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_regulator_bg_update_uclamp_fast
+    chown system system /sys/module/mtk_c2ps/parameters/c2ps_placeholder
+    chmod 0664 /sys/module/mtk_c2ps/parameters/c2ps_placeholder
+    chown system system /sys/kernel/c2ps/main/um_placeholder
+    chmod 0664 /sys/kernel/c2ps/main/um_placeholder
+
+# peak power budget
+    chown system system /proc/ppb/peak_power_mode
+    chmod 0664 /proc/ppb/peak_power_mode
+    chown system system /proc/ppb/ppb_cg_min_power
+    chmod 0664 /proc/ppb/ppb_cg_min_power
+    chown system system /sys/class/misc/mcupm/mpmm
+    chmod 0664 /sys/class/misc/mcupm/mpmm
+
+# cm thermal hint
+    chown system system /sys/kernel/thermal/thermal_hint
+    chmod 0664 /sys/kernel/thermal/thermal_hint

@@ -1,0 +1,13 @@
+on property:init.svc.media=*
+    setprop init.svc.mediadrm ${init.svc.media}
+
+service media /system_ext/bin/mediahelper
+    class main
+    user media
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm
+    ioprio rt 4
+    task_profiles ProcessCapacityHigh HighPerformance
+
+import /system/etc/init/hw/mediaserver.zygote64.rc
+import /system/etc/init/hw/mediaserver.zygote64_32.rc
+

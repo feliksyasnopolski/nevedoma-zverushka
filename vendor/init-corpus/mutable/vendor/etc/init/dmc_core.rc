@@ -1,0 +1,11 @@
+# MTK platform .rc configure
+service dmc_core /vendor/bin/dmc_core
+    class core
+    class hal
+    user system
+    group system
+    interface aidl vendor.mediatek.hardware.dmc.IDmcService/default
+    interface aidl vendor.mediatek.hardware.apmonitor.IApmService/default
+    disabled
+    oneshot
+

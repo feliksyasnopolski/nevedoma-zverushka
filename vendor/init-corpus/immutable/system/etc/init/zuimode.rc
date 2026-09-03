@@ -1,0 +1,16 @@
+# For ZUI VideoMode check, add by wangwq14.
+
+on post-fs-data
+    mkdir /data/zuimode 0777 system system
+    restorecon_recursive /data/zuimode
+
+service checkvideomode /system/bin/zuimode.sh
+    user root
+    group system
+    oneshot
+    disabled
+
+on property:sys.zui.videomode=requested
+    start checkvideomode
+    setprop sys.zui.videomode finished
+

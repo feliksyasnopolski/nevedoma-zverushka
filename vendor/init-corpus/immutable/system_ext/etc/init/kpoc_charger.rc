@@ -1,0 +1,12 @@
+on charger
+    start kpoc_charger
+
+on charger && property:ro.build.type=eng
+    setprop persist.vendor.pstore.model 1
+on charger && property:ro.build.type=userdebug
+    setprop persist.vendor.pstore.model 1
+
+service kpoc_charger /system_ext/bin/kpoc_charger
+    group system wakelock
+    capabilities BLOCK_SUSPEND SYS_ADMIN SYS_BOOT
+    user root

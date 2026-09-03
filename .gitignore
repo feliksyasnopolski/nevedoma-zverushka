@@ -102,3 +102,6 @@ core.*
 
 # Charger build output
 /src/charger/tb330fu-native-charger-renderer
+
+# Full-corpus graph output is deterministic disposable build output.
+/generated/full-corpus/

@@ -1,0 +1,13 @@
+service factory_aidl_service /vendor/bin/hw/vendor.lenovo.hardware.factory-service
+    class hal
+    user system
+    group system
+
+on property:vendor.temp.countrycode=*
+    setprop ro.product.countrycode ${vendor.temp.countrycode}
+
+on property:vendor.temp.countrycode=*
+    setprop ro.boot.wificountrycode ${vendor.temp.countrycode}
+
+on property:vendor.temp.countrycode=*
+    setprop ro.config.lgsi.countrycode ${vendor.temp.countrycode}

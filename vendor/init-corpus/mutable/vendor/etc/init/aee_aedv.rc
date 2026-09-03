@@ -1,0 +1,12 @@
+service aeev_set_last_shutdown /vendor/bin/aeev -S
+    oneshot
+    disabled
+    user root
+    group root
+
+service aeev_printk_index /vendor/bin/aee_aedv --printk_index
+    oneshot
+    disabled
+    user root
+    group root
+

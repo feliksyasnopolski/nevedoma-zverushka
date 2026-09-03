@@ -1,0 +1,14 @@
+on post-fs-data
+    chown system system /proc/Pen_ID
+    chown system system /proc/Pen_Q
+    chown system system /proc/gesture_control
+    chown system system /proc/game_mode
+    chown system system /proc/panel_direction
+    chown system system /proc/support_pen
+    chown system system /proc/edge_grid_zone
+
+service touchscreen_hal_service /system/bin/hw/vendor.lenovo.hardware.touchscreen-service
+    interface aidl vendor.lenovo.hardware.touchscreen.ITouchscreen/default
+    class hal
+    user system
+    group system

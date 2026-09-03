@@ -1,0 +1,2 @@
+on post-fs-data
+    mkdir /data/misc/bthci 0770 bluetooth net_bt

@@ -1,0 +1,4 @@
+service aee_aed64 /system_ext/bin/aee_aed64
+    group root readproc system debuggerd log package_info radio
+    writepid /dev/cpuset/system-background/tasks
+    user root

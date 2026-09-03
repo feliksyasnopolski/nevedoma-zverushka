@@ -1,0 +1,5 @@
+on post-fs-data && property:vendor.storage.dynamicdata.type=dmuserdata
+	mkdir /mnt/lenovobackup
+	restorecon_recursive /mnt/lenovobackup
+	chown system system /mnt/lenovobackup
+	chmod 0771 /mnt/lenovobackup

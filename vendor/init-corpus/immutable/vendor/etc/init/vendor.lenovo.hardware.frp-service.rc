@@ -1,0 +1,4 @@
+service frp /vendor/bin/hw/vendor.lenovo.hardware.frp-service
+    class hal
+    user system
+    group system

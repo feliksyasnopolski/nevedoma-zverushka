@@ -1,0 +1,11 @@
+service bootanim /system/bin/bootanimation
+    class core animation
+    user graphics
+    group graphics audio
+    disabled
+    oneshot
+    ioprio rt 0
+    task_profiles MaxPerformance
+    # BEGIN Lenovo, wangdf12, 2023/07/24, [LGSIU-117], [OASPHALT-5709], Modify to kill process later
+    shutdown critical
+    # END Lenovo, [LGSIU-117], [OASPHALT-5709]

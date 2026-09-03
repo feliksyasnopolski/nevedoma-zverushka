@@ -1,0 +1,10 @@
+service omservice /system/system_ext/bin/omservice
+    class main
+    user system
+    group system
+
+#on property:persist.lenovo.omservice=1
+#   start omservice
+
+#on property:persist.lenovo.omservice=0
+#   stop omservice

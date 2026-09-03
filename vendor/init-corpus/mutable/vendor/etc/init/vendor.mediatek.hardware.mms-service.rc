@@ -1,0 +1,8 @@
+service vendor.mediatek.hardware.mms-default /vendor/bin/hw/vendor.mediatek.hardware.mms-service
+    interface aidl vendor.mediatek.hardware.mms.IMms/default
+    class main
+    user system
+    oneshot
+    disabled
+    group system graphics
+    capabilities SYS_NICE

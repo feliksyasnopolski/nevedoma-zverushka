@@ -1,0 +1,8 @@
+on early-init
+    write /sys/module/musb_hdrc/parameters/kernel_init_done 1
+    # force on usb
+    # write /sys/class/udc/musb-hdrc/device/cmode 3
+
+    #Barley code for OBARLEY-2842 by jiangjq3 at 2023/08/02 start
+    write /sys/module/block/parameters/events_dfl_poll_msecs 1000
+    #Barley code for OBARLEY-2842 by jiangjq3 at 2023/08/02 end

@@ -1,0 +1,6 @@
+# GPS Debug Process
+service lbs_dbg_ext /system_ext/bin/lbs_dbg_ext
+    class main
+    user shell
+    group log system gps inet misc sdcard_rw sdcard_r media_rw radio
+    socket lbs_dbg_ext stream 660 gps system

@@ -1,0 +1,7 @@
+service emhal_user /vendor/bin/em_hidl
+    interface aidl vendor.mediatek.hardware.engineermode.IEmds/default
+    class hal
+    oneshot
+    disabled
+    user system
+    group bluetooth radio gps system nfc
