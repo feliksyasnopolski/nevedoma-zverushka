@@ -1,0 +1,17 @@
+[Unit]
+Description=TB330FU folio hall_irq to standard SW_LID input proxy
+Wants=tb330fu-devd.service
+After=local-fs.target systemd-udevd.service tb330fu-devd.service
+Before=graphical.target
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/test -c /dev/uinput
+ExecStart=/usr/local/sbin/tb330fu-folio-lid
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

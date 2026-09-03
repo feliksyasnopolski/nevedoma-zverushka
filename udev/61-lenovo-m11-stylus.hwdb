@@ -1,0 +1,3 @@
+evdev:name:lenovo-stylus:*
+ EVDEV_ABS_00=::50
+ EVDEV_ABS_01=::50

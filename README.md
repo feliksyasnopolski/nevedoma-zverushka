@@ -34,6 +34,7 @@ Start with:
 - `docs/BOOT.md` — boot path from vendor_boot to systemd.
 - `docs/BUILD.md` — build and deployment procedures.
 - `docs/RECOVERY.md` — recovery-critical artifacts and procedures.
+- `docs/INPUT.md` — touchscreen, stylus, and folio lid integration.
 
 Subsystem documentation lives under `docs/`.
 
