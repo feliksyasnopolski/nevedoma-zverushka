@@ -1,0 +1,16 @@
+diff --git a/daemon/actions/bundled/handlebuttonevents.cpp b/daemon/actions/bundled/handlebuttonevents.cpp
+--- a/daemon/actions/bundled/handlebuttonevents.cpp
++++ b/daemon/actions/bundled/handlebuttonevents.cpp
+@@ -164,6 +164,11 @@ void HandleButtonEvents::onLidClosedChanged(bool closed)
+         if (m_oldKeyboardBrightness.has_value() && m_oldKeyboardBrightness > 0) {
+             core()->keyboardBrightnessController()->setBrightness(m_oldKeyboardBrightness.value());
+         }
++
++        if (m_lidAction == PowerDevil::PowerButtonAction::TurnOffScreen
++            || m_lidAction == PowerDevil::PowerButtonAction::ToggleScreenOnOff) {
++            triggerAction(u"DPMSControl"_s, u"TurnOn"_s);
++        }
+
+         // In this case, let's send a wakeup event
+         KIdleTime::instance()->simulateUserActivity();
+     }

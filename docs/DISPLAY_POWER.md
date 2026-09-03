@@ -38,7 +38,7 @@ KWin/PowerDevil owns desktop display policy. No TB330FU brightness daemon is in 
 
 DRM DPMS and physical backlight state are separate. The display can be black after DPMS while the PWM/backlight remains lit. This affects power use and closed-folio behavior.
 
-The pending PowerDevil change sets brightness to zero before normal DPMS off and restores the previous value after DPMS on. Brightness changes while off are retained as the new restore value. It does not change kernel DRM, KWin, folio, or logind. Runtime brightness-off, wake restore, slider, and suspend/resume checks remain unverified.
+The PowerDevil change sets logical brightness to zero, writes `0` to `/sys/class/leds/lcd-backlight/brightness` for hardware-off, then performs normal idle DPMS off and restores the previous logical value exactly once on input wake. Brightness changes while off are retained as the new restore value, and wake without a saved idle-off value does not alter brightness. It does not change kernel DRM, KWin, folio, or logind.
 
 ## Suspend
 
@@ -113,4 +113,4 @@ These checks do not prove physical pixels, brightness, or folio transitions. Sus
 
 ## Known limitations
 
-The release contains no kernel DRM change, donor DRM stack, custom brightness daemon, double-tap wake, or automated folio-transition test. The PowerDevil patch builds against PowerDevil 6.6.6, but its physical display behavior remains unverified. It is not a validated release feature.
+The release contains no kernel DRM change, donor DRM stack, custom brightness daemon, double-tap wake, or automated folio-transition test. Physical backlight state is represented by the PowerDevil brightness backend; direct operator observation remains outside automated validation.

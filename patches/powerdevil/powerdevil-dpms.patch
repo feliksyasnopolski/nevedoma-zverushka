@@ -22,6 +22,10 @@ diff --git a/daemon/actions/bundled/dpms.cpp b/daemon/actions/bundled/dpms.cpp
 index 0000000..0000000 100644
 --- a/daemon/actions/bundled/dpms.cpp
 +++ b/daemon/actions/bundled/dpms.cpp
+@@ -20,6 +20,7 @@
+ #include <QGuiApplication>
++#include <QFile>
+ #include <QTimer>
 @@ -68,6 +68,17 @@ DPMS::DPMS(QObject *parent)
      connect(core()->suspendController(), &SuspendController::aboutToSuspend, this, &DPMS::onAboutToSuspend);
      connect(core()->suspendController(), &SuspendController::resumeFromSuspend, this, &DPMS::onResumeFromSuspend);
@@ -42,6 +46,21 @@ index 0000000..0000000 100644
          }
 -        m_dpms->switchMode(KScreen::Dpms::Off);
 +        turnOffScreen();
+@@ -117,6 +117,16 @@ void DPMS::onWakeupFromIdle()
+     if (m_oldKeyboardBrightness > 0) {
+         setKeyboardBrightnessHelper(m_oldKeyboardBrightness);
+         m_oldKeyboardBrightness = 0;
+     }
++
++    if (m_screenBrightnessSaved) {
++        m_settingScreenBrightness = true;
++        core()->screenBrightnessController()->setBrightness(m_oldScreenBrightness);
++        m_settingScreenBrightness = false;
++        m_oldScreenBrightness = 0;
++        m_screenBrightnessSaved = false;
++    }
+ }
+
 @@ -135,9 +146,46 @@ void DPMS::turnOffOnIdleTimeout()
          setKeyboardBrightnessHelper(0);
      }
@@ -66,6 +85,11 @@ index 0000000..0000000 100644
 +            m_settingScreenBrightness = false;
 +        }
      }
++
++    QFile backlight(QStringLiteral("/sys/class/leds/lcd-backlight/brightness"));
++    if (!backlight.open(QIODevice::WriteOnly) || backlight.write("0") != 1) {
++        qCWarning(POWERDEVIL) << "DPMS: failed to turn off lcd-backlight hardware node" << backlight.errorString();
++    }
 +
 +    m_dpms->switchMode(KScreen::Dpms::Off);
 +}
