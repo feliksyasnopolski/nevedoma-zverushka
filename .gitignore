@@ -86,3 +86,6 @@ core.*
 /toolchains/
 /sysroot/
 /toolchain-cache/
+
+# Devd's local native build output
+/src/devd/tb330fu-devd
