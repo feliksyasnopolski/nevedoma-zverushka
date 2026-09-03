@@ -1,0 +1,46 @@
+#!/bin/sh
+set -eu
+
+MODULE_DIR=/system/lib/modules
+
+log() { printf '%s\n' "TB330FU Bluetooth modules: $*"; }
+
+module_loaded() {
+    wanted=$1
+    awk -v wanted="$wanted" '$1 == wanted { found = 1 } END { exit !found }' /proc/modules
+}
+
+load_module() {
+    filename=$1
+    name=$2
+    path=$MODULE_DIR/$filename
+
+    if module_loaded "$name"; then
+        log "$filename already loaded ($name)"
+        return 0
+    fi
+    [ -f "$path" ] || { log "FAILED $filename: missing $path" >&2; return 1; }
+    log "loading $filename"
+    output=$(/sbin/insmod "$path" 2>&1) || {
+        status=$?
+        log "FAILED $filename (insmod status $status): $output" >&2
+        return "$status"
+    }
+    module_loaded "$name" || {
+        log "FAILED $filename: insmod returned success but $name is absent" >&2
+        return 1
+    }
+    log "loaded $filename"
+}
+
+load_module rfkill.ko rfkill
+
+[ -c /dev/rfkill ] || {
+    log "FAILED: /dev/rfkill missing after rfkill module load" >&2
+    exit 1
+}
+
+chmod 0666 /dev/rfkill
+log "normalized /dev/rfkill permissions to 0666"
+
+load_module bluetooth.ko bluetooth

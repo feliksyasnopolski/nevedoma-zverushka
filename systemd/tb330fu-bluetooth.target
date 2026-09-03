@@ -1,0 +1,4 @@
+[Unit]
+Description=TB330FU manual native Bluetooth integration
+Requires=tb330fu-android-boot-complete.service tb330fu-bluetooth-modules.service tb330fu-bt-bridge.service tb330fu-bt-hci.service
+After=tb330fu-android-boot-complete.service tb330fu-bluetooth-modules.service tb330fu-bt-bridge.service tb330fu-bt-hci.service

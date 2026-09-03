@@ -133,13 +133,11 @@ still require it.
 
 ## Bluetooth
 
-The current chain combines stock MediaTek Bluetooth modules,
-`tb330fu_hci_shim`, the HCI helper, the Android Bluetooth AIDL bridge, the
-Android Bluetooth service, and host `bluetoothd`. The bridge and host daemon
-are live concurrently. BlueZ owns the native host-side Bluetooth policy;
-Android/vendor components provide the hardware-facing compatibility path.
-The exact boundary between the AIDL bridge and host daemon remains an audit
-item and is not inferred from unit names.
+The retained MediaTek/WMT path reaches the stock Bluetooth AIDL HAL through
+`bt_drv_connac1x.ko` and `/dev/stpbt`. The promoted
+`tb330fu-android-bt-aidl-bridge` translates that AIDL HCI endpoint to the
+Unix-socket-backed `tb330fu_hci_shim.ko`, which exposes Linux `hci0`.
+BlueZ owns host-side Bluetooth policy. See [BLUETOOTH.md](BLUETOOTH.md).
 
 ## GNSS
 

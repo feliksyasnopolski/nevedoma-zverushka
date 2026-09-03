@@ -1,0 +1,17 @@
+[Unit]
+Description=TB330FU native Bluetooth AIDL bridge
+Requires=tb330fu-android-boot-complete.service
+After=local-fs.target tb330fu-android-boot-complete.service
+PartOf=tb330fu-bluetooth.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/tb330fu-android-bt-aidl-bridge
+Restart=no
+StandardOutput=journal
+StandardError=journal
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+[Install]
+WantedBy=tb330fu-bluetooth.target

@@ -41,6 +41,7 @@ Start with:
 - `docs/INIT_CORPUS.md` — Android init corpus provenance and graph carving.
 - `docs/GRAPH_COMPILER.md` — parser, compiler transformations, and graph contract.
 - `docs/VENDOR_RUNTIME.md` — graph executor, retained vendor services, and readiness gate.
+- `docs/BLUETOOTH.md` — retained MediaTek Bluetooth path, HCI bridge, and BlueZ interface.
 
 Subsystem documentation lives under `docs/`.
 

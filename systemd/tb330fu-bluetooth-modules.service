@@ -1,0 +1,13 @@
+[Unit]
+Description=TB330FU stock Bluetooth core modules
+Requires=tb330fu-android-boot-complete.service
+After=local-fs.target tb330fu-android-boot-complete.service
+Before=tb330fu-bt-bridge.service tb330fu-bt-hci.service
+PartOf=tb330fu-bluetooth.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/tb330fu-bluetooth-modules
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,14 @@
+[Unit]
+Description=TB330FU native Bluetooth HCI shim
+Requires=tb330fu-android-boot-complete.service tb330fu-bluetooth-modules.service tb330fu-bt-bridge.service
+After=tb330fu-android-boot-complete.service tb330fu-bluetooth-modules.service tb330fu-bt-bridge.service
+PartOf=tb330fu-bluetooth.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/tb330fu-bluetooth-ready 30
+ExecStart=/usr/local/libexec/tb330fu-bluetooth-hci
+ExecStop=/bin/sh -c 'if awk '\''$1 == "tb330fu_hci_shim" { found=1 } END { exit !found }'\'' /proc/modules; then /sbin/rmmod tb330fu_hci_shim; fi'
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+
+module=/usr/lib/tb330fu/bluetooth/tb330fu_hci_shim.ko
+
+module_loaded() {
+    awk -v wanted="$1" '$1 == wanted { found = 1 } END { exit !found }' /proc/modules
+}
+
+if module_loaded tb330fu_hci_shim; then
+    echo 'TB330FU Bluetooth HCI shim already loaded'
+else
+    [ -f "$module" ] || { echo "missing $module" >&2; exit 1; }
+    echo "loading $module"
+    /sbin/insmod "$module"
+    module_loaded tb330fu_hci_shim || { echo 'shim absent after successful insmod' >&2; exit 1; }
+fi
+
+i=0
+while [ "$i" -lt 10 ]; do
+    if [ -e /sys/class/bluetooth/hci0 ]; then
+        if [ -e /dev/rfkill ]; then
+            chmod 0666 /dev/rfkill
+        fi
+        exit 0
+    fi
+    sleep 1
+    i=$((i + 1))
+done
+
+echo 'TB330FU Bluetooth: shim loaded but hci0 did not register' >&2
+exit 1

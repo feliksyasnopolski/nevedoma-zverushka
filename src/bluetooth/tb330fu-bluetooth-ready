@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+socket=/tmp/tb330fu-hci.sock
+timeout=${1:-30}
+i=0
+
+while [ "$i" -lt "$timeout" ]; do
+    state=$(systemctl is-active tb330fu-bt-bridge.service 2>/dev/null || true)
+    pid=$(systemctl show -p MainPID --value tb330fu-bt-bridge.service 2>/dev/null || true)
+    if [ "$state" = active ] && [ -n "$pid" ] && [ "$pid" -gt 0 ] && kill -0 "$pid" 2>/dev/null; then
+        # The bridge only calls listen() after Binder lookup, initialize(), and
+        # initializationComplete(SUCCESS). ss verifies that this is listening.
+        if ss -xlH 2>/dev/null | awk -v path="$socket" '{ for (i = 1; i <= NF; i++) if ($i == path) found = 1 } END { exit !found }'; then
+            exit 0
+        fi
+    fi
+    sleep 1
+    i=$((i + 1))
+done
+
+echo "TB330FU Bluetooth: bridge readiness timeout (${timeout}s)" >&2
+exit 1
