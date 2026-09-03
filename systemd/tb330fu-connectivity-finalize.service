@@ -1,0 +1,16 @@
+[Unit]
+Description=TB330FU post-graph Wi-Fi hardware finalizer
+Requires=tb330fu-android-boot-complete.service
+After=tb330fu-android-boot-complete.service
+Before=shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/tb330fu-connectivity-finalize
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

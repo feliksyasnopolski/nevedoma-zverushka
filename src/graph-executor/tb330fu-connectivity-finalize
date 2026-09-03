@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+device=/dev/wmtWifi
+
+if [ ! -c "$device" ]; then
+    echo "TB330FU connectivity finalizer: missing character device $device" >&2
+    exit 1
+fi
+
+echo "TB330FU connectivity finalizer: enabling Wi-Fi with one ASCII 1 write"
+printf '%s' 1 > "$device"

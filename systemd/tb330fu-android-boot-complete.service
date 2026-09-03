@@ -1,0 +1,10 @@
+[Unit]
+Description=Wait for graph-produced Android boot-complete property
+Requires=rediska-genuine-property.service
+After=rediska-genuine-property.service
+Before=tb330fu-panfrost.service tb330fu-connectivity-finalize.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/wait-android-property sys.boot_completed 1
+RemainAfterExit=yes

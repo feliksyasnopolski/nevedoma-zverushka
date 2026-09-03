@@ -1,0 +1,19 @@
+[Unit]
+Description=TB330FU retained Android/vendor init graph executor
+Wants=rediska-genuine-property.service
+Requires=tb330fu-devd.service
+After=rediska-genuine-property.service tb330fu-devd.service
+Before=shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=simple
+Environment=PATH=/system/bin:/system/xbin:/vendor/bin:/vendor/xbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/sbin/tb330fu-graph-executor --run --graph /usr/lib/tb330fu/graph/full-corpus-graph.json --event early-init --event init --event late-init --event boot --event nonencrypted
+KillMode=control-group
+KillSignal=SIGKILL
+SendSIGKILL=yes
+TimeoutStopSec=1s
+
+[Install]
+WantedBy=multi-user.target
