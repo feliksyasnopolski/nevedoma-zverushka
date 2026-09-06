@@ -37,9 +37,11 @@ constexpr const char *kRearNode = "/dev/video-rear";
 constexpr const char *kFrontNode = "/dev/video-front";
 constexpr const char *kDaemonRawPath = "/run/tb330fu-camera/preview.i420";
 constexpr const char *kStillDirectory = "/run/tb330fu-camera";
+constexpr const char *kStillYuvPath = "/run/tb330fu-camera/last-still.yuv";
+constexpr const char *kStillYuvLayoutPath = "/run/tb330fu-camera/last-still-yuv-layout.json";
 constexpr const char *kStillRawPath = "/run/tb330fu-camera/last.raw";
 constexpr const char *kStillMetadataPath = "/run/tb330fu-camera/last-metadata.json";
-constexpr const char *kStillLayoutPath = "/run/tb330fu-camera/last-layout.json";
+constexpr const char *kStillRawLayoutPath = "/run/tb330fu-camera/last-raw-layout.json";
 constexpr const char *kRecorderSocket = TB330FU_VIDEO_RECORDER_SOCKET;
 
 struct YuvPlaneLayout {
@@ -80,6 +82,7 @@ struct LiveRing {
 };
 
 enum class CameraMode { VIDEO, PHOTO };
+enum class StillSessionFormat { YUV, RAW16 };
 
 struct Mode {
     int width = 1920;
@@ -175,14 +178,14 @@ static uint64_t monotonic_ns() {
                                      .count());
 }
 
-static bool read_yuv_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
-                                  std::vector<YuvPlaneLayout> *planes) {
+static bool read_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
+                              int64_t expected_count, std::vector<YuvPlaneLayout> *planes) {
     std::vector<uint8_t> bytes;
     if (!metadata(mapper, handle, 15, &bytes))
         return false;
     Reader r{bytes.data(), bytes.size(), 0};
     int64_t count = 0;
-    if (!r.take64(&count) || count != 2)
+    if (!r.take64(&count) || count != expected_count)
         return false;
     planes->clear();
     for (int64_t i = 0; i < count; ++i) {
@@ -194,7 +197,7 @@ static bool read_yuv_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
             std::string name;
             int64_t value = 0, offset_bits = 0, size_bits = 0;
             if (!r.takeString(&name) || !r.take64(&value) ||
-                !r.take64(&offset_bits) || !r.take64(&size_bits) || size_bits != 8)
+                !r.take64(&offset_bits) || !r.take64(&size_bits) || size_bits <= 0)
                 return false;
             // PlaneLayoutComponentType: Y=1, Cb=2, Cr=4.
             if (value == 4)
@@ -212,6 +215,10 @@ static bool read_yuv_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
         planes->push_back(p);
     }
     return true;
+}
+static bool read_yuv_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
+                                  std::vector<YuvPlaneLayout> *planes) {
+    return read_plane_layout(mapper, handle, 2, planes);
 }
 
 struct ByteStats {
@@ -512,13 +519,16 @@ class CameraInstance {
         worker_.join();
         return true;
     }
-    bool capture_still(std::shared_ptr<ICameraProvider> /*provider*/, std::string *error) {
+    bool capture_still(std::shared_ptr<ICameraProvider> provider, StillFormat format, std::string *error) {
+        const StillSessionFormat requested_session =
+            format == STILL_FORMAT_RAW16 ? StillSessionFormat::RAW16 : StillSessionFormat::YUV;
+        std::unique_lock<std::mutex> lifecycle_lock(lifecycle_mu_);
         std::unique_lock<std::mutex> lock(mu_);
         if (camera_mode_ != CameraMode::PHOTO) {
             if (error) *error = "camera is not in photo mode";
             return false;
         }
-        if (!worker_.joinable()) {
+        if (!worker_.joinable() || state_ != "streaming") {
             if (error) *error = "camera is not streaming";
             return false;
         }
@@ -529,8 +539,23 @@ class CameraInstance {
         still_completed_ = false;
         still_success_ = false;
         still_error_.clear();
+        still_format_ = format == STILL_FORMAT_RAW16 ? STILL_FORMAT_RAW16 : STILL_FORMAT_JPEG;
         still_pending_ = true;
         state_ = "capturing";
+        if (session_format_ != requested_session) {
+            std::printf("camera=%s still_session_reconfigure from=%s to=%s action=close_reopen\n",
+                        name_.c_str(), session_format_ == StillSessionFormat::RAW16 ? "RAW16" : "YUV",
+                        requested_session == StillSessionFormat::RAW16 ? "RAW16" : "YUV");
+            stop_requested_ = true;
+            lock.unlock();
+            worker_.join();
+            lock.lock();
+            session_format_ = requested_session;
+            stop_requested_ = false;
+            state_ = "starting";
+            error_.clear();
+            worker_ = std::thread([this, provider] { run(provider); });
+        }
         cv_.notify_all();
         const bool completed = cv_.wait_for(lock, std::chrono::seconds(10),
                                             [&] { return still_completed_ || !worker_.joinable(); });
@@ -638,7 +663,12 @@ class CameraInstance {
         still_stream.streamType = StreamType::OUTPUT;
         still_stream.width = name_ == "rear" ? 3264 : 1920;
         still_stream.height = name_ == "rear" ? 2448 : 1080;
-        still_stream.format = PixelFormat::YCBCR_420_888;
+        const StillSessionFormat session_format = [&] {
+            std::lock_guard<std::mutex> lock(mu_);
+            return session_format_;
+        }();
+        still_stream.format = session_format == StillSessionFormat::RAW16
+                                  ? PixelFormat::RAW16 : PixelFormat::YCBCR_420_888;
         still_stream.usage = BufferUsage::CPU_READ_OFTEN;
         still_stream.dataSpace = Dataspace::UNKNOWN;
         still_stream.rotation = StreamRotation::ROTATION_0;
@@ -706,7 +736,7 @@ class CameraInstance {
                      s.getDescription().c_str(), hal.size());
         if (!s.isOk() || hal.size() != 2) {
             session->close();
-            fail("configureStreams dual stream: " + s.getDescription());
+            fail("configureStreams preview+still: " + s.getDescription());
             return;
         }
         std::printf("camera=%s configureStreams ok\n", name_.c_str());
@@ -753,7 +783,8 @@ class CameraInstance {
                         static_cast<int>(h.overrideDataSpace));
         };
         log_hal_stream("main_video", *video_hs);
-        log_hal_stream("still", *still_hs);
+        log_hal_stream(session_format == StillSessionFormat::RAW16 ? "still_raw16" : "still_yuv",
+                       *still_hs);
         BufferDescriptorInfo info{};
         const char label[] = "tb330fu-camera-daemon";
         std::memcpy(info.name.data(), label, sizeof(label));
@@ -816,40 +847,51 @@ class CameraInstance {
             image_fds.push_back(raw->data[1]);
         }
         aidl::android::hardware::graphics::allocator::AllocationResult still_allocation;
-        std::vector<native_handle_t *> still_raws;
+        std::vector<native_handle_t *> yuv_raws;
+        std::vector<native_handle_t *> raw_raws;
         auto cleanup_still_handles = [&] {
-            for (auto *h : still_raws) { native_handle_close(h); native_handle_delete(h); }
-            still_raws.clear();
+            for (auto *h : yuv_raws) { native_handle_close(h); native_handle_delete(h); }
+            for (auto *h : raw_raws) { native_handle_close(h); native_handle_delete(h); }
+            yuv_raws.clear(); raw_raws.clear();
         };
-        BufferDescriptorInfo still_info{};
-        const char still_label[] = "tb330fu-camera-still";
-        std::memcpy(still_info.name.data(), still_label, sizeof(still_label));
-        still_info.width = still_stream.width;
-        still_info.height = still_stream.height;
-        still_info.layerCount = 1;
-        still_info.format = still_hs->overrideFormat;
-        still_info.usage = static_cast<BufferUsage>(static_cast<uint64_t>(still_hs->producerUsage) |
-                                                     static_cast<uint64_t>(still_hs->consumerUsage));
-        s = allocator->allocate2(still_info, pool_count, &still_allocation);
-        if (!s.isOk() || still_allocation.buffers.size() != static_cast<size_t>(pool_count)) {
-            cleanup_handles(); session->close(); fail("allocate2 still pool"); return;
-        }
-        for (auto &ah : still_allocation.buffers) {
-            native_handle_t *raw = native_handle_create(ah.fds.size(), ah.ints.size());
-            if (!raw || ah.fds.size() < 2) {
-                if (raw) { native_handle_close(raw); native_handle_delete(raw); }
-                cleanup_still_handles(); cleanup_handles(); session->close();
-                fail("still native handle allocation"); return;
+        auto allocate_still_pool = [&](const HalStream &hal_stream, int count, const char *label,
+                                       aidl::android::hardware::graphics::allocator::AllocationResult *allocation,
+                                       std::vector<native_handle_t *> *handles) {
+            BufferDescriptorInfo info{};
+            std::memcpy(info.name.data(), label, std::min(std::strlen(label), info.name.size()));
+            info.width = still_stream.width;
+            info.height = still_stream.height;
+            info.layerCount = 1;
+            info.format = hal_stream.overrideFormat;
+            info.usage = static_cast<BufferUsage>(static_cast<uint64_t>(hal_stream.producerUsage) |
+                                                   static_cast<uint64_t>(hal_stream.consumerUsage));
+            ndk::ScopedAStatus status = allocator->allocate2(info, count, allocation);
+            std::printf("camera=%s still_allocate label=%s count=%d ok=%d desc=%s buffers=%zu\n",
+                        name_.c_str(), label, count, status.isOk(), status.getDescription().c_str(), allocation->buffers.size());
+            if (!status.isOk() || allocation->buffers.size() != static_cast<size_t>(count)) return false;
+            for (auto &ah : allocation->buffers) {
+                std::printf("camera=%s still_allocate label=%s fds=%zu ints=%zu\n",
+                            name_.c_str(), label, ah.fds.size(), ah.ints.size());
+                native_handle_t *raw = native_handle_create(ah.fds.size(), ah.ints.size());
+                if (!raw || ah.fds.size() < 2) { if (raw) { native_handle_close(raw); native_handle_delete(raw); } return false; }
+                bool valid = true;
+                for (size_t i = 0; i < ah.fds.size(); ++i) {
+                    raw->data[i] = fcntl(ah.fds[i].get(), F_DUPFD_CLOEXEC, 0);
+                    if (raw->data[i] < 0) valid = false;
+                }
+                for (size_t i = 0; valid && i < ah.ints.size(); ++i) raw->data[ah.fds.size() + i] = ah.ints[i];
+                if (!valid) { native_handle_close(raw); native_handle_delete(raw); return false; }
+                handles->push_back(raw);
             }
-            bool valid = true;
-            for (size_t i = 0; i < ah.fds.size(); ++i) {
-                raw->data[i] = fcntl(ah.fds[i].get(), F_DUPFD_CLOEXEC, 0);
-                if (raw->data[i] < 0) valid = false;
-            }
-            for (size_t i = 0; valid && i < ah.ints.size(); ++i)
-                raw->data[ah.fds.size() + i] = ah.ints[i];
-            if (!valid) { native_handle_close(raw); native_handle_delete(raw); cleanup_still_handles(); cleanup_handles(); session->close(); fail("still native handle fd duplication"); return; }
-            still_raws.push_back(raw);
+            return true;
+        };
+        const int still_pool_count = std::max(1, std::min(pool_count, still_hs->maxBuffers));
+        const char *still_label = session_format == StillSessionFormat::RAW16
+                                      ? "tb330fu-camera-raw16" : "tb330fu-camera-yuv";
+        auto &still_raws = session_format == StillSessionFormat::RAW16 ? raw_raws : yuv_raws;
+        if (!allocate_still_pool(*still_hs, still_pool_count, still_label, &still_allocation,
+                                 &still_raws)) {
+            cleanup_still_handles(); cleanup_handles(); session->close(); fail("allocate2 still pool"); return;
         }
 
         void *mapper_dl = dlopen((std::string("/vendor/lib64/hw/mapper.") + suffix + ".so").c_str(),
@@ -871,8 +913,10 @@ class CameraInstance {
             return;
         }
         std::vector<buffer_handle_t> imported_buffers;
-        std::vector<buffer_handle_t> imported_still_buffers;
+        std::vector<buffer_handle_t> imported_yuv_buffers;
+        std::vector<buffer_handle_t> imported_raw_buffers;
         std::vector<YuvPlaneLayout> yuv_planes;
+        std::vector<YuvPlaneLayout> still_yuv_planes;
         for (auto *raw : raws) {
             buffer_handle_t imported = nullptr;
             mapper_error_code = mapper->v5.importBuffer(raw, &imported);
@@ -887,15 +931,24 @@ class CameraInstance {
             }
             imported_buffers.push_back(imported);
         }
-        for (auto *raw : still_raws) {
-            buffer_handle_t imported = nullptr;
-            mapper_error_code = mapper->v5.importBuffer(raw, &imported);
-            if (mapper_error_code != AIMAPPER_ERROR_NONE || !imported) {
-                for (auto h : imported_still_buffers) mapper->v5.freeBuffer(h);
-                for (auto h : imported_buffers) mapper->v5.freeBuffer(h);
-                cleanup_still_handles(); cleanup_handles(); dlclose(mapper_dl); session->close(); fail("still mapper import"); return;
+        auto import_pool = [&](const std::vector<native_handle_t *> &handles,
+                               std::vector<buffer_handle_t> *imported) {
+            for (auto *raw : handles) {
+                buffer_handle_t imported_handle = nullptr;
+                mapper_error_code = mapper->v5.importBuffer(raw, &imported_handle);
+                if (mapper_error_code != AIMAPPER_ERROR_NONE || !imported_handle) {
+                    return false;
+                }
+                imported->push_back(imported_handle);
             }
-            imported_still_buffers.push_back(imported);
+            return true;
+        };
+        auto &imported_still_buffers = session_format == StillSessionFormat::RAW16
+                                           ? imported_raw_buffers : imported_yuv_buffers;
+        if (!import_pool(still_raws, &imported_still_buffers)) {
+            for (auto h : imported_yuv_buffers) mapper->v5.freeBuffer(h);
+            for (auto h : imported_raw_buffers) mapper->v5.freeBuffer(h);
+            cleanup_still_handles(); cleanup_handles(); dlclose(mapper_dl); session->close(); fail("jpeg/raw mapper import"); return;
         }
         std::vector<uint8_t> allocation_metadata;
         int64_t allocation_size = 0;
@@ -919,19 +972,27 @@ class CameraInstance {
             fail("YUV plane layout");
             return;
         }
-        std::vector<YuvPlaneLayout> still_planes;
         int64_t still_allocation_size = 0;
         std::vector<uint8_t> still_size_bytes;
+        std::vector<YuvPlaneLayout> raw_planes;
         if (!metadata(&mapper->v5, imported_still_buffers.front(), 10, &still_size_bytes) ||
             still_size_bytes.size() < sizeof(still_allocation_size) ||
-            !read_yuv_plane_layout(&mapper->v5, imported_still_buffers.front(), &still_planes)) {
-            for (auto h : imported_still_buffers) mapper->v5.freeBuffer(h);
+            (session_format == StillSessionFormat::YUV &&
+             !read_yuv_plane_layout(&mapper->v5, imported_still_buffers.front(), &still_yuv_planes)) ||
+            (session_format == StillSessionFormat::RAW16 &&
+             !read_plane_layout(&mapper->v5, imported_still_buffers.front(), 1, &raw_planes))) {
+            for (auto h : imported_yuv_buffers) mapper->v5.freeBuffer(h);
+            for (auto h : imported_raw_buffers) mapper->v5.freeBuffer(h);
             for (auto h : imported_buffers) mapper->v5.freeBuffer(h);
             cleanup_still_handles(); cleanup_handles(); dlclose(mapper_dl); session->close();
-            fail("still YUV plane layout"); return;
+            fail("jpeg/raw layout"); return;
         }
         std::memcpy(&still_allocation_size, still_size_bytes.data(), sizeof(still_allocation_size));
-        std::printf("camera=%s mapper YUV layout planes=%zu y_stride=%lld uv_stride=%lld "
+        if (session_format == StillSessionFormat::RAW16)
+            std::printf("camera=%s RAW16 session layout stride=%lld allocation_size=%lld\n",
+                        name_.c_str(), static_cast<long long>(raw_planes[0].row_stride),
+                        static_cast<long long>(still_allocation_size));
+        std::printf("camera=%s mapper preview YUV layout planes=%zu y_stride=%lld uv_stride=%lld "
                     "uv_cr_offset_bits=%lld uv_cb_offset_bits=%lld allocation_size=%lld\n",
                     name_.c_str(), yuv_planes.size(),
                     static_cast<long long>(yuv_planes[0].row_stride),
@@ -1180,26 +1241,26 @@ class CameraInstance {
             submit_t1[frame] = t1;
             return true;
         };
-        std::vector<bool> still_handle_sent(static_cast<size_t>(pool_count) + 1, false);
-        auto submit_still = [&](int frame, int buffer_id) {
-            StreamBuffer out{};
-            out.streamId = still_stream.id;
-            out.bufferId = buffer_id;
-            if (!still_handle_sent[static_cast<size_t>(buffer_id)]) {
-                out.buffer = std::move(still_allocation.buffers[buffer_id - 1]);
-                still_handle_sent[static_cast<size_t>(buffer_id)] = true;
-            }
-            out.status = BufferStatus::OK;
+        std::vector<bool> still_handle_sent(static_cast<size_t>(still_pool_count) + 1, false);
+        auto submit_still = [&](int frame, int buffer_id, StillFormat format) {
             CaptureRequest req{}; req.frameNumber = frame; req.settings = still_tmpl;
-            req.outputBuffers.emplace_back(std::move(out));
+            const size_t index = static_cast<size_t>(buffer_id - 1);
+            StreamBuffer still{}; still.streamId = still_stream.id; still.bufferId = buffer_id;
+            if (!still_handle_sent[static_cast<size_t>(buffer_id)])
+                still.buffer = std::move(still_allocation.buffers[index]);
+            still.status = BufferStatus::OK;
+            req.outputBuffers.emplace_back(std::move(still));
             StreamBuffer input{}; input.streamId = -1; input.bufferId = 0; input.status = BufferStatus::ERROR;
             req.inputBuffer = std::move(input);
             std::vector<CaptureRequest> requests; requests.emplace_back(std::move(req));
             int processed = 0;
             const auto result = session->processCaptureRequest(std::move(requests), {}, &processed);
-            if (result.isOk() && processed == 1)
-                std::printf("camera=%s still_request frame=%d template=STILL_CAPTURE stream=%d\n",
-                            name_.c_str(), frame, still_stream.id);
+            if (result.isOk() && processed == 1) {
+                still_handle_sent[static_cast<size_t>(buffer_id)] = true;
+                std::printf("camera=%s still_request frame=%d template=STILL_CAPTURE format=%s stream=%d\n",
+                            name_.c_str(), frame, format == STILL_FORMAT_RAW16 ? "RAW16" : "JPEG",
+                            still_stream.id);
+            }
             return result.isOk() && processed == 1;
         };
 
@@ -1239,49 +1300,87 @@ class CameraInstance {
             }
             if (do_still) {
                 const int still_frame = next_frame++;
-                const int still_buffer = (still_frame - 1) % pool_count + 1;
-                bool success = submit_still(still_frame, still_buffer);
-                int64_t returned_still = 0;
+                const int still_buffer = 1;
+                StillFormat still_format;
+                { std::lock_guard<std::mutex> lock(mu_); still_format = still_format_; }
+                bool success = submit_still(still_frame, still_buffer, still_format);
+                int64_t returned_yuv = 0, returned_raw = 0;
                 if (success) {
                     std::unique_lock<std::mutex> lock(cb->mu);
                     success = cb->cv.wait_for(lock, std::chrono::seconds(5), [&] {
-                        return std::any_of(cb->returned_buffers.begin(), cb->returned_buffers.end(),
-                            [&](const auto &b) { return b.frame == still_frame && b.stream_id == still_stream.id; });
+                        for (const auto &b : cb->returned_buffers) if (b.frame == still_frame) {
+                            if (b.stream_id == still_stream.id)
+                                return true;
+                        }
+                        return false;
                     });
                     if (success) {
-                        auto it = std::find_if(cb->returned_buffers.begin(), cb->returned_buffers.end(),
-                            [&](const auto &b) { return b.frame == still_frame && b.stream_id == still_stream.id; });
-                        returned_still = it->buffer_id; cb->returned_buffers.erase(it);
+                        for (auto it = cb->returned_buffers.begin(); it != cb->returned_buffers.end();) {
+                            if (it->frame == still_frame && it->stream_id == still_stream.id) {
+                                if (still_format == STILL_FORMAT_RAW16) returned_raw = it->buffer_id;
+                                else returned_yuv = it->buffer_id;
+                                it = cb->returned_buffers.erase(it);
+                            } else ++it;
+                        }
                     }
                 }
-                bool saved = success && returned_still > 0 && static_cast<size_t>(returned_still) <= imported_still_buffers.size();
-                void *still_base = nullptr;
-                if (saved) {
+                const bool want_jpeg = still_format != STILL_FORMAT_RAW16;
+                const bool want_raw = !want_jpeg;
+                bool saved = success && (want_jpeg ? returned_yuv > 0 : returned_raw > 0) &&
+                             (!want_jpeg || static_cast<size_t>(returned_yuv) <= imported_yuv_buffers.size()) &&
+                             (!want_raw || static_cast<size_t>(returned_raw) <= imported_raw_buffers.size());
+                void *yuv_base = nullptr; void *raw_base = nullptr;
+                if (saved && want_jpeg) {
                     ARect region{0, 0, still_stream.width, still_stream.height};
-                    saved = mapper->v5.lock(imported_still_buffers[returned_still - 1],
-                        static_cast<uint64_t>(BufferUsage::CPU_READ_OFTEN), region, -1, &still_base) == AIMAPPER_ERROR_NONE && still_base;
+                    saved = mapper->v5.lock(imported_yuv_buffers[returned_yuv - 1],
+                        static_cast<uint64_t>(BufferUsage::CPU_READ_OFTEN), region, -1, &yuv_base) == AIMAPPER_ERROR_NONE && yuv_base;
+                }
+                if (saved && want_raw) {
+                    ARect region{0, 0, still_stream.width, still_stream.height};
+                    saved = mapper->v5.lock(imported_raw_buffers[returned_raw - 1],
+                        static_cast<uint64_t>(BufferUsage::CPU_READ_OFTEN), region, -1, &raw_base) == AIMAPPER_ERROR_NONE && raw_base;
                 }
                 if (saved) {
-                    const std::string raw_tmp = std::string(kStillRawPath) + ".tmp";
-                    int fd = ::open(raw_tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                    saved = fd >= 0 && write_full(fd, still_base, static_cast<size_t>(still_allocation_size));
-                    if (fd >= 0) ::close(fd);
-                    int fence = -1; mapper->v5.unlock(imported_still_buffers[returned_still - 1], &fence);
-                    if (saved) saved = std::rename(raw_tmp.c_str(), kStillRawPath) == 0;
+                    auto publish_file = [](const char *path, const void *data, size_t size) {
+                        const std::string tmp = std::string(path) + ".tmp";
+                        int fd = ::open(tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                        bool ok = fd >= 0 && write_full(fd, data, size);
+                        if (fd >= 0) { if (::fsync(fd) != 0) ok = false; ::close(fd); }
+                        return ok && std::rename(tmp.c_str(), path) == 0;
+                    };
+                    if (want_jpeg) {
+                        saved = publish_file(kStillYuvPath, yuv_base, static_cast<size_t>(still_allocation_size));
+                    } else {
+                        saved = publish_file(kStillRawPath, raw_base, static_cast<size_t>(still_allocation_size));
+                    }
+                    std::printf("camera=%s still_publish format=%s yuv_size=%lld raw_size=%lld\n",
+                                name_.c_str(), want_jpeg ? "YUV_FOR_JPEG" : "RAW16",
+                                static_cast<long long>(still_allocation_size),
+                                static_cast<long long>(still_allocation_size));
                 }
+                if (yuv_base) { int fence = -1; mapper->v5.unlock(imported_yuv_buffers[returned_yuv - 1], &fence); }
+                if (raw_base) { int fence = -1; mapper->v5.unlock(imported_raw_buffers[returned_raw - 1], &fence); }
                 FrameInfo still_info; bool have_info = false;
                 { std::lock_guard<std::mutex> lock(cb->mu); for (const auto &f : cb->frames) if (f.frame == still_frame) { still_info = f; have_info = true; } }
                 if (have_info) { gLastCompletedFrame = still_info; gHasLastCompletedFrame = true; }
-                if (saved && have_info) {
+                if (saved && have_info && want_jpeg) {
+                    const std::string layout_tmp = std::string(kStillYuvLayoutPath) + ".tmp";
+                    FILE *f = std::fopen(layout_tmp.c_str(), "w");
+                    if (f) {
+                        const auto &y = still_yuv_planes[0]; const auto &uv = still_yuv_planes[1];
+                        std::fprintf(f, "{\"mapper_suffix\":\"%s\",\"mapper_api\":5,\"width\":%d,\"height\":%d,\"format\":35,\"format_name\":\"YCBCR_420_888\",\"allocation_size\":%lld,\"planes\":[{\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld},{\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld,\"components\":[{\"value\":2,\"offset_bits\":%lld},{\"value\":4,\"offset_bits\":%lld}]}]}\n", suffix.c_str(), still_stream.width, still_stream.height, (long long)still_allocation_size, (long long)y.offset, (long long)y.sample_increment_bits, (long long)y.row_stride, (long long)y.width, (long long)y.height, (long long)y.total_size, (long long)uv.offset, (long long)uv.sample_increment_bits, (long long)uv.row_stride, (long long)uv.width, (long long)uv.height, (long long)uv.total_size, (long long)uv.cb_offset_bits, (long long)uv.cr_offset_bits);
+                        std::fclose(f); saved = std::rename(layout_tmp.c_str(), kStillYuvLayoutPath) == 0;
+                    } else saved = false;
+                } else if (saved && have_info && want_raw) {
                     const std::string meta_tmp = std::string(kStillMetadataPath) + ".tmp";
                     FILE *f = std::fopen(meta_tmp.c_str(), "w");
                     if (f) { json_metadata(f, still_info.metadata); std::fclose(f); saved = std::rename(meta_tmp.c_str(), kStillMetadataPath) == 0; }
-                    const auto &y = still_planes[0]; const auto &uv = still_planes[1];
-                    const std::string layout_tmp = std::string(kStillLayoutPath) + ".tmp";
+                    const auto &raw_plane = raw_planes[0];
+                    const std::string layout_tmp = std::string(kStillRawLayoutPath) + ".tmp";
                     f = std::fopen(layout_tmp.c_str(), "w");
                     if (f) {
-                        std::fprintf(f, "{\"mapper_suffix\":\"%s\",\"mapper_api\":5,\"width\":%d,\"height\":%d,\"format\":35,\"format_name\":\"YCBCR_420_888\",\"allocation_size\":%lld,\"planes\":[{\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld},{\"components\":[{\"value\":4,\"offset_bits\":%lld},{\"value\":2,\"offset_bits\":%lld}],\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld}]}\n", suffix.c_str(), still_stream.width, still_stream.height, (long long)still_allocation_size, (long long)y.offset, (long long)y.sample_increment_bits, (long long)y.row_stride, (long long)y.width, (long long)y.height, (long long)y.total_size, (long long)uv.cr_offset_bits, (long long)uv.cb_offset_bits, (long long)uv.offset, (long long)uv.sample_increment_bits, (long long)uv.row_stride, (long long)uv.width, (long long)uv.height, (long long)uv.total_size);
-                        std::fclose(f); saved = std::rename(layout_tmp.c_str(), kStillLayoutPath) == 0;
+                        std::fprintf(f, "{\"mapper_suffix\":\"%s\",\"mapper_api\":5,\"width\":%d,\"height\":%d,\"format\":32,\"format_name\":\"RAW16\",\"allocation_size\":%lld,\"planes\":[{\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld}]}\n", suffix.c_str(), still_stream.width, still_stream.height, (long long)still_allocation_size, (long long)raw_plane.offset, (long long)raw_plane.sample_increment_bits, (long long)raw_plane.row_stride, (long long)raw_plane.width, (long long)raw_plane.height, (long long)raw_plane.total_size);
+                        std::fclose(f); saved = std::rename(layout_tmp.c_str(), kStillRawLayoutPath) == 0;
                     } else saved = false;
                 }
                 { std::lock_guard<std::mutex> lock(mu_); still_success_ = saved; still_error_ = saved ? "" : "still result/publication failed"; still_completed_ = true; state_ = saved ? "streaming" : "error"; if (!saved) error_ = still_error_; cv_.notify_all(); }
@@ -1466,6 +1565,10 @@ class CameraInstance {
         munmap(stage, stage_query.length);
         for (auto h : imported_buffers)
             mapper->v5.freeBuffer(h);
+        for (auto h : imported_yuv_buffers)
+            mapper->v5.freeBuffer(h);
+        for (auto h : imported_raw_buffers)
+            mapper->v5.freeBuffer(h);
         dlclose(mapper_dl);
         {
             std::lock_guard<std::mutex> l(mu_);
@@ -1490,9 +1593,11 @@ class CameraInstance {
     bool af_trigger_pending_ = false;
     bool live_recording_ = false;
     bool still_pending_ = false;
+    StillFormat still_format_ = STILL_FORMAT_JPEG;
     bool still_completed_ = false;
     bool still_success_ = false;
     std::string still_error_;
+    StillSessionFormat session_format_ = StillSessionFormat::YUV;
     ResultState result_;
     bool latest_result_ = false;
 };
@@ -1572,14 +1677,14 @@ class CameraManager {
         CameraInstance *c = n == "front" ? front_ : rear_;
         return c->set_control_mode(mode);
     }
-    bool capture_still(const std::string &n, std::string *error) {
+    bool capture_still(const std::string &n, StillFormat format, std::string *error) {
         CameraInstance *c = n == "front" ? front_ : rear_;
         std::lock_guard<std::mutex> l(mu_);
         if (owner_ != n) {
             if (error) *error = "camera is not the active HAL owner";
             return false;
         }
-        return c->capture_still(provider_, error);
+        return c->capture_still(provider_, format, error);
     }
     std::shared_ptr<ICameraProvider> provider() { return provider_; }
     bool video_start(std::string *error) {
@@ -1723,12 +1828,16 @@ static void control_client(int c, CameraManager& manager) {
             else response.mutable_ok(); break;
         }
         case Request::kCaptureStill: {
-            std::string error; const bool ok = manager.capture_still(camera, &error);
+            const StillFormat format = request.capture_still().format() == STILL_FORMAT_RAW16 ? STILL_FORMAT_RAW16 : STILL_FORMAT_JPEG;
+            std::string error; const bool ok = manager.capture_still(camera, format, &error);
             if (!ok) response = error_response(request.request_id(), CAPTURE_FAILED, error);
             else {
                 auto *capture = response.mutable_capture(); capture->set_width(3264); capture->set_height(2448);
                 capture->set_frame_number(gHasLastCompletedFrame ? static_cast<uint64_t>(gLastCompletedFrame.frame) : 0);
-                capture->set_path(kStillRawPath);
+                capture->set_path(format == STILL_FORMAT_RAW16 ? kStillRawPath : kStillYuvPath);
+                capture->set_jpeg_path(kStillYuvPath);
+                capture->set_raw_path(kStillRawPath);
+                capture->set_raw_metadata_path(kStillMetadataPath);
                 if (gHasLastCompletedFrame) {
                     auto *result = capture->mutable_result();
                     result->set_ae_state(static_cast<AeState>(gLastCompletedFrame.ae + 1));

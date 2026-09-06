@@ -320,6 +320,28 @@ inline const std::string& ErrorCode_Name(T enum_t_value) {
 }
 bool ErrorCode_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, ErrorCode* value);
+enum StillFormat : int {
+  STILL_FORMAT_UNSPECIFIED = 0,
+  STILL_FORMAT_JPEG = 1,
+  STILL_FORMAT_RAW16 = 2,
+  StillFormat_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::int32_t>::min(),
+  StillFormat_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::int32_t>::max()
+};
+bool StillFormat_IsValid(int value);
+constexpr StillFormat StillFormat_MIN = STILL_FORMAT_UNSPECIFIED;
+constexpr StillFormat StillFormat_MAX = STILL_FORMAT_RAW16;
+constexpr int StillFormat_ARRAYSIZE = StillFormat_MAX + 1;
+
+const std::string& StillFormat_Name(StillFormat value);
+template<typename T>
+inline const std::string& StillFormat_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, StillFormat>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function StillFormat_Name.");
+  return StillFormat_Name(static_cast<StillFormat>(enum_t_value));
+}
+bool StillFormat_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, StillFormat* value);
 enum RecordingState : int {
   RECORDING_UNSPECIFIED = 0,
   RECORDING_IDLE = 1,
@@ -1822,6 +1844,9 @@ class CaptureResult final :
 
   enum : int {
     kPathFieldNumber = 5,
+    kJpegPathFieldNumber = 6,
+    kRawPathFieldNumber = 7,
+    kRawMetadataPathFieldNumber = 8,
     kResultFieldNumber = 4,
     kWidthFieldNumber = 1,
     kHeightFieldNumber = 2,
@@ -1839,6 +1864,48 @@ class CaptureResult final :
   const std::string& _internal_path() const;
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_path(const std::string& value);
   std::string* _internal_mutable_path();
+  public:
+
+  // string jpeg_path = 6;
+  void clear_jpeg_path();
+  const std::string& jpeg_path() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_jpeg_path(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_jpeg_path();
+  PROTOBUF_NODISCARD std::string* release_jpeg_path();
+  void set_allocated_jpeg_path(std::string* jpeg_path);
+  private:
+  const std::string& _internal_jpeg_path() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_jpeg_path(const std::string& value);
+  std::string* _internal_mutable_jpeg_path();
+  public:
+
+  // string raw_path = 7;
+  void clear_raw_path();
+  const std::string& raw_path() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_raw_path(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_raw_path();
+  PROTOBUF_NODISCARD std::string* release_raw_path();
+  void set_allocated_raw_path(std::string* raw_path);
+  private:
+  const std::string& _internal_raw_path() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_raw_path(const std::string& value);
+  std::string* _internal_mutable_raw_path();
+  public:
+
+  // string raw_metadata_path = 8;
+  void clear_raw_metadata_path();
+  const std::string& raw_metadata_path() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_raw_metadata_path(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_raw_metadata_path();
+  PROTOBUF_NODISCARD std::string* release_raw_metadata_path();
+  void set_allocated_raw_metadata_path(std::string* raw_metadata_path);
+  private:
+  const std::string& _internal_raw_metadata_path() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_raw_metadata_path(const std::string& value);
+  std::string* _internal_mutable_raw_metadata_path();
   public:
 
   // .tb330fu.camera.v1.ResultState result = 4;
@@ -1895,6 +1962,9 @@ class CaptureResult final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr path_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr jpeg_path_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr raw_path_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr raw_metadata_path_;
     ::tb330fu::camera::v1::ResultState* result_;
     ::uint32_t width_;
     ::uint32_t height_;
@@ -3139,6 +3209,18 @@ class CaptureStillRequest final :
 
   // accessors -------------------------------------------------------
 
+  enum : int {
+    kFormatFieldNumber = 1,
+  };
+  // .tb330fu.camera.v1.StillFormat format = 1;
+  void clear_format();
+  ::tb330fu::camera::v1::StillFormat format() const;
+  void set_format(::tb330fu::camera::v1::StillFormat value);
+  private:
+  ::tb330fu::camera::v1::StillFormat _internal_format() const;
+  void _internal_set_format(::tb330fu::camera::v1::StillFormat value);
+  public:
+
   // @@protoc_insertion_point(class_scope:tb330fu.camera.v1.CaptureStillRequest)
  private:
   class _Internal;
@@ -3147,6 +3229,7 @@ class CaptureStillRequest final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
+    int format_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -4607,7 +4690,7 @@ inline ::tb330fu::camera::v1::AeState ResultState::ae_state() const {
   return _internal_ae_state();
 }
 inline void ResultState::_internal_set_ae_state(::tb330fu::camera::v1::AeState value) {
-  
+
   _impl_.ae_state_ = value;
 }
 inline void ResultState::set_ae_state(::tb330fu::camera::v1::AeState value) {
@@ -4627,7 +4710,7 @@ inline ::tb330fu::camera::v1::AfState ResultState::af_state() const {
   return _internal_af_state();
 }
 inline void ResultState::_internal_set_af_state(::tb330fu::camera::v1::AfState value) {
-  
+
   _impl_.af_state_ = value;
 }
 inline void ResultState::set_af_state(::tb330fu::camera::v1::AfState value) {
@@ -4647,7 +4730,7 @@ inline ::tb330fu::camera::v1::AwbState ResultState::awb_state() const {
   return _internal_awb_state();
 }
 inline void ResultState::_internal_set_awb_state(::tb330fu::camera::v1::AwbState value) {
-  
+
   _impl_.awb_state_ = value;
 }
 inline void ResultState::set_awb_state(::tb330fu::camera::v1::AwbState value) {
@@ -4667,7 +4750,7 @@ inline ::int64_t ResultState::exposure_time_ns() const {
   return _internal_exposure_time_ns();
 }
 inline void ResultState::_internal_set_exposure_time_ns(::int64_t value) {
-  
+
   _impl_.exposure_time_ns_ = value;
 }
 inline void ResultState::set_exposure_time_ns(::int64_t value) {
@@ -4687,7 +4770,7 @@ inline ::int32_t ResultState::sensitivity_iso() const {
   return _internal_sensitivity_iso();
 }
 inline void ResultState::_internal_set_sensitivity_iso(::int32_t value) {
-  
+
   _impl_.sensitivity_iso_ = value;
 }
 inline void ResultState::set_sensitivity_iso(::int32_t value) {
@@ -4707,7 +4790,7 @@ inline ::int64_t ResultState::frame_duration_ns() const {
   return _internal_frame_duration_ns();
 }
 inline void ResultState::_internal_set_frame_duration_ns(::int64_t value) {
-  
+
   _impl_.frame_duration_ns_ = value;
 }
 inline void ResultState::set_frame_duration_ns(::int64_t value) {
@@ -4727,7 +4810,7 @@ inline float ResultState::focus_distance_diopters() const {
   return _internal_focus_distance_diopters();
 }
 inline void ResultState::_internal_set_focus_distance_diopters(float value) {
-  
+
   _impl_.focus_distance_diopters_ = value;
 }
 inline void ResultState::set_focus_distance_diopters(float value) {
@@ -4747,7 +4830,7 @@ inline ::uint64_t ResultState::frame_number() const {
   return _internal_frame_number();
 }
 inline void ResultState::_internal_set_frame_number(::uint64_t value) {
-  
+
   _impl_.frame_number_ = value;
 }
 inline void ResultState::set_frame_number(::uint64_t value) {
@@ -4767,7 +4850,7 @@ inline ::int64_t ResultState::sensor_timestamp_ns() const {
   return _internal_sensor_timestamp_ns();
 }
 inline void ResultState::_internal_set_sensor_timestamp_ns(::int64_t value) {
-  
+
   _impl_.sensor_timestamp_ns_ = value;
 }
 inline void ResultState::set_sensor_timestamp_ns(::int64_t value) {
@@ -4791,7 +4874,7 @@ inline ::tb330fu::camera::v1::ErrorCode Error::code() const {
   return _internal_code();
 }
 inline void Error::_internal_set_code(::tb330fu::camera::v1::ErrorCode value) {
-  
+
   _impl_.code_ = value;
 }
 inline void Error::set_code(::tb330fu::camera::v1::ErrorCode value) {
@@ -4810,7 +4893,7 @@ inline const std::string& Error::message() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void Error::set_message(ArgT0&& arg0, ArgT... args) {
- 
+
  _impl_.message_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tb330fu.camera.v1.Error.message)
 }
@@ -4823,11 +4906,11 @@ inline const std::string& Error::_internal_message() const {
   return _impl_.message_.Get();
 }
 inline void Error::_internal_set_message(const std::string& value) {
-  
+
   _impl_.message_.Set(value, GetArenaForAllocation());
 }
 inline std::string* Error::_internal_mutable_message() {
-  
+
   return _impl_.message_.Mutable(GetArenaForAllocation());
 }
 inline std::string* Error::release_message() {
@@ -4860,7 +4943,7 @@ inline ::tb330fu::camera::v1::CameraId CameraStatus::camera() const {
   return _internal_camera();
 }
 inline void CameraStatus::_internal_set_camera(::tb330fu::camera::v1::CameraId value) {
-  
+
   _impl_.camera_ = value;
 }
 inline void CameraStatus::set_camera(::tb330fu::camera::v1::CameraId value) {
@@ -4880,7 +4963,7 @@ inline ::tb330fu::camera::v1::CameraMode CameraStatus::mode() const {
   return _internal_mode();
 }
 inline void CameraStatus::_internal_set_mode(::tb330fu::camera::v1::CameraMode value) {
-  
+
   _impl_.mode_ = value;
 }
 inline void CameraStatus::set_mode(::tb330fu::camera::v1::CameraMode value) {
@@ -4900,7 +4983,7 @@ inline ::tb330fu::camera::v1::CameraState CameraStatus::state() const {
   return _internal_state();
 }
 inline void CameraStatus::_internal_set_state(::tb330fu::camera::v1::CameraState value) {
-  
+
   _impl_.state_ = value;
 }
 inline void CameraStatus::set_state(::tb330fu::camera::v1::CameraState value) {
@@ -4920,7 +5003,7 @@ inline ::uint32_t CameraStatus::preview_width() const {
   return _internal_preview_width();
 }
 inline void CameraStatus::_internal_set_preview_width(::uint32_t value) {
-  
+
   _impl_.preview_width_ = value;
 }
 inline void CameraStatus::set_preview_width(::uint32_t value) {
@@ -4940,7 +5023,7 @@ inline ::uint32_t CameraStatus::preview_height() const {
   return _internal_preview_height();
 }
 inline void CameraStatus::_internal_set_preview_height(::uint32_t value) {
-  
+
   _impl_.preview_height_ = value;
 }
 inline void CameraStatus::set_preview_height(::uint32_t value) {
@@ -4960,7 +5043,7 @@ inline ::uint32_t CameraStatus::preview_fps() const {
   return _internal_preview_fps();
 }
 inline void CameraStatus::_internal_set_preview_fps(::uint32_t value) {
-  
+
   _impl_.preview_fps_ = value;
 }
 inline void CameraStatus::set_preview_fps(::uint32_t value) {
@@ -4999,7 +5082,7 @@ inline void CameraStatus::unsafe_arena_set_allocated_result(
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:tb330fu.camera.v1.CameraStatus.result)
 }
 inline ::tb330fu::camera::v1::ResultState* CameraStatus::release_result() {
-  
+
   ::tb330fu::camera::v1::ResultState* temp = _impl_.result_;
   _impl_.result_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
@@ -5015,13 +5098,13 @@ inline ::tb330fu::camera::v1::ResultState* CameraStatus::release_result() {
 }
 inline ::tb330fu::camera::v1::ResultState* CameraStatus::unsafe_arena_release_result() {
   // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CameraStatus.result)
-  
+
   ::tb330fu::camera::v1::ResultState* temp = _impl_.result_;
   _impl_.result_ = nullptr;
   return temp;
 }
 inline ::tb330fu::camera::v1::ResultState* CameraStatus::_internal_mutable_result() {
-  
+
   if (_impl_.result_ == nullptr) {
     auto* p = CreateMaybeMessage<::tb330fu::camera::v1::ResultState>(GetArenaForAllocation());
     _impl_.result_ = p;
@@ -5045,9 +5128,9 @@ inline void CameraStatus::set_allocated_result(::tb330fu::camera::v1::ResultStat
       result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, result, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   _impl_.result_ = result;
   // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CameraStatus.result)
@@ -5084,7 +5167,7 @@ inline void CameraStatus::unsafe_arena_set_allocated_last_error(
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:tb330fu.camera.v1.CameraStatus.last_error)
 }
 inline ::tb330fu::camera::v1::Error* CameraStatus::release_last_error() {
-  
+
   ::tb330fu::camera::v1::Error* temp = _impl_.last_error_;
   _impl_.last_error_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
@@ -5100,13 +5183,13 @@ inline ::tb330fu::camera::v1::Error* CameraStatus::release_last_error() {
 }
 inline ::tb330fu::camera::v1::Error* CameraStatus::unsafe_arena_release_last_error() {
   // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CameraStatus.last_error)
-  
+
   ::tb330fu::camera::v1::Error* temp = _impl_.last_error_;
   _impl_.last_error_ = nullptr;
   return temp;
 }
 inline ::tb330fu::camera::v1::Error* CameraStatus::_internal_mutable_last_error() {
-  
+
   if (_impl_.last_error_ == nullptr) {
     auto* p = CreateMaybeMessage<::tb330fu::camera::v1::Error>(GetArenaForAllocation());
     _impl_.last_error_ = p;
@@ -5130,9 +5213,9 @@ inline void CameraStatus::set_allocated_last_error(::tb330fu::camera::v1::Error*
       last_error = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, last_error, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   _impl_.last_error_ = last_error;
   // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CameraStatus.last_error)
@@ -5154,7 +5237,7 @@ inline ::uint32_t Size::width() const {
   return _internal_width();
 }
 inline void Size::_internal_set_width(::uint32_t value) {
-  
+
   _impl_.width_ = value;
 }
 inline void Size::set_width(::uint32_t value) {
@@ -5174,7 +5257,7 @@ inline ::uint32_t Size::height() const {
   return _internal_height();
 }
 inline void Size::_internal_set_height(::uint32_t value) {
-  
+
   _impl_.height_ = value;
 }
 inline void Size::set_height(::uint32_t value) {
@@ -6020,7 +6103,7 @@ inline ::uint32_t CaptureResult::width() const {
   return _internal_width();
 }
 inline void CaptureResult::_internal_set_width(::uint32_t value) {
-  
+
   _impl_.width_ = value;
 }
 inline void CaptureResult::set_width(::uint32_t value) {
@@ -6040,7 +6123,7 @@ inline ::uint32_t CaptureResult::height() const {
   return _internal_height();
 }
 inline void CaptureResult::_internal_set_height(::uint32_t value) {
-  
+
   _impl_.height_ = value;
 }
 inline void CaptureResult::set_height(::uint32_t value) {
@@ -6060,7 +6143,7 @@ inline ::uint64_t CaptureResult::frame_number() const {
   return _internal_frame_number();
 }
 inline void CaptureResult::_internal_set_frame_number(::uint64_t value) {
-  
+
   _impl_.frame_number_ = value;
 }
 inline void CaptureResult::set_frame_number(::uint64_t value) {
@@ -6099,7 +6182,7 @@ inline void CaptureResult::unsafe_arena_set_allocated_result(
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:tb330fu.camera.v1.CaptureResult.result)
 }
 inline ::tb330fu::camera::v1::ResultState* CaptureResult::release_result() {
-  
+
   ::tb330fu::camera::v1::ResultState* temp = _impl_.result_;
   _impl_.result_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
@@ -6115,13 +6198,13 @@ inline ::tb330fu::camera::v1::ResultState* CaptureResult::release_result() {
 }
 inline ::tb330fu::camera::v1::ResultState* CaptureResult::unsafe_arena_release_result() {
   // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CaptureResult.result)
-  
+
   ::tb330fu::camera::v1::ResultState* temp = _impl_.result_;
   _impl_.result_ = nullptr;
   return temp;
 }
 inline ::tb330fu::camera::v1::ResultState* CaptureResult::_internal_mutable_result() {
-  
+
   if (_impl_.result_ == nullptr) {
     auto* p = CreateMaybeMessage<::tb330fu::camera::v1::ResultState>(GetArenaForAllocation());
     _impl_.result_ = p;
@@ -6145,9 +6228,9 @@ inline void CaptureResult::set_allocated_result(::tb330fu::camera::v1::ResultSta
       result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, result, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   _impl_.result_ = result;
   // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CaptureResult.result)
@@ -6164,7 +6247,7 @@ inline const std::string& CaptureResult::path() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void CaptureResult::set_path(ArgT0&& arg0, ArgT... args) {
- 
+
  _impl_.path_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tb330fu.camera.v1.CaptureResult.path)
 }
@@ -6177,11 +6260,11 @@ inline const std::string& CaptureResult::_internal_path() const {
   return _impl_.path_.Get();
 }
 inline void CaptureResult::_internal_set_path(const std::string& value) {
-  
+
   _impl_.path_.Set(value, GetArenaForAllocation());
 }
 inline std::string* CaptureResult::_internal_mutable_path() {
-  
+
   return _impl_.path_.Mutable(GetArenaForAllocation());
 }
 inline std::string* CaptureResult::release_path() {
@@ -6196,6 +6279,141 @@ inline void CaptureResult::set_allocated_path(std::string* path) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CaptureResult.path)
+}
+
+// string jpeg_path = 6;
+inline void CaptureResult::clear_jpeg_path() {
+  _impl_.jpeg_path_.ClearToEmpty();
+}
+inline const std::string& CaptureResult::jpeg_path() const {
+  // @@protoc_insertion_point(field_get:tb330fu.camera.v1.CaptureResult.jpeg_path)
+  return _internal_jpeg_path();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void CaptureResult::set_jpeg_path(ArgT0&& arg0, ArgT... args) {
+
+ _impl_.jpeg_path_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:tb330fu.camera.v1.CaptureResult.jpeg_path)
+}
+inline std::string* CaptureResult::mutable_jpeg_path() {
+  std::string* _s = _internal_mutable_jpeg_path();
+  // @@protoc_insertion_point(field_mutable:tb330fu.camera.v1.CaptureResult.jpeg_path)
+  return _s;
+}
+inline const std::string& CaptureResult::_internal_jpeg_path() const {
+  return _impl_.jpeg_path_.Get();
+}
+inline void CaptureResult::_internal_set_jpeg_path(const std::string& value) {
+
+  _impl_.jpeg_path_.Set(value, GetArenaForAllocation());
+}
+inline std::string* CaptureResult::_internal_mutable_jpeg_path() {
+
+  return _impl_.jpeg_path_.Mutable(GetArenaForAllocation());
+}
+inline std::string* CaptureResult::release_jpeg_path() {
+  // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CaptureResult.jpeg_path)
+  return _impl_.jpeg_path_.Release();
+}
+inline void CaptureResult::set_allocated_jpeg_path(std::string* jpeg_path) {
+  _impl_.jpeg_path_.SetAllocated(jpeg_path, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.jpeg_path_.IsDefault()) {
+    _impl_.jpeg_path_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CaptureResult.jpeg_path)
+}
+
+// string raw_path = 7;
+inline void CaptureResult::clear_raw_path() {
+  _impl_.raw_path_.ClearToEmpty();
+}
+inline const std::string& CaptureResult::raw_path() const {
+  // @@protoc_insertion_point(field_get:tb330fu.camera.v1.CaptureResult.raw_path)
+  return _internal_raw_path();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void CaptureResult::set_raw_path(ArgT0&& arg0, ArgT... args) {
+
+ _impl_.raw_path_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:tb330fu.camera.v1.CaptureResult.raw_path)
+}
+inline std::string* CaptureResult::mutable_raw_path() {
+  std::string* _s = _internal_mutable_raw_path();
+  // @@protoc_insertion_point(field_mutable:tb330fu.camera.v1.CaptureResult.raw_path)
+  return _s;
+}
+inline const std::string& CaptureResult::_internal_raw_path() const {
+  return _impl_.raw_path_.Get();
+}
+inline void CaptureResult::_internal_set_raw_path(const std::string& value) {
+
+  _impl_.raw_path_.Set(value, GetArenaForAllocation());
+}
+inline std::string* CaptureResult::_internal_mutable_raw_path() {
+
+  return _impl_.raw_path_.Mutable(GetArenaForAllocation());
+}
+inline std::string* CaptureResult::release_raw_path() {
+  // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CaptureResult.raw_path)
+  return _impl_.raw_path_.Release();
+}
+inline void CaptureResult::set_allocated_raw_path(std::string* raw_path) {
+  _impl_.raw_path_.SetAllocated(raw_path, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.raw_path_.IsDefault()) {
+    _impl_.raw_path_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CaptureResult.raw_path)
+}
+
+// string raw_metadata_path = 8;
+inline void CaptureResult::clear_raw_metadata_path() {
+  _impl_.raw_metadata_path_.ClearToEmpty();
+}
+inline const std::string& CaptureResult::raw_metadata_path() const {
+  // @@protoc_insertion_point(field_get:tb330fu.camera.v1.CaptureResult.raw_metadata_path)
+  return _internal_raw_metadata_path();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void CaptureResult::set_raw_metadata_path(ArgT0&& arg0, ArgT... args) {
+
+ _impl_.raw_metadata_path_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:tb330fu.camera.v1.CaptureResult.raw_metadata_path)
+}
+inline std::string* CaptureResult::mutable_raw_metadata_path() {
+  std::string* _s = _internal_mutable_raw_metadata_path();
+  // @@protoc_insertion_point(field_mutable:tb330fu.camera.v1.CaptureResult.raw_metadata_path)
+  return _s;
+}
+inline const std::string& CaptureResult::_internal_raw_metadata_path() const {
+  return _impl_.raw_metadata_path_.Get();
+}
+inline void CaptureResult::_internal_set_raw_metadata_path(const std::string& value) {
+
+  _impl_.raw_metadata_path_.Set(value, GetArenaForAllocation());
+}
+inline std::string* CaptureResult::_internal_mutable_raw_metadata_path() {
+
+  return _impl_.raw_metadata_path_.Mutable(GetArenaForAllocation());
+}
+inline std::string* CaptureResult::release_raw_metadata_path() {
+  // @@protoc_insertion_point(field_release:tb330fu.camera.v1.CaptureResult.raw_metadata_path)
+  return _impl_.raw_metadata_path_.Release();
+}
+inline void CaptureResult::set_allocated_raw_metadata_path(std::string* raw_metadata_path) {
+  _impl_.raw_metadata_path_.SetAllocated(raw_metadata_path, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.raw_metadata_path_.IsDefault()) {
+    _impl_.raw_metadata_path_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.CaptureResult.raw_metadata_path)
 }
 
 // -------------------------------------------------------------------
@@ -6222,7 +6440,7 @@ inline ::tb330fu::camera::v1::CameraId SetCameraRequest::camera() const {
   return _internal_camera();
 }
 inline void SetCameraRequest::_internal_set_camera(::tb330fu::camera::v1::CameraId value) {
-  
+
   _impl_.camera_ = value;
 }
 inline void SetCameraRequest::set_camera(::tb330fu::camera::v1::CameraId value) {
@@ -6246,7 +6464,7 @@ inline ::tb330fu::camera::v1::CameraMode SetModeRequest::mode() const {
   return _internal_mode();
 }
 inline void SetModeRequest::_internal_set_mode(::tb330fu::camera::v1::CameraMode value) {
-  
+
   _impl_.mode_ = value;
 }
 inline void SetModeRequest::set_mode(::tb330fu::camera::v1::CameraMode value) {
@@ -6578,6 +6796,26 @@ inline void SetControlsRequest::set_manual_focus_distance_diopters(float value) 
 
 // CaptureStillRequest
 
+// .tb330fu.camera.v1.StillFormat format = 1;
+inline void CaptureStillRequest::clear_format() {
+  _impl_.format_ = 0;
+}
+inline ::tb330fu::camera::v1::StillFormat CaptureStillRequest::_internal_format() const {
+  return static_cast< ::tb330fu::camera::v1::StillFormat >(_impl_.format_);
+}
+inline ::tb330fu::camera::v1::StillFormat CaptureStillRequest::format() const {
+  // @@protoc_insertion_point(field_get:tb330fu.camera.v1.CaptureStillRequest.format)
+  return _internal_format();
+}
+inline void CaptureStillRequest::_internal_set_format(::tb330fu::camera::v1::StillFormat value) {
+
+  _impl_.format_ = value;
+}
+inline void CaptureStillRequest::set_format(::tb330fu::camera::v1::StillFormat value) {
+  _internal_set_format(value);
+  // @@protoc_insertion_point(field_set:tb330fu.camera.v1.CaptureStillRequest.format)
+}
+
 // -------------------------------------------------------------------
 
 // VideoStartRequest
@@ -6606,7 +6844,7 @@ inline ::tb330fu::camera::v1::RecordingState VideoStatus::state() const {
   return _internal_state();
 }
 inline void VideoStatus::_internal_set_state(::tb330fu::camera::v1::RecordingState value) {
-  
+
   _impl_.state_ = value;
 }
 inline void VideoStatus::set_state(::tb330fu::camera::v1::RecordingState value) {
@@ -6626,7 +6864,7 @@ inline ::uint64_t VideoStatus::frames_received() const {
   return _internal_frames_received();
 }
 inline void VideoStatus::_internal_set_frames_received(::uint64_t value) {
-  
+
   _impl_.frames_received_ = value;
 }
 inline void VideoStatus::set_frames_received(::uint64_t value) {
@@ -6646,7 +6884,7 @@ inline ::uint64_t VideoStatus::frames_transport_dropped() const {
   return _internal_frames_transport_dropped();
 }
 inline void VideoStatus::_internal_set_frames_transport_dropped(::uint64_t value) {
-  
+
   _impl_.frames_transport_dropped_ = value;
 }
 inline void VideoStatus::set_frames_transport_dropped(::uint64_t value) {
@@ -6666,7 +6904,7 @@ inline ::uint64_t VideoStatus::frames_encoded() const {
   return _internal_frames_encoded();
 }
 inline void VideoStatus::_internal_set_frames_encoded(::uint64_t value) {
-  
+
   _impl_.frames_encoded_ = value;
 }
 inline void VideoStatus::set_frames_encoded(::uint64_t value) {
@@ -6686,7 +6924,7 @@ inline ::uint64_t VideoStatus::last_video_timestamp_ns() const {
   return _internal_last_video_timestamp_ns();
 }
 inline void VideoStatus::_internal_set_last_video_timestamp_ns(::uint64_t value) {
-  
+
   _impl_.last_video_timestamp_ns_ = value;
 }
 inline void VideoStatus::set_last_video_timestamp_ns(::uint64_t value) {
@@ -6706,7 +6944,7 @@ inline ::uint64_t VideoStatus::bytes_written() const {
   return _internal_bytes_written();
 }
 inline void VideoStatus::_internal_set_bytes_written(::uint64_t value) {
-  
+
   _impl_.bytes_written_ = value;
 }
 inline void VideoStatus::set_bytes_written(::uint64_t value) {
@@ -6725,7 +6963,7 @@ inline const std::string& VideoStatus::path() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void VideoStatus::set_path(ArgT0&& arg0, ArgT... args) {
- 
+
  _impl_.path_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tb330fu.camera.v1.VideoStatus.path)
 }
@@ -6738,11 +6976,11 @@ inline const std::string& VideoStatus::_internal_path() const {
   return _impl_.path_.Get();
 }
 inline void VideoStatus::_internal_set_path(const std::string& value) {
-  
+
   _impl_.path_.Set(value, GetArenaForAllocation());
 }
 inline std::string* VideoStatus::_internal_mutable_path() {
-  
+
   return _impl_.path_.Mutable(GetArenaForAllocation());
 }
 inline std::string* VideoStatus::release_path() {
@@ -6770,7 +7008,7 @@ inline const std::string& VideoStatus::last_error() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void VideoStatus::set_last_error(ArgT0&& arg0, ArgT... args) {
- 
+
  _impl_.last_error_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tb330fu.camera.v1.VideoStatus.last_error)
 }
@@ -6783,11 +7021,11 @@ inline const std::string& VideoStatus::_internal_last_error() const {
   return _impl_.last_error_.Get();
 }
 inline void VideoStatus::_internal_set_last_error(const std::string& value) {
-  
+
   _impl_.last_error_.Set(value, GetArenaForAllocation());
 }
 inline std::string* VideoStatus::_internal_mutable_last_error() {
-  
+
   return _impl_.last_error_.Mutable(GetArenaForAllocation());
 }
 inline std::string* VideoStatus::release_last_error() {
@@ -6820,7 +7058,7 @@ inline ::uint64_t Request::request_id() const {
   return _internal_request_id();
 }
 inline void Request::_internal_set_request_id(::uint64_t value) {
-  
+
   _impl_.request_id_ = value;
 }
 inline void Request::set_request_id(::uint64_t value) {
@@ -7667,7 +7905,7 @@ inline ::uint64_t Response::request_id() const {
   return _internal_request_id();
 }
 inline void Response::_internal_set_request_id(::uint64_t value) {
-  
+
   _impl_.request_id_ = value;
 }
 inline void Response::set_request_id(::uint64_t value) {
@@ -8218,7 +8456,7 @@ inline ::uint64_t StatusUpdate::sequence() const {
   return _internal_sequence();
 }
 inline void StatusUpdate::_internal_set_sequence(::uint64_t value) {
-  
+
   _impl_.sequence_ = value;
 }
 inline void StatusUpdate::set_sequence(::uint64_t value) {
@@ -8257,7 +8495,7 @@ inline void StatusUpdate::unsafe_arena_set_allocated_status(
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:tb330fu.camera.v1.StatusUpdate.status)
 }
 inline ::tb330fu::camera::v1::CameraStatus* StatusUpdate::release_status() {
-  
+
   ::tb330fu::camera::v1::CameraStatus* temp = _impl_.status_;
   _impl_.status_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
@@ -8273,13 +8511,13 @@ inline ::tb330fu::camera::v1::CameraStatus* StatusUpdate::release_status() {
 }
 inline ::tb330fu::camera::v1::CameraStatus* StatusUpdate::unsafe_arena_release_status() {
   // @@protoc_insertion_point(field_release:tb330fu.camera.v1.StatusUpdate.status)
-  
+
   ::tb330fu::camera::v1::CameraStatus* temp = _impl_.status_;
   _impl_.status_ = nullptr;
   return temp;
 }
 inline ::tb330fu::camera::v1::CameraStatus* StatusUpdate::_internal_mutable_status() {
-  
+
   if (_impl_.status_ == nullptr) {
     auto* p = CreateMaybeMessage<::tb330fu::camera::v1::CameraStatus>(GetArenaForAllocation());
     _impl_.status_ = p;
@@ -8303,9 +8541,9 @@ inline void StatusUpdate::set_allocated_status(::tb330fu::camera::v1::CameraStat
       status = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
           message_arena, status, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   _impl_.status_ = status;
   // @@protoc_insertion_point(field_set_allocated:tb330fu.camera.v1.StatusUpdate.status)
@@ -8374,6 +8612,7 @@ template <> struct is_proto_enum< ::tb330fu::camera::v1::AeState> : ::std::true_
 template <> struct is_proto_enum< ::tb330fu::camera::v1::AfState> : ::std::true_type {};
 template <> struct is_proto_enum< ::tb330fu::camera::v1::AwbState> : ::std::true_type {};
 template <> struct is_proto_enum< ::tb330fu::camera::v1::ErrorCode> : ::std::true_type {};
+template <> struct is_proto_enum< ::tb330fu::camera::v1::StillFormat> : ::std::true_type {};
 template <> struct is_proto_enum< ::tb330fu::camera::v1::RecordingState> : ::std::true_type {};
 
 PROTOBUF_NAMESPACE_CLOSE

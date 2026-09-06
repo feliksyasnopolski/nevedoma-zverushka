@@ -11,6 +11,8 @@ Restart=on-failure
 RestartSec=2
 NoNewPrivileges=yes
 ReadWritePaths=/run/tb330fu-camera /var/lib/tb330fu-camera
+RuntimeDirectory=tb330fu-camera
+RuntimeDirectoryMode=0775
 ExecStartPre=/usr/bin/install -d -o root -g root -m 0775 /run/tb330fu-camera
 StateDirectory=tb330fu-camera
 

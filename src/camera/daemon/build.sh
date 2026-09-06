@@ -24,6 +24,12 @@ LIBPNG_INC=${LIBPNG_INC:?Set LIBPNG_INC to libpng headers}
 LIBPNG_LIB=${LIBPNG_LIB:?Set LIBPNG_LIB to target libpng.so}
 Z_LIB=${Z_LIB:?Set Z_LIB to target libz.so}
 PROTOBUF_SRC_DIR=${PROTOBUF_SRC_DIR:?Set PROTOBUF_SRC_DIR to AOSP external/protobuf/src}
+case "$LIBPNG_INC" in
+    /usr/include|/usr/include/*|*/x86_64-linux-gnu|*/x86_64-linux-gnu/*)
+        echo "LIBPNG_INC must be a target-compatible libpng include root, not host glibc headers" >&2
+        exit 2
+        ;;
+esac
 rm -rf "$OUT"; mkdir -p "$OUT/src" "$OUT/include/android/hardware/graphics/mapper"
 git -C "$GRAPHICS_SNAPSHOT" show android-15.0.0_r17:graphics/mapper/stable-c/include/android/hardware/graphics/mapper/IMapper.h > "$OUT/include/android/hardware/graphics/mapper/IMapper.h"
 set -- $(find "$HDR/interfaces/camera" "$HDR/interfaces/common/aidl" "$HDR/interfaces/common/fmq/aidl" "$GRAPHICS_SNAPSHOT/graphics/common/aidl" "$GRAPHICS_SNAPSHOT/graphics/allocator/aidl" -path '*/aidl/android/*' -type f -name '*.aidl' | sort)

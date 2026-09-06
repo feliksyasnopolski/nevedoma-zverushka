@@ -141,6 +141,9 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR CaptureResult::CaptureResult(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.path_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.jpeg_path_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.raw_path_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.raw_metadata_path_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.result_)*/nullptr
   , /*decltype(_impl_.width_)*/0u
   , /*decltype(_impl_.height_)*/0u
@@ -264,7 +267,8 @@ struct TriggerAutofocusRequestDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TriggerAutofocusRequestDefaultTypeInternal _TriggerAutofocusRequest_default_instance_;
 PROTOBUF_CONSTEXPR CaptureStillRequest::CaptureStillRequest(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_._cached_size_)*/{}} {}
+    /*decltype(_impl_.format_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CaptureStillRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CaptureStillRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -841,6 +845,61 @@ bool ErrorCode_Parse(
   }
   return success;
 }
+bool StillFormat_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+static ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<std::string> StillFormat_strings[3] = {};
+
+static const char StillFormat_names[] =
+  "STILL_FORMAT_JPEG"
+  "STILL_FORMAT_RAW16"
+  "STILL_FORMAT_UNSPECIFIED";
+
+static const ::PROTOBUF_NAMESPACE_ID::internal::EnumEntry StillFormat_entries[] = {
+  { {StillFormat_names + 0, 17}, 1 },
+  { {StillFormat_names + 17, 18}, 2 },
+  { {StillFormat_names + 35, 24}, 0 },
+};
+
+static const int StillFormat_entries_by_number[] = {
+  2, // 0 -> STILL_FORMAT_UNSPECIFIED
+  0, // 1 -> STILL_FORMAT_JPEG
+  1, // 2 -> STILL_FORMAT_RAW16
+};
+
+const std::string& StillFormat_Name(
+    StillFormat value) {
+  static const bool dummy =
+      ::PROTOBUF_NAMESPACE_ID::internal::InitializeEnumStrings(
+          StillFormat_entries,
+          StillFormat_entries_by_number,
+          3, StillFormat_strings);
+  (void) dummy;
+  int idx = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumName(
+      StillFormat_entries,
+      StillFormat_entries_by_number,
+      3, value);
+  return idx == -1 ? ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString() :
+                     StillFormat_strings[idx].get();
+}
+bool StillFormat_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, StillFormat* value) {
+  int int_value;
+  bool success = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumValue(
+      StillFormat_entries, 3, name, &int_value);
+  if (success) {
+    *value = static_cast<StillFormat>(int_value);
+  }
+  return success;
+}
 bool RecordingState_IsValid(int value) {
   switch (value) {
     case 0:
@@ -1350,7 +1409,7 @@ Error::Error(const Error& from)
     _impl_.message_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_message().empty()) {
-    _this->_impl_.message_.Set(from._internal_message(), 
+    _this->_impl_.message_.Set(from._internal_message(),
       _this->GetArenaForAllocation());
   }
   _this->_impl_.code_ = from._impl_.code_;
@@ -2874,7 +2933,7 @@ CameraControls::CameraControls(const CameraControls& from)
     _impl_.focus_mode_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (from._internal_has_focus_mode()) {
-    _this->_impl_.focus_mode_.Set(from._internal_focus_mode(), 
+    _this->_impl_.focus_mode_.Set(from._internal_focus_mode(),
       _this->GetArenaForAllocation());
   }
   _impl_.white_balance_mode_.InitDefault();
@@ -2882,7 +2941,7 @@ CameraControls::CameraControls(const CameraControls& from)
     _impl_.white_balance_mode_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (from._internal_has_white_balance_mode()) {
-    _this->_impl_.white_balance_mode_.Set(from._internal_white_balance_mode(), 
+    _this->_impl_.white_balance_mode_.Set(from._internal_white_balance_mode(),
       _this->GetArenaForAllocation());
   }
   ::memcpy(&_impl_.ae_lock_, &from._impl_.ae_lock_,
@@ -3310,6 +3369,9 @@ CaptureResult::CaptureResult(const CaptureResult& from)
   CaptureResult* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.path_){}
+    , decltype(_impl_.jpeg_path_){}
+    , decltype(_impl_.raw_path_){}
+    , decltype(_impl_.raw_metadata_path_){}
     , decltype(_impl_.result_){nullptr}
     , decltype(_impl_.width_){}
     , decltype(_impl_.height_){}
@@ -3322,7 +3384,31 @@ CaptureResult::CaptureResult(const CaptureResult& from)
     _impl_.path_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_path().empty()) {
-    _this->_impl_.path_.Set(from._internal_path(), 
+    _this->_impl_.path_.Set(from._internal_path(),
+      _this->GetArenaForAllocation());
+  }
+  _impl_.jpeg_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.jpeg_path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_jpeg_path().empty()) {
+    _this->_impl_.jpeg_path_.Set(from._internal_jpeg_path(),
+      _this->GetArenaForAllocation());
+  }
+  _impl_.raw_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.raw_path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_raw_path().empty()) {
+    _this->_impl_.raw_path_.Set(from._internal_raw_path(),
+      _this->GetArenaForAllocation());
+  }
+  _impl_.raw_metadata_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.raw_metadata_path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_raw_metadata_path().empty()) {
+    _this->_impl_.raw_metadata_path_.Set(from._internal_raw_metadata_path(),
       _this->GetArenaForAllocation());
   }
   if (from._internal_has_result()) {
@@ -3340,6 +3426,9 @@ inline void CaptureResult::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.path_){}
+    , decltype(_impl_.jpeg_path_){}
+    , decltype(_impl_.raw_path_){}
+    , decltype(_impl_.raw_metadata_path_){}
     , decltype(_impl_.result_){nullptr}
     , decltype(_impl_.width_){0u}
     , decltype(_impl_.height_){0u}
@@ -3349,6 +3438,18 @@ inline void CaptureResult::SharedCtor(
   _impl_.path_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
     _impl_.path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.jpeg_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.jpeg_path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.raw_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.raw_path_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.raw_metadata_path_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.raw_metadata_path_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
@@ -3364,6 +3465,9 @@ CaptureResult::~CaptureResult() {
 inline void CaptureResult::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.path_.Destroy();
+  _impl_.jpeg_path_.Destroy();
+  _impl_.raw_path_.Destroy();
+  _impl_.raw_metadata_path_.Destroy();
   if (this != internal_default_instance()) delete _impl_.result_;
 }
 
@@ -3378,6 +3482,9 @@ void CaptureResult::Clear() {
   (void) cached_has_bits;
 
   _impl_.path_.ClearToEmpty();
+  _impl_.jpeg_path_.ClearToEmpty();
+  _impl_.raw_path_.ClearToEmpty();
+  _impl_.raw_metadata_path_.ClearToEmpty();
   if (GetArenaForAllocation() == nullptr && _impl_.result_ != nullptr) {
     delete _impl_.result_;
   }
@@ -3434,6 +3541,39 @@ const char* CaptureResult::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 42)) {
           auto str = _internal_mutable_path();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, nullptr));
+        } else {
+          goto handle_unusual;
+        }
+        continue;
+      // string jpeg_path = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 50)) {
+          auto str = _internal_mutable_jpeg_path();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, nullptr));
+        } else {
+          goto handle_unusual;
+        }
+        continue;
+      // string raw_path = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 58)) {
+          auto str = _internal_mutable_raw_path();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, nullptr));
+        } else {
+          goto handle_unusual;
+        }
+        continue;
+      // string raw_metadata_path = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 66)) {
+          auto str = _internal_mutable_raw_metadata_path();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
           CHK_(::_pbi::VerifyUTF8(str, nullptr));
@@ -3505,6 +3645,36 @@ failure:
         5, this->_internal_path(), target);
   }
 
+  // string jpeg_path = 6;
+  if (!this->_internal_jpeg_path().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_jpeg_path().data(), static_cast<int>(this->_internal_jpeg_path().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "tb330fu.camera.v1.CaptureResult.jpeg_path");
+    target = stream->WriteStringMaybeAliased(
+        6, this->_internal_jpeg_path(), target);
+  }
+
+  // string raw_path = 7;
+  if (!this->_internal_raw_path().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_raw_path().data(), static_cast<int>(this->_internal_raw_path().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "tb330fu.camera.v1.CaptureResult.raw_path");
+    target = stream->WriteStringMaybeAliased(
+        7, this->_internal_raw_path(), target);
+  }
+
+  // string raw_metadata_path = 8;
+  if (!this->_internal_raw_metadata_path().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_raw_metadata_path().data(), static_cast<int>(this->_internal_raw_metadata_path().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "tb330fu.camera.v1.CaptureResult.raw_metadata_path");
+    target = stream->WriteStringMaybeAliased(
+        8, this->_internal_raw_metadata_path(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
         static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
@@ -3526,6 +3696,27 @@ size_t CaptureResult::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_path());
+  }
+
+  // string jpeg_path = 6;
+  if (!this->_internal_jpeg_path().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_jpeg_path());
+  }
+
+  // string raw_path = 7;
+  if (!this->_internal_raw_path().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_raw_path());
+  }
+
+  // string raw_metadata_path = 8;
+  if (!this->_internal_raw_metadata_path().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_raw_metadata_path());
   }
 
   // .tb330fu.camera.v1.ResultState result = 4;
@@ -3574,6 +3765,15 @@ void CaptureResult::MergeFrom(const CaptureResult& from) {
   if (!from._internal_path().empty()) {
     _this->_internal_set_path(from._internal_path());
   }
+  if (!from._internal_jpeg_path().empty()) {
+    _this->_internal_set_jpeg_path(from._internal_jpeg_path());
+  }
+  if (!from._internal_raw_path().empty()) {
+    _this->_internal_set_raw_path(from._internal_raw_path());
+  }
+  if (!from._internal_raw_metadata_path().empty()) {
+    _this->_internal_set_raw_metadata_path(from._internal_raw_metadata_path());
+  }
   if (from._internal_has_result()) {
     _this->_internal_mutable_result()->::tb330fu::camera::v1::ResultState::MergeFrom(
         from._internal_result());
@@ -3609,6 +3809,18 @@ void CaptureResult::InternalSwap(CaptureResult* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &_impl_.path_, lhs_arena,
       &other->_impl_.path_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.jpeg_path_, lhs_arena,
+      &other->_impl_.jpeg_path_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.raw_path_, lhs_arena,
+      &other->_impl_.raw_path_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.raw_metadata_path_, lhs_arena,
+      &other->_impl_.raw_metadata_path_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(CaptureResult, _impl_.frame_number_)
@@ -4625,7 +4837,7 @@ SetControlsRequest::SetControlsRequest(const SetControlsRequest& from)
     _impl_.focus_mode_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (from._internal_has_focus_mode()) {
-    _this->_impl_.focus_mode_.Set(from._internal_focus_mode(), 
+    _this->_impl_.focus_mode_.Set(from._internal_focus_mode(),
       _this->GetArenaForAllocation());
   }
   _impl_.white_balance_mode_.InitDefault();
@@ -4633,7 +4845,7 @@ SetControlsRequest::SetControlsRequest(const SetControlsRequest& from)
     _impl_.white_balance_mode_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (from._internal_has_white_balance_mode()) {
-    _this->_impl_.white_balance_mode_.Set(from._internal_white_balance_mode(), 
+    _this->_impl_.white_balance_mode_.Set(from._internal_white_balance_mode(),
       _this->GetArenaForAllocation());
   }
   ::memcpy(&_impl_.ae_lock_, &from._impl_.ae_lock_,
@@ -5199,9 +5411,11 @@ CaptureStillRequest::CaptureStillRequest(const CaptureStillRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::MessageLite() {
   CaptureStillRequest* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      /*decltype(_impl_._cached_size_)*/{}};
+      decltype(_impl_.format_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _this->_impl_.format_ = from._impl_.format_;
   // @@protoc_insertion_point(copy_constructor:tb330fu.camera.v1.CaptureStillRequest)
 }
 
@@ -5210,7 +5424,8 @@ inline void CaptureStillRequest::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      /*decltype(_impl_._cached_size_)*/{}
+      decltype(_impl_.format_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
   };
 }
 
@@ -5237,6 +5452,7 @@ void CaptureStillRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.format_ = 0;
   _internal_metadata_.Clear<std::string>();
 }
 
@@ -5245,6 +5461,21 @@ const char* CaptureStillRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
   while (!ctx->Done(&ptr)) {
     ::uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .tb330fu.camera.v1.StillFormat format = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 8)) {
+          ::uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_format(static_cast<::tb330fu::camera::v1::StillFormat>(val));
+        } else {
+          goto handle_unusual;
+        }
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
     if ((tag == 0) || ((tag & 7) == 4)) {
       CHK_(ptr);
       ctx->SetLastTag(tag);
@@ -5270,6 +5501,13 @@ failure:
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  // .tb330fu.camera.v1.StillFormat format = 1;
+  if (this->_internal_format() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_format(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
         static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
@@ -5281,6 +5519,16 @@ failure:
 size_t CaptureStillRequest::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:tb330fu.camera.v1.CaptureStillRequest)
   size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .tb330fu.camera.v1.StillFormat format = 1;
+  if (this->_internal_format() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_format());
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
@@ -5303,6 +5551,9 @@ void CaptureStillRequest::MergeFrom(const CaptureStillRequest& from) {
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from._internal_format() != 0) {
+    _this->_internal_set_format(from._internal_format());
+  }
   _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
 }
 
@@ -5320,6 +5571,7 @@ bool CaptureStillRequest::IsInitialized() const {
 void CaptureStillRequest::InternalSwap(CaptureStillRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.format_, other->_impl_.format_);
 }
 
 std::string CaptureStillRequest::GetTypeName() const {
@@ -5791,7 +6043,7 @@ VideoStatus::VideoStatus(const VideoStatus& from)
     _impl_.path_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_path().empty()) {
-    _this->_impl_.path_.Set(from._internal_path(), 
+    _this->_impl_.path_.Set(from._internal_path(),
       _this->GetArenaForAllocation());
   }
   _impl_.last_error_.InitDefault();
@@ -5799,7 +6051,7 @@ VideoStatus::VideoStatus(const VideoStatus& from)
     _impl_.last_error_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_last_error().empty()) {
-    _this->_impl_.last_error_.Set(from._internal_last_error(), 
+    _this->_impl_.last_error_.Set(from._internal_last_error(),
       _this->GetArenaForAllocation());
   }
   ::memcpy(&_impl_.frames_received_, &from._impl_.frames_received_,

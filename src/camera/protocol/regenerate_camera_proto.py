@@ -11,6 +11,10 @@ ROOT = Path(__file__).resolve().parent
 PROTO = ROOT / "tb330fu_camera.proto"
 GENERATED = (ROOT / "tb330fu_camera.pb.h", ROOT / "tb330fu_camera.pb.cc", ROOT / "tb330fu_camera_pb2.py")
 
+def normalized_bytes(path: Path) -> bytes:
+    """Keep protoc output reproducible without generated trailing whitespace."""
+    return b"\n".join(line.rstrip() for line in path.read_bytes().splitlines()) + b"\n"
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--protoc", default=os.environ.get("PROTOC", "protoc"))
@@ -22,8 +26,8 @@ def main():
         fresh = (Path(tmp) / "tb330fu_camera.pb.h", Path(tmp) / "tb330fu_camera.pb.cc", Path(tmp) / "tb330fu_camera_pb2.py")
         if args.check:
             for expected, actual in zip(GENERATED, fresh):
-                if expected.read_bytes() != actual.read_bytes(): raise SystemExit(f"stale generated file: {expected.name}")
+                if normalized_bytes(expected) != normalized_bytes(actual): raise SystemExit(f"stale generated file: {expected.name}")
         else:
-            for expected, actual in zip(GENERATED, fresh): expected.write_bytes(actual.read_bytes())
+            for expected, actual in zip(GENERATED, fresh): expected.write_bytes(normalized_bytes(actual))
 
 if __name__ == "__main__": main()

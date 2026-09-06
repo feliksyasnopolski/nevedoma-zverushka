@@ -9,6 +9,7 @@ enum AeState { AE_STATE_UNSPECIFIED = 0; AE_INACTIVE = 1; AE_SEARCHING = 2; AE_C
 enum AfState { AF_STATE_UNSPECIFIED = 0; AF_INACTIVE = 1; AF_PASSIVE_SCAN = 2; AF_PASSIVE_FOCUSED = 3; AF_ACTIVE_SCAN = 4; AF_FOCUSED_LOCKED = 5; AF_NOT_FOCUSED_LOCKED = 6; AF_PASSIVE_UNFOCUSED = 7; }
 enum AwbState { AWB_STATE_UNSPECIFIED = 0; AWB_INACTIVE = 1; AWB_SEARCHING = 2; AWB_CONVERGED = 3; AWB_LOCKED = 4; }
 enum ErrorCode { ERROR_NONE = 0; INVALID_REQUEST = 1; INVALID_STATE = 2; UNSUPPORTED = 3; BUSY = 4; CAMERA_UNAVAILABLE = 5; CAPTURE_FAILED = 6; INTERNAL_ERROR = 7; }
+enum StillFormat { STILL_FORMAT_UNSPECIFIED = 0; STILL_FORMAT_JPEG = 1; STILL_FORMAT_RAW16 = 2; }
 
 message ResultState { AeState ae_state = 1; AfState af_state = 2; AwbState awb_state = 3; int64 exposure_time_ns = 4; int32 sensitivity_iso = 5; int64 frame_duration_ns = 6; float focus_distance_diopters = 7; uint64 frame_number = 8; int64 sensor_timestamp_ns = 9; }
 message Error { ErrorCode code = 1; string message = 2; }
@@ -16,7 +17,7 @@ message CameraStatus { CameraId camera = 1; CameraMode mode = 2; CameraState sta
 message Size { uint32 width = 1; uint32 height = 2; }
 message CameraCapabilities { repeated Size preview_sizes = 1; repeated Size still_sizes = 2; repeated string focus_modes = 3; repeated string white_balance_modes = 4; optional bool ae_lock_supported = 5; optional bool awb_lock_supported = 6; optional int32 exposure_compensation_min = 7; optional int32 exposure_compensation_max = 8; optional int64 manual_exposure_time_min_ns = 9; optional int64 manual_exposure_time_max_ns = 10; optional int32 iso_min = 11; optional int32 iso_max = 12; optional float focus_distance_min_diopters = 13; optional float focus_distance_max_diopters = 14; }
 message CameraControls { optional string focus_mode = 1; optional string white_balance_mode = 2; optional bool ae_lock = 3; optional bool awb_lock = 4; optional int32 exposure_compensation = 5; optional int64 manual_exposure_time_ns = 6; optional int32 manual_sensitivity_iso = 7; optional float manual_focus_distance_diopters = 8; }
-message CaptureResult { uint32 width = 1; uint32 height = 2; uint64 frame_number = 3; ResultState result = 4; string path = 5; }
+message CaptureResult { uint32 width = 1; uint32 height = 2; uint64 frame_number = 3; ResultState result = 4; string path = 5; string jpeg_path = 6; string raw_path = 7; string raw_metadata_path = 8; }
 message Empty {}
 message GetStateRequest {}
 message SetCameraRequest { CameraId camera = 1; }
@@ -25,7 +26,7 @@ message GetCapabilitiesRequest {}
 message GetControlsRequest {}
 message SetControlsRequest { optional string focus_mode = 1; optional string white_balance_mode = 2; optional bool ae_lock = 3; optional bool awb_lock = 4; optional int32 exposure_compensation = 5; optional int64 manual_exposure_time_ns = 6; optional int32 manual_sensitivity_iso = 7; optional float manual_focus_distance_diopters = 8; }
 message TriggerAutofocusRequest {}
-message CaptureStillRequest {}
+message CaptureStillRequest { StillFormat format = 1; }
 message VideoStartRequest {}
 message VideoStopRequest {}
 message VideoStatusRequest {}

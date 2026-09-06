@@ -95,6 +95,9 @@ For this repository, the established build host is:
 entertainment.local
 ```
 
+Do not change service enablement/lifecycle state merely to obtain root execution.
+For manual runtime validation, invoke the target binary directly with sudo/root unless the task explicitly requires service-managed execution.
+
 Primary access to the tablet is SSH unless the task explicitly requires another route.
 
 Tablet possible access routes:

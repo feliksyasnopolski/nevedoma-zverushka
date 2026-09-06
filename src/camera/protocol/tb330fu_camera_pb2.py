@@ -13,29 +13,31 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14tb330fu_camera.proto\x12\x11tb330fu.camera.v1\"\xbb\x02\n\x0bResultState\x12,\n\x08\x61\x65_state\x18\x01 \x01(\x0e\x32\x1a.tb330fu.camera.v1.AeState\x12,\n\x08\x61\x66_state\x18\x02 \x01(\x0e\x32\x1a.tb330fu.camera.v1.AfState\x12.\n\tawb_state\x18\x03 \x01(\x0e\x32\x1b.tb330fu.camera.v1.AwbState\x12\x18\n\x10\x65xposure_time_ns\x18\x04 \x01(\x03\x12\x17\n\x0fsensitivity_iso\x18\x05 \x01(\x05\x12\x19\n\x11\x66rame_duration_ns\x18\x06 \x01(\x03\x12\x1f\n\x17\x66ocus_distance_diopters\x18\x07 \x01(\x02\x12\x14\n\x0c\x66rame_number\x18\x08 \x01(\x04\x12\x1b\n\x13sensor_timestamp_ns\x18\t \x01(\x03\"D\n\x05\x45rror\x12*\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x1c.tb330fu.camera.v1.ErrorCode\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xb9\x02\n\x0c\x43\x61meraStatus\x12+\n\x06\x63\x61mera\x18\x01 \x01(\x0e\x32\x1b.tb330fu.camera.v1.CameraId\x12+\n\x04mode\x18\x02 \x01(\x0e\x32\x1d.tb330fu.camera.v1.CameraMode\x12-\n\x05state\x18\x03 \x01(\x0e\x32\x1e.tb330fu.camera.v1.CameraState\x12\x15\n\rpreview_width\x18\x04 \x01(\r\x12\x16\n\x0epreview_height\x18\x05 \x01(\r\x12\x13\n\x0bpreview_fps\x18\x06 \x01(\r\x12.\n\x06result\x18\x07 \x01(\x0b\x32\x1e.tb330fu.camera.v1.ResultState\x12,\n\nlast_error\x18\x08 \x01(\x0b\x32\x18.tb330fu.camera.v1.Error\"%\n\x04Size\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\"\x8a\x06\n\x12\x43\x61meraCapabilities\x12.\n\rpreview_sizes\x18\x01 \x03(\x0b\x32\x17.tb330fu.camera.v1.Size\x12,\n\x0bstill_sizes\x18\x02 \x03(\x0b\x32\x17.tb330fu.camera.v1.Size\x12\x13\n\x0b\x66ocus_modes\x18\x03 \x03(\t\x12\x1b\n\x13white_balance_modes\x18\x04 \x03(\t\x12\x1e\n\x11\x61\x65_lock_supported\x18\x05 \x01(\x08H\x00\x88\x01\x01\x12\x1f\n\x12\x61wb_lock_supported\x18\x06 \x01(\x08H\x01\x88\x01\x01\x12&\n\x19\x65xposure_compensation_min\x18\x07 \x01(\x05H\x02\x88\x01\x01\x12&\n\x19\x65xposure_compensation_max\x18\x08 \x01(\x05H\x03\x88\x01\x01\x12(\n\x1bmanual_exposure_time_min_ns\x18\t \x01(\x03H\x04\x88\x01\x01\x12(\n\x1bmanual_exposure_time_max_ns\x18\n \x01(\x03H\x05\x88\x01\x01\x12\x14\n\x07iso_min\x18\x0b \x01(\x05H\x06\x88\x01\x01\x12\x14\n\x07iso_max\x18\x0c \x01(\x05H\x07\x88\x01\x01\x12(\n\x1b\x66ocus_distance_min_diopters\x18\r \x01(\x02H\x08\x88\x01\x01\x12(\n\x1b\x66ocus_distance_max_diopters\x18\x0e \x01(\x02H\t\x88\x01\x01\x42\x14\n\x12_ae_lock_supportedB\x15\n\x13_awb_lock_supportedB\x1c\n\x1a_exposure_compensation_minB\x1c\n\x1a_exposure_compensation_maxB\x1e\n\x1c_manual_exposure_time_min_nsB\x1e\n\x1c_manual_exposure_time_max_nsB\n\n\x08_iso_minB\n\n\x08_iso_maxB\x1e\n\x1c_focus_distance_min_dioptersB\x1e\n\x1c_focus_distance_max_diopters\"\xc6\x03\n\x0e\x43\x61meraControls\x12\x17\n\nfocus_mode\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x1f\n\x12white_balance_mode\x18\x02 \x01(\tH\x01\x88\x01\x01\x12\x14\n\x07\x61\x65_lock\x18\x03 \x01(\x08H\x02\x88\x01\x01\x12\x15\n\x08\x61wb_lock\x18\x04 \x01(\x08H\x03\x88\x01\x01\x12\"\n\x15\x65xposure_compensation\x18\x05 \x01(\x05H\x04\x88\x01\x01\x12$\n\x17manual_exposure_time_ns\x18\x06 \x01(\x03H\x05\x88\x01\x01\x12#\n\x16manual_sensitivity_iso\x18\x07 \x01(\x05H\x06\x88\x01\x01\x12+\n\x1emanual_focus_distance_diopters\x18\x08 \x01(\x02H\x07\x88\x01\x01\x42\r\n\x0b_focus_modeB\x15\n\x13_white_balance_modeB\n\n\x08_ae_lockB\x0b\n\t_awb_lockB\x18\n\x16_exposure_compensationB\x1a\n\x18_manual_exposure_time_nsB\x19\n\x17_manual_sensitivity_isoB!\n\x1f_manual_focus_distance_diopters\"\x82\x01\n\rCaptureResult\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x14\n\x0c\x66rame_number\x18\x03 \x01(\x04\x12.\n\x06result\x18\x04 \x01(\x0b\x32\x1e.tb330fu.camera.v1.ResultState\x12\x0c\n\x04path\x18\x05 \x01(\t\"\x07\n\x05\x45mpty\"\x11\n\x0fGetStateRequest\"?\n\x10SetCameraRequest\x12+\n\x06\x63\x61mera\x18\x01 \x01(\x0e\x32\x1b.tb330fu.camera.v1.CameraId\"=\n\x0eSetModeRequest\x12+\n\x04mode\x18\x01 \x01(\x0e\x32\x1d.tb330fu.camera.v1.CameraMode\"\x18\n\x16GetCapabilitiesRequest\"\x14\n\x12GetControlsRequest\"\xca\x03\n\x12SetControlsRequest\x12\x17\n\nfocus_mode\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x1f\n\x12white_balance_mode\x18\x02 \x01(\tH\x01\x88\x01\x01\x12\x14\n\x07\x61\x65_lock\x18\x03 \x01(\x08H\x02\x88\x01\x01\x12\x15\n\x08\x61wb_lock\x18\x04 \x01(\x08H\x03\x88\x01\x01\x12\"\n\x15\x65xposure_compensation\x18\x05 \x01(\x05H\x04\x88\x01\x01\x12$\n\x17manual_exposure_time_ns\x18\x06 \x01(\x03H\x05\x88\x01\x01\x12#\n\x16manual_sensitivity_iso\x18\x07 \x01(\x05H\x06\x88\x01\x01\x12+\n\x1emanual_focus_distance_diopters\x18\x08 \x01(\x02H\x07\x88\x01\x01\x42\r\n\x0b_focus_modeB\x15\n\x13_white_balance_modeB\n\n\x08_ae_lockB\x0b\n\t_awb_lockB\x18\n\x16_exposure_compensationB\x1a\n\x18_manual_exposure_time_nsB\x19\n\x17_manual_sensitivity_isoB!\n\x1f_manual_focus_distance_diopters\"\x19\n\x17TriggerAutofocusRequest\"\x15\n\x13\x43\x61ptureStillRequest\"\x13\n\x11VideoStartRequest\"\x12\n\x10VideoStopRequest\"\x14\n\x12VideoStatusRequest\"\xec\x01\n\x0bVideoStatus\x12\x30\n\x05state\x18\x01 \x01(\x0e\x32!.tb330fu.camera.v1.RecordingState\x12\x17\n\x0f\x66rames_received\x18\x02 \x01(\x04\x12 \n\x18\x66rames_transport_dropped\x18\x03 \x01(\x04\x12\x16\n\x0e\x66rames_encoded\x18\x04 \x01(\x04\x12\x1f\n\x17last_video_timestamp_ns\x18\x05 \x01(\x04\x12\x15\n\rbytes_written\x18\x06 \x01(\x04\x12\x0c\n\x04path\x18\x07 \x01(\t\x12\x12\n\nlast_error\x18\x08 \x01(\t\"\xd9\x05\n\x07Request\x12\x12\n\nrequest_id\x18\x01 \x01(\x04\x12\x37\n\tget_state\x18\n \x01(\x0b\x32\".tb330fu.camera.v1.GetStateRequestH\x00\x12\x39\n\nset_camera\x18\x0b \x01(\x0b\x32#.tb330fu.camera.v1.SetCameraRequestH\x00\x12\x35\n\x08set_mode\x18\x0c \x01(\x0b\x32!.tb330fu.camera.v1.SetModeRequestH\x00\x12\x45\n\x10get_capabilities\x18\r \x01(\x0b\x32).tb330fu.camera.v1.GetCapabilitiesRequestH\x00\x12=\n\x0cget_controls\x18\x0e \x01(\x0b\x32%.tb330fu.camera.v1.GetControlsRequestH\x00\x12=\n\x0cset_controls\x18\x0f \x01(\x0b\x32%.tb330fu.camera.v1.SetControlsRequestH\x00\x12G\n\x11trigger_autofocus\x18\x10 \x01(\x0b\x32*.tb330fu.camera.v1.TriggerAutofocusRequestH\x00\x12?\n\rcapture_still\x18\x11 \x01(\x0b\x32&.tb330fu.camera.v1.CaptureStillRequestH\x00\x12;\n\x0bvideo_start\x18\x12 \x01(\x0b\x32$.tb330fu.camera.v1.VideoStartRequestH\x00\x12\x39\n\nvideo_stop\x18\x13 \x01(\x0b\x32#.tb330fu.camera.v1.VideoStopRequestH\x00\x12=\n\x0cvideo_status\x18\x14 \x01(\x0b\x32%.tb330fu.camera.v1.VideoStatusRequestH\x00\x42\t\n\x07\x63ommand\"\x89\x03\n\x08Response\x12\x12\n\nrequest_id\x18\x01 \x01(\x04\x12)\n\x05\x65rror\x18\n \x01(\x0b\x32\x18.tb330fu.camera.v1.ErrorH\x00\x12\x30\n\x05state\x18\x0b \x01(\x0b\x32\x1f.tb330fu.camera.v1.CameraStatusH\x00\x12=\n\x0c\x63\x61pabilities\x18\x0c \x01(\x0b\x32%.tb330fu.camera.v1.CameraCapabilitiesH\x00\x12\x35\n\x08\x63ontrols\x18\r \x01(\x0b\x32!.tb330fu.camera.v1.CameraControlsH\x00\x12\x33\n\x07\x63\x61pture\x18\x0e \x01(\x0b\x32 .tb330fu.camera.v1.CaptureResultH\x00\x12&\n\x02ok\x18\x0f \x01(\x0b\x32\x18.tb330fu.camera.v1.EmptyH\x00\x12/\n\x05video\x18\x10 \x01(\x0b\x32\x1e.tb330fu.camera.v1.VideoStatusH\x00\x42\x08\n\x06result\"Q\n\x0cStatusUpdate\x12\x10\n\x08sequence\x18\x01 \x01(\x04\x12/\n\x06status\x18\x02 \x01(\x0b\x32\x1f.tb330fu.camera.v1.CameraStatus*E\n\x08\x43\x61meraId\x12\x16\n\x12\x43\x41MERA_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x43\x41MERA_REAR\x10\x01\x12\x10\n\x0c\x43\x41MERA_FRONT\x10\x02*B\n\nCameraMode\x12\x14\n\x10MODE_UNSPECIFIED\x10\x00\x12\x0e\n\nMODE_PHOTO\x10\x01\x12\x0e\n\nMODE_VIDEO\x10\x02*\x86\x01\n\x0b\x43\x61meraState\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x0e\n\nSTATE_IDLE\x10\x01\x12\x15\n\x11STATE_CONFIGURING\x10\x02\x12\x13\n\x0fSTATE_STREAMING\x10\x03\x12\x13\n\x0fSTATE_CAPTURING\x10\x04\x12\x0f\n\x0bSTATE_ERROR\x10\x05*\x91\x01\n\x07\x41\x65State\x12\x18\n\x14\x41\x45_STATE_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x41\x45_INACTIVE\x10\x01\x12\x10\n\x0c\x41\x45_SEARCHING\x10\x02\x12\x10\n\x0c\x41\x45_CONVERGED\x10\x03\x12\r\n\tAE_LOCKED\x10\x04\x12\x15\n\x11\x41\x45_FLASH_REQUIRED\x10\x05\x12\x11\n\rAE_PRECAPTURE\x10\x06*\xc1\x01\n\x07\x41\x66State\x12\x18\n\x14\x41\x46_STATE_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x41\x46_INACTIVE\x10\x01\x12\x13\n\x0f\x41\x46_PASSIVE_SCAN\x10\x02\x12\x16\n\x12\x41\x46_PASSIVE_FOCUSED\x10\x03\x12\x12\n\x0e\x41\x46_ACTIVE_SCAN\x10\x04\x12\x15\n\x11\x41\x46_FOCUSED_LOCKED\x10\x05\x12\x19\n\x15\x41\x46_NOT_FOCUSED_LOCKED\x10\x06\x12\x18\n\x14\x41\x46_PASSIVE_UNFOCUSED\x10\x07*m\n\x08\x41wbState\x12\x19\n\x15\x41WB_STATE_UNSPECIFIED\x10\x00\x12\x10\n\x0c\x41WB_INACTIVE\x10\x01\x12\x11\n\rAWB_SEARCHING\x10\x02\x12\x11\n\rAWB_CONVERGED\x10\x03\x12\x0e\n\nAWB_LOCKED\x10\x04*\x9e\x01\n\tErrorCode\x12\x0e\n\nERROR_NONE\x10\x00\x12\x13\n\x0fINVALID_REQUEST\x10\x01\x12\x11\n\rINVALID_STATE\x10\x02\x12\x0f\n\x0bUNSUPPORTED\x10\x03\x12\x08\n\x04\x42USY\x10\x04\x12\x16\n\x12\x43\x41MERA_UNAVAILABLE\x10\x05\x12\x12\n\x0e\x43\x41PTURE_FAILED\x10\x06\x12\x12\n\x0eINTERNAL_ERROR\x10\x07*\xb3\x01\n\x0eRecordingState\x12\x19\n\x15RECORDING_UNSPECIFIED\x10\x00\x12\x12\n\x0eRECORDING_IDLE\x10\x01\x12\x16\n\x12RECORDING_STARTING\x10\x02\x12\x14\n\x10RECORDING_ACTIVE\x10\x03\x12\x16\n\x12RECORDING_STOPPING\x10\x04\x12\x17\n\x13RECORDING_COMPLETED\x10\x05\x12\x13\n\x0fRECORDING_ERROR\x10\x06\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14tb330fu_camera.proto\x12\x11tb330fu.camera.v1\"\xbb\x02\n\x0bResultState\x12,\n\x08\x61\x65_state\x18\x01 \x01(\x0e\x32\x1a.tb330fu.camera.v1.AeState\x12,\n\x08\x61\x66_state\x18\x02 \x01(\x0e\x32\x1a.tb330fu.camera.v1.AfState\x12.\n\tawb_state\x18\x03 \x01(\x0e\x32\x1b.tb330fu.camera.v1.AwbState\x12\x18\n\x10\x65xposure_time_ns\x18\x04 \x01(\x03\x12\x17\n\x0fsensitivity_iso\x18\x05 \x01(\x05\x12\x19\n\x11\x66rame_duration_ns\x18\x06 \x01(\x03\x12\x1f\n\x17\x66ocus_distance_diopters\x18\x07 \x01(\x02\x12\x14\n\x0c\x66rame_number\x18\x08 \x01(\x04\x12\x1b\n\x13sensor_timestamp_ns\x18\t \x01(\x03\"D\n\x05\x45rror\x12*\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x1c.tb330fu.camera.v1.ErrorCode\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xb9\x02\n\x0c\x43\x61meraStatus\x12+\n\x06\x63\x61mera\x18\x01 \x01(\x0e\x32\x1b.tb330fu.camera.v1.CameraId\x12+\n\x04mode\x18\x02 \x01(\x0e\x32\x1d.tb330fu.camera.v1.CameraMode\x12-\n\x05state\x18\x03 \x01(\x0e\x32\x1e.tb330fu.camera.v1.CameraState\x12\x15\n\rpreview_width\x18\x04 \x01(\r\x12\x16\n\x0epreview_height\x18\x05 \x01(\r\x12\x13\n\x0bpreview_fps\x18\x06 \x01(\r\x12.\n\x06result\x18\x07 \x01(\x0b\x32\x1e.tb330fu.camera.v1.ResultState\x12,\n\nlast_error\x18\x08 \x01(\x0b\x32\x18.tb330fu.camera.v1.Error\"%\n\x04Size\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\"\x8a\x06\n\x12\x43\x61meraCapabilities\x12.\n\rpreview_sizes\x18\x01 \x03(\x0b\x32\x17.tb330fu.camera.v1.Size\x12,\n\x0bstill_sizes\x18\x02 \x03(\x0b\x32\x17.tb330fu.camera.v1.Size\x12\x13\n\x0b\x66ocus_modes\x18\x03 \x03(\t\x12\x1b\n\x13white_balance_modes\x18\x04 \x03(\t\x12\x1e\n\x11\x61\x65_lock_supported\x18\x05 \x01(\x08H\x00\x88\x01\x01\x12\x1f\n\x12\x61wb_lock_supported\x18\x06 \x01(\x08H\x01\x88\x01\x01\x12&\n\x19\x65xposure_compensation_min\x18\x07 \x01(\x05H\x02\x88\x01\x01\x12&\n\x19\x65xposure_compensation_max\x18\x08 \x01(\x05H\x03\x88\x01\x01\x12(\n\x1bmanual_exposure_time_min_ns\x18\t \x01(\x03H\x04\x88\x01\x01\x12(\n\x1bmanual_exposure_time_max_ns\x18\n \x01(\x03H\x05\x88\x01\x01\x12\x14\n\x07iso_min\x18\x0b \x01(\x05H\x06\x88\x01\x01\x12\x14\n\x07iso_max\x18\x0c \x01(\x05H\x07\x88\x01\x01\x12(\n\x1b\x66ocus_distance_min_diopters\x18\r \x01(\x02H\x08\x88\x01\x01\x12(\n\x1b\x66ocus_distance_max_diopters\x18\x0e \x01(\x02H\t\x88\x01\x01\x42\x14\n\x12_ae_lock_supportedB\x15\n\x13_awb_lock_supportedB\x1c\n\x1a_exposure_compensation_minB\x1c\n\x1a_exposure_compensation_maxB\x1e\n\x1c_manual_exposure_time_min_nsB\x1e\n\x1c_manual_exposure_time_max_nsB\n\n\x08_iso_minB\n\n\x08_iso_maxB\x1e\n\x1c_focus_distance_min_dioptersB\x1e\n\x1c_focus_distance_max_diopters\"\xc6\x03\n\x0e\x43\x61meraControls\x12\x17\n\nfocus_mode\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x1f\n\x12white_balance_mode\x18\x02 \x01(\tH\x01\x88\x01\x01\x12\x14\n\x07\x61\x65_lock\x18\x03 \x01(\x08H\x02\x88\x01\x01\x12\x15\n\x08\x61wb_lock\x18\x04 \x01(\x08H\x03\x88\x01\x01\x12\"\n\x15\x65xposure_compensation\x18\x05 \x01(\x05H\x04\x88\x01\x01\x12$\n\x17manual_exposure_time_ns\x18\x06 \x01(\x03H\x05\x88\x01\x01\x12#\n\x16manual_sensitivity_iso\x18\x07 \x01(\x05H\x06\x88\x01\x01\x12+\n\x1emanual_focus_distance_diopters\x18\x08 \x01(\x02H\x07\x88\x01\x01\x42\r\n\x0b_focus_modeB\x15\n\x13_white_balance_modeB\n\n\x08_ae_lockB\x0b\n\t_awb_lockB\x18\n\x16_exposure_compensationB\x1a\n\x18_manual_exposure_time_nsB\x19\n\x17_manual_sensitivity_isoB!\n\x1f_manual_focus_distance_diopters\"\xc2\x01\n\rCaptureResult\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x14\n\x0c\x66rame_number\x18\x03 \x01(\x04\x12.\n\x06result\x18\x04 \x01(\x0b\x32\x1e.tb330fu.camera.v1.ResultState\x12\x0c\n\x04path\x18\x05 \x01(\t\x12\x11\n\tjpeg_path\x18\x06 \x01(\t\x12\x10\n\x08raw_path\x18\x07 \x01(\t\x12\x19\n\x11raw_metadata_path\x18\x08 \x01(\t\"\x07\n\x05\x45mpty\"\x11\n\x0fGetStateRequest\"?\n\x10SetCameraRequest\x12+\n\x06\x63\x61mera\x18\x01 \x01(\x0e\x32\x1b.tb330fu.camera.v1.CameraId\"=\n\x0eSetModeRequest\x12+\n\x04mode\x18\x01 \x01(\x0e\x32\x1d.tb330fu.camera.v1.CameraMode\"\x18\n\x16GetCapabilitiesRequest\"\x14\n\x12GetControlsRequest\"\xca\x03\n\x12SetControlsRequest\x12\x17\n\nfocus_mode\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x1f\n\x12white_balance_mode\x18\x02 \x01(\tH\x01\x88\x01\x01\x12\x14\n\x07\x61\x65_lock\x18\x03 \x01(\x08H\x02\x88\x01\x01\x12\x15\n\x08\x61wb_lock\x18\x04 \x01(\x08H\x03\x88\x01\x01\x12\"\n\x15\x65xposure_compensation\x18\x05 \x01(\x05H\x04\x88\x01\x01\x12$\n\x17manual_exposure_time_ns\x18\x06 \x01(\x03H\x05\x88\x01\x01\x12#\n\x16manual_sensitivity_iso\x18\x07 \x01(\x05H\x06\x88\x01\x01\x12+\n\x1emanual_focus_distance_diopters\x18\x08 \x01(\x02H\x07\x88\x01\x01\x42\r\n\x0b_focus_modeB\x15\n\x13_white_balance_modeB\n\n\x08_ae_lockB\x0b\n\t_awb_lockB\x18\n\x16_exposure_compensationB\x1a\n\x18_manual_exposure_time_nsB\x19\n\x17_manual_sensitivity_isoB!\n\x1f_manual_focus_distance_diopters\"\x19\n\x17TriggerAutofocusRequest\"E\n\x13\x43\x61ptureStillRequest\x12.\n\x06\x66ormat\x18\x01 \x01(\x0e\x32\x1e.tb330fu.camera.v1.StillFormat\"\x13\n\x11VideoStartRequest\"\x12\n\x10VideoStopRequest\"\x14\n\x12VideoStatusRequest\"\xec\x01\n\x0bVideoStatus\x12\x30\n\x05state\x18\x01 \x01(\x0e\x32!.tb330fu.camera.v1.RecordingState\x12\x17\n\x0f\x66rames_received\x18\x02 \x01(\x04\x12 \n\x18\x66rames_transport_dropped\x18\x03 \x01(\x04\x12\x16\n\x0e\x66rames_encoded\x18\x04 \x01(\x04\x12\x1f\n\x17last_video_timestamp_ns\x18\x05 \x01(\x04\x12\x15\n\rbytes_written\x18\x06 \x01(\x04\x12\x0c\n\x04path\x18\x07 \x01(\t\x12\x12\n\nlast_error\x18\x08 \x01(\t\"\xd9\x05\n\x07Request\x12\x12\n\nrequest_id\x18\x01 \x01(\x04\x12\x37\n\tget_state\x18\n \x01(\x0b\x32\".tb330fu.camera.v1.GetStateRequestH\x00\x12\x39\n\nset_camera\x18\x0b \x01(\x0b\x32#.tb330fu.camera.v1.SetCameraRequestH\x00\x12\x35\n\x08set_mode\x18\x0c \x01(\x0b\x32!.tb330fu.camera.v1.SetModeRequestH\x00\x12\x45\n\x10get_capabilities\x18\r \x01(\x0b\x32).tb330fu.camera.v1.GetCapabilitiesRequestH\x00\x12=\n\x0cget_controls\x18\x0e \x01(\x0b\x32%.tb330fu.camera.v1.GetControlsRequestH\x00\x12=\n\x0cset_controls\x18\x0f \x01(\x0b\x32%.tb330fu.camera.v1.SetControlsRequestH\x00\x12G\n\x11trigger_autofocus\x18\x10 \x01(\x0b\x32*.tb330fu.camera.v1.TriggerAutofocusRequestH\x00\x12?\n\rcapture_still\x18\x11 \x01(\x0b\x32&.tb330fu.camera.v1.CaptureStillRequestH\x00\x12;\n\x0bvideo_start\x18\x12 \x01(\x0b\x32$.tb330fu.camera.v1.VideoStartRequestH\x00\x12\x39\n\nvideo_stop\x18\x13 \x01(\x0b\x32#.tb330fu.camera.v1.VideoStopRequestH\x00\x12=\n\x0cvideo_status\x18\x14 \x01(\x0b\x32%.tb330fu.camera.v1.VideoStatusRequestH\x00\x42\t\n\x07\x63ommand\"\x89\x03\n\x08Response\x12\x12\n\nrequest_id\x18\x01 \x01(\x04\x12)\n\x05\x65rror\x18\n \x01(\x0b\x32\x18.tb330fu.camera.v1.ErrorH\x00\x12\x30\n\x05state\x18\x0b \x01(\x0b\x32\x1f.tb330fu.camera.v1.CameraStatusH\x00\x12=\n\x0c\x63\x61pabilities\x18\x0c \x01(\x0b\x32%.tb330fu.camera.v1.CameraCapabilitiesH\x00\x12\x35\n\x08\x63ontrols\x18\r \x01(\x0b\x32!.tb330fu.camera.v1.CameraControlsH\x00\x12\x33\n\x07\x63\x61pture\x18\x0e \x01(\x0b\x32 .tb330fu.camera.v1.CaptureResultH\x00\x12&\n\x02ok\x18\x0f \x01(\x0b\x32\x18.tb330fu.camera.v1.EmptyH\x00\x12/\n\x05video\x18\x10 \x01(\x0b\x32\x1e.tb330fu.camera.v1.VideoStatusH\x00\x42\x08\n\x06result\"Q\n\x0cStatusUpdate\x12\x10\n\x08sequence\x18\x01 \x01(\x04\x12/\n\x06status\x18\x02 \x01(\x0b\x32\x1f.tb330fu.camera.v1.CameraStatus*E\n\x08\x43\x61meraId\x12\x16\n\x12\x43\x41MERA_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x43\x41MERA_REAR\x10\x01\x12\x10\n\x0c\x43\x41MERA_FRONT\x10\x02*B\n\nCameraMode\x12\x14\n\x10MODE_UNSPECIFIED\x10\x00\x12\x0e\n\nMODE_PHOTO\x10\x01\x12\x0e\n\nMODE_VIDEO\x10\x02*\x86\x01\n\x0b\x43\x61meraState\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x0e\n\nSTATE_IDLE\x10\x01\x12\x15\n\x11STATE_CONFIGURING\x10\x02\x12\x13\n\x0fSTATE_STREAMING\x10\x03\x12\x13\n\x0fSTATE_CAPTURING\x10\x04\x12\x0f\n\x0bSTATE_ERROR\x10\x05*\x91\x01\n\x07\x41\x65State\x12\x18\n\x14\x41\x45_STATE_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x41\x45_INACTIVE\x10\x01\x12\x10\n\x0c\x41\x45_SEARCHING\x10\x02\x12\x10\n\x0c\x41\x45_CONVERGED\x10\x03\x12\r\n\tAE_LOCKED\x10\x04\x12\x15\n\x11\x41\x45_FLASH_REQUIRED\x10\x05\x12\x11\n\rAE_PRECAPTURE\x10\x06*\xc1\x01\n\x07\x41\x66State\x12\x18\n\x14\x41\x46_STATE_UNSPECIFIED\x10\x00\x12\x0f\n\x0b\x41\x46_INACTIVE\x10\x01\x12\x13\n\x0f\x41\x46_PASSIVE_SCAN\x10\x02\x12\x16\n\x12\x41\x46_PASSIVE_FOCUSED\x10\x03\x12\x12\n\x0e\x41\x46_ACTIVE_SCAN\x10\x04\x12\x15\n\x11\x41\x46_FOCUSED_LOCKED\x10\x05\x12\x19\n\x15\x41\x46_NOT_FOCUSED_LOCKED\x10\x06\x12\x18\n\x14\x41\x46_PASSIVE_UNFOCUSED\x10\x07*m\n\x08\x41wbState\x12\x19\n\x15\x41WB_STATE_UNSPECIFIED\x10\x00\x12\x10\n\x0c\x41WB_INACTIVE\x10\x01\x12\x11\n\rAWB_SEARCHING\x10\x02\x12\x11\n\rAWB_CONVERGED\x10\x03\x12\x0e\n\nAWB_LOCKED\x10\x04*\x9e\x01\n\tErrorCode\x12\x0e\n\nERROR_NONE\x10\x00\x12\x13\n\x0fINVALID_REQUEST\x10\x01\x12\x11\n\rINVALID_STATE\x10\x02\x12\x0f\n\x0bUNSUPPORTED\x10\x03\x12\x08\n\x04\x42USY\x10\x04\x12\x16\n\x12\x43\x41MERA_UNAVAILABLE\x10\x05\x12\x12\n\x0e\x43\x41PTURE_FAILED\x10\x06\x12\x12\n\x0eINTERNAL_ERROR\x10\x07*Z\n\x0bStillFormat\x12\x1c\n\x18STILL_FORMAT_UNSPECIFIED\x10\x00\x12\x15\n\x11STILL_FORMAT_JPEG\x10\x01\x12\x16\n\x12STILL_FORMAT_RAW16\x10\x02*\xb3\x01\n\x0eRecordingState\x12\x19\n\x15RECORDING_UNSPECIFIED\x10\x00\x12\x12\n\x0eRECORDING_IDLE\x10\x01\x12\x16\n\x12RECORDING_STARTING\x10\x02\x12\x14\n\x10RECORDING_ACTIVE\x10\x03\x12\x16\n\x12RECORDING_STOPPING\x10\x04\x12\x17\n\x13RECORDING_COMPLETED\x10\x05\x12\x13\n\x0fRECORDING_ERROR\x10\x06\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tb330fu_camera_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _CAMERAID._serialized_start=4385
-  _CAMERAID._serialized_end=4454
-  _CAMERAMODE._serialized_start=4456
-  _CAMERAMODE._serialized_end=4522
-  _CAMERASTATE._serialized_start=4525
-  _CAMERASTATE._serialized_end=4659
-  _AESTATE._serialized_start=4662
-  _AESTATE._serialized_end=4807
-  _AFSTATE._serialized_start=4810
-  _AFSTATE._serialized_end=5003
-  _AWBSTATE._serialized_start=5005
-  _AWBSTATE._serialized_end=5114
-  _ERRORCODE._serialized_start=5117
-  _ERRORCODE._serialized_end=5275
-  _RECORDINGSTATE._serialized_start=5278
-  _RECORDINGSTATE._serialized_end=5457
+  _CAMERAID._serialized_start=4497
+  _CAMERAID._serialized_end=4566
+  _CAMERAMODE._serialized_start=4568
+  _CAMERAMODE._serialized_end=4634
+  _CAMERASTATE._serialized_start=4637
+  _CAMERASTATE._serialized_end=4771
+  _AESTATE._serialized_start=4774
+  _AESTATE._serialized_end=4919
+  _AFSTATE._serialized_start=4922
+  _AFSTATE._serialized_end=5115
+  _AWBSTATE._serialized_start=5117
+  _AWBSTATE._serialized_end=5226
+  _ERRORCODE._serialized_start=5229
+  _ERRORCODE._serialized_end=5387
+  _STILLFORMAT._serialized_start=5389
+  _STILLFORMAT._serialized_end=5479
+  _RECORDINGSTATE._serialized_start=5482
+  _RECORDINGSTATE._serialized_end=5661
   _RESULTSTATE._serialized_start=44
   _RESULTSTATE._serialized_end=359
   _ERROR._serialized_start=361
@@ -49,37 +51,37 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _CAMERACONTROLS._serialized_start=1568
   _CAMERACONTROLS._serialized_end=2022
   _CAPTURERESULT._serialized_start=2025
-  _CAPTURERESULT._serialized_end=2155
-  _EMPTY._serialized_start=2157
-  _EMPTY._serialized_end=2164
-  _GETSTATEREQUEST._serialized_start=2166
-  _GETSTATEREQUEST._serialized_end=2183
-  _SETCAMERAREQUEST._serialized_start=2185
-  _SETCAMERAREQUEST._serialized_end=2248
-  _SETMODEREQUEST._serialized_start=2250
-  _SETMODEREQUEST._serialized_end=2311
-  _GETCAPABILITIESREQUEST._serialized_start=2313
-  _GETCAPABILITIESREQUEST._serialized_end=2337
-  _GETCONTROLSREQUEST._serialized_start=2339
-  _GETCONTROLSREQUEST._serialized_end=2359
-  _SETCONTROLSREQUEST._serialized_start=2362
-  _SETCONTROLSREQUEST._serialized_end=2820
-  _TRIGGERAUTOFOCUSREQUEST._serialized_start=2822
-  _TRIGGERAUTOFOCUSREQUEST._serialized_end=2847
-  _CAPTURESTILLREQUEST._serialized_start=2849
-  _CAPTURESTILLREQUEST._serialized_end=2870
-  _VIDEOSTARTREQUEST._serialized_start=2872
-  _VIDEOSTARTREQUEST._serialized_end=2891
-  _VIDEOSTOPREQUEST._serialized_start=2893
-  _VIDEOSTOPREQUEST._serialized_end=2911
-  _VIDEOSTATUSREQUEST._serialized_start=2913
-  _VIDEOSTATUSREQUEST._serialized_end=2933
-  _VIDEOSTATUS._serialized_start=2936
-  _VIDEOSTATUS._serialized_end=3172
-  _REQUEST._serialized_start=3175
-  _REQUEST._serialized_end=3904
-  _RESPONSE._serialized_start=3907
-  _RESPONSE._serialized_end=4300
-  _STATUSUPDATE._serialized_start=4302
-  _STATUSUPDATE._serialized_end=4383
+  _CAPTURERESULT._serialized_end=2219
+  _EMPTY._serialized_start=2221
+  _EMPTY._serialized_end=2228
+  _GETSTATEREQUEST._serialized_start=2230
+  _GETSTATEREQUEST._serialized_end=2247
+  _SETCAMERAREQUEST._serialized_start=2249
+  _SETCAMERAREQUEST._serialized_end=2312
+  _SETMODEREQUEST._serialized_start=2314
+  _SETMODEREQUEST._serialized_end=2375
+  _GETCAPABILITIESREQUEST._serialized_start=2377
+  _GETCAPABILITIESREQUEST._serialized_end=2401
+  _GETCONTROLSREQUEST._serialized_start=2403
+  _GETCONTROLSREQUEST._serialized_end=2423
+  _SETCONTROLSREQUEST._serialized_start=2426
+  _SETCONTROLSREQUEST._serialized_end=2884
+  _TRIGGERAUTOFOCUSREQUEST._serialized_start=2886
+  _TRIGGERAUTOFOCUSREQUEST._serialized_end=2911
+  _CAPTURESTILLREQUEST._serialized_start=2913
+  _CAPTURESTILLREQUEST._serialized_end=2982
+  _VIDEOSTARTREQUEST._serialized_start=2984
+  _VIDEOSTARTREQUEST._serialized_end=3003
+  _VIDEOSTOPREQUEST._serialized_start=3005
+  _VIDEOSTOPREQUEST._serialized_end=3023
+  _VIDEOSTATUSREQUEST._serialized_start=3025
+  _VIDEOSTATUSREQUEST._serialized_end=3045
+  _VIDEOSTATUS._serialized_start=3048
+  _VIDEOSTATUS._serialized_end=3284
+  _REQUEST._serialized_start=3287
+  _REQUEST._serialized_end=4016
+  _RESPONSE._serialized_start=4019
+  _RESPONSE._serialized_end=4412
+  _STATUSUPDATE._serialized_start=4414
+  _STATUSUPDATE._serialized_end=4495
 # @@protoc_insertion_point(module_scope)

@@ -35,6 +35,8 @@ The module and V4L2 nodes are native Linux-facing transport.
 |---|---|
 | `src/camera/daemon/tb330fu-camera-daemon.cpp` | resident bionic Camera3-to-V4L2 daemon |
 | `src/camera/capture/tb330fu-camera-capture.cpp` | shared Camera3/AIDL/FMQ/mapper implementation |
+| `src/camera/jpeg/tb330fu-camera-processor.cpp` | persistent glibc/libjpeg-turbo image processor |
+| `src/camera/jpeg/build.sh` | independent AArch64 glibc processor build entry point |
 | `src/camera/bridge/camera_bridge.py` | FastAPI/uvicorn app-facing HTTP and WebSocket bridge |
 | `src/camera/bridge/openapi.json` | generated v1 HTTP contract for the future frontend |
 | `modules/v4l2loopback-tb330fu/v4l2loopback.c` | GPL v4l2loopback fork with DMABUF OUTPUT and producer events |
@@ -87,8 +89,12 @@ V4L2 `S_FMT` and `S_PARM` events select the supported width, height, and frame i
 Preview and video use the same daemon stream configuration.
 The daemon uses the returned `HalStream` format and usage for allocation and
 buffer import. The Linux-facing format is YU12 after conversion of the
-mapper-visible Y-plus-interleaved-VU payload. The separate still stream uses
-`YCBCR_420_888` with `CPU_READ_OFTEN`.
+mapper-visible Y-plus-interleaved-VU payload. Still capture configures a
+single full-resolution still stream alongside preview: processed
+`YCBCR_420_888` for JPEG product mode or `RAW16` for RAW mode. Switching
+between these still formats closes and reopens the Camera3 session, so YUV and
+RAW16 are never configured concurrently. JPEG encoding is performed by the
+persistent separate glibc/libjpeg-turbo processor over a bounded Unix socket.
 
 ## Scene control
 
@@ -220,7 +226,9 @@ The bridge translates public string/enumeration models to the daemon's
 protobuf requests and does not become authoritative for camera state.
 
 The API includes synchronous still capture and raw/JPEG retrieval from the
-daemon-owned last-shot files. `/v1/events` uses Starlette WebSocket support and
+daemon-owned last-shot files. `POST /v1/capture?format=jpeg` is the default
+full-resolution processed-YUV capture followed by synchronous processor JPEG
+encoding; `format=raw` selects RAW16. `/v1/events` uses Starlette WebSocket support and
 sends complete status snapshots, beginning with the latest available snapshot.
 The generated contract freezes operation IDs, cleaned status enums, and binary
 `/v1/last-shot` responses. Control PATCH fields are optional for omission, but
@@ -349,9 +357,16 @@ Sustained delivery was measured below nominal 30 fps; that does not change the V
   they are applied to subsequent Camera3 requests where the target metadata
   supports them. Autofocus is a one-shot Camera3 AF trigger.
 - Rear/front simultaneous HAL capture is unsupported.
-- Still capture returns result metadata and the canonical last-shot path;
-  image bytes are served by the bridge from daemon-owned files and are not
-  transported over IPC.
+- Still capture returns result metadata and the selected canonical last-shot path;
+  JPEG selects preview plus full-resolution processed YUV, RAW selects preview
+  plus full-resolution RAW16, and JPEG/RAW switching explicitly closes and
+  reopens the Camera3 session. Image bytes are served by the bridge from
+  daemon-owned files and are not transported over IPC.
+- The persistent `tb330fu-camera-processor` listens on
+  `/run/tb330fu-camera/processor.sock` using bounded `SOCK_SEQPACKET` messages.
+  JPEG requests contain only processed-YUV and layout paths; replies are
+  `OK|<canonical-path>` or an explicit bounded `ERR|<code>`. DNG is reserved
+  and currently returns `ERR|UNSUPPORTED`.
 - The DMA-BUF path performs a module copy and the daemon performs an NV21 to I420 conversion; it is not zero-copy.
 - Busy consumers may wait instead of receiving immediate `EBUSY`.
 - Nominal 30 fps is not reached in the validated deployment.

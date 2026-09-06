@@ -152,8 +152,8 @@ class CameraIpc:
         r = self._new(); r.set_controls.CopyFrom(controls); return self._request(r)
     def trigger_autofocus(self) -> Response:
         r = self._new(); r.trigger_autofocus.CopyFrom(TriggerAutofocusRequest()); return self._request(r)
-    def capture_still(self) -> Response:
-        r = self._new(); r.capture_still.CopyFrom(CaptureStillRequest()); return self._request(r)
+    def capture_still(self, format: int = 1) -> Response:
+        r = self._new(); r.capture_still.CopyFrom(CaptureStillRequest(format=format)); return self._request(r)
     def video_start(self) -> Response:
         r = self._new(); r.video_start.CopyFrom(VideoStartRequest()); return self._request(r)
     def video_stop(self) -> Response:

@@ -18,11 +18,19 @@ contract. Regenerate it with:
 python3 generate_openapi.py
 ```
 
-The runtime needs FastAPI, uvicorn, the generated protobuf Python dependency,
-Pillow, and NumPy for vectorized JPEG extraction. The raw endpoint does not
-require Pillow or NumPy. JPEG conversion reads
-`/run/tb330fu-camera/last-layout.json`, which is the daemon's copied mapper
-plane-layout sidecar, and therefore honors allocation offsets and strides.
+Build the persistent processor separately on the Linux build host. Set
+`JPEGINC` and `JPEGLIB` to the target glibc/libjpeg-turbo sysroot when needed:
+
+```text
+JPEGINC=/path/to/jpeg/include \
+JPEGLIB=/path/to/aarch64/libjpeg.so.8 \
+  sh src/camera/jpeg/build.sh
+```
+
+The runtime needs FastAPI, uvicorn, and the generated protobuf Python
+dependency. JPEG capture requests conversion from the persistent
+`tb330fu-camera-processor` over `/run/tb330fu-camera/processor.sock`; the raw
+endpoint serves the daemon's RAW16 artifact.
 
 Status camera/mode values are `unspecified`, `rear`/`front`, and
 `unspecified`, `photo`/`video`. PATCH controls preserve omitted fields, accept

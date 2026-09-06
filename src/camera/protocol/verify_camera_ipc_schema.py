@@ -30,6 +30,9 @@ response.capture.frame_number = 17
 response.capture.result.ae_state = 3
 response.capture.result.sensitivity_iso = 400
 response.capture.path = "/run/tb330fu-camera/last.raw"
+response.capture.jpeg_path = "/run/tb330fu-camera/last.jpg"
+response.capture.raw_path = "/run/tb330fu-camera/last.raw"
+response.capture.raw_metadata_path = "/run/tb330fu-camera/last-metadata.json"
 round_trip(response)
 
 update = StatusUpdate(sequence=9)

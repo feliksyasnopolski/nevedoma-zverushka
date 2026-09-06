@@ -2,14 +2,11 @@
 """Focused contract and transport tests for the camera bridge."""
 from __future__ import annotations
 
-import io
 import threading
 import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
-from PIL import Image
-
 import camera_bridge
 import camera_ipc
 from tb330fu_camera_pb2 import Request, Response
@@ -71,31 +68,9 @@ class BridgeContractTests(unittest.TestCase):
         last_shot = paths["/v1/last-shot"]["get"]
         self.assertEqual(last_shot["parameters"][0]["schema"]["enum"], ["raw", "jpg"])
         self.assertEqual(set(last_shot["responses"]["200"]["content"]), {"application/octet-stream", "image/jpeg"})
+        capture = paths["/v1/capture"]["post"]
+        self.assertEqual(capture["parameters"][0]["schema"]["enum"], ["jpeg", "raw"])
         self.assertNotIn("path", camera_bridge.app.openapi()["components"]["schemas"]["CaptureResultModel"]["properties"])
-
-    def test_vectorized_jpeg_honors_strides_and_offsets(self):
-        width, height = 4, 4
-        raw = bytearray(80)
-        y_offset, uv_offset = 3, 40
-        y_stride, uv_stride = 8, 7
-        for row in range(height):
-            for col in range(width):
-                raw[y_offset + row * y_stride + col] = 80 + row * 10 + col
-        for row in range(height // 2):
-            for col in range(width // 2):
-                base = uv_offset + row * uv_stride + col * 2
-                raw[base] = 100 + row * 5 + col
-                raw[base + 1] = 150 + row * 5 + col
-        layout = {"width": width, "height": height, "planes": [
-            {"offset": y_offset, "row_stride": y_stride, "sample_increment_bits": 8},
-            {"offset": uv_offset, "row_stride": uv_stride, "sample_increment_bits": 16,
-             "components": [{"value": 2, "offset_bits": 0}, {"value": 4, "offset_bits": 8}]},
-        ]}
-        encoded = camera_bridge._jpeg(bytes(raw), layout)
-        with Image.open(io.BytesIO(encoded)) as image:
-            self.assertEqual(image.size, (width, height))
-            self.assertGreater(image.convert("L").getextrema()[1], image.convert("L").getextrema()[0])
-
 
 class FakeSocket:
     def __init__(self, *, connect_error=False, receive_error=False):

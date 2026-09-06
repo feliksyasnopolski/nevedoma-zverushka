@@ -138,7 +138,10 @@ Preview and video are exposed through V4L2.
 The daemon has local protobuf v1 Unix `SOCK_SEQPACKET` control and events
 sockets; it is not an HTTP server. The daemon remains authoritative for camera
 selection, mode, controls, Camera3 observation, and capture lifecycle.
-Still capture is not implemented.
+Still capture uses full-resolution processed YUV and RAW16 outputs. The
+persistent native glibc camera processor owns libjpeg-turbo JPEG encoding and
+will own RAW-to-DNG processing later; only the latest JPEG, RAW16, and RAW
+metadata artifacts are published.
 Device-node and daemon liveness do not by themselves prove correct pixels, format negotiation, or product-complete camera behavior.
 
 ## Sensors

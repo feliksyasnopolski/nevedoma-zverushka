@@ -35,7 +35,8 @@ def request(req_id, command, value=None):
                 setattr(controls, name, int(raw))
         out.set_controls.CopyFrom(controls)
     elif command == "trigger_autofocus": out.trigger_autofocus.CopyFrom(TriggerAutofocusRequest())
-    elif command == "capture_still": out.capture_still.CopyFrom(CaptureStillRequest())
+    elif command == "capture_still":
+        out.capture_still.CopyFrom(CaptureStillRequest(format=2 if value == "raw" else 1))
     else: raise ValueError(command)
     return out
 

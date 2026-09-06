@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import io
 import json
+import socket
 import threading
 from contextlib import asynccontextmanager
 from enum import Enum
@@ -27,7 +27,9 @@ except ImportError:  # direct execution from this directory
     from camera_ipc import CameraDaemonError, CameraIpc, CameraIpcError
 
 RAW_PATH = Path("/run/tb330fu-camera/last.raw")
-LAYOUT_PATH = Path("/run/tb330fu-camera/last-layout.json")
+JPEG_PATH = Path("/run/tb330fu-camera/last.jpg")
+PROCESSOR_SOCKET = "/run/tb330fu-camera/processor.sock"
+PROCESSOR_MAX_MESSAGE = 4096
 
 
 class CameraName(str, Enum):
@@ -208,6 +210,9 @@ class CaptureResultModel(PublicModel):
     height: int
     frame_number: int
     result: Optional[ResultMetadata] = None
+    jpeg_path: Optional[str] = None
+    raw_path: Optional[str] = None
+    raw_metadata_path: Optional[str] = None
 
 
 class EmptyModel(PublicModel):
@@ -293,45 +298,11 @@ def message_json(message: Any) -> dict[str, Any]:
     if message.HasField("capture"):
         c = message.capture
         return {"width": c.width, "height": c.height, "frame_number": c.frame_number,
-                "result": result_json(c.result) if c.HasField("result") else None}
+                "result": result_json(c.result) if c.HasField("result") else None,
+                "jpeg_path": c.jpeg_path or c.path or None,
+                "raw_path": c.raw_path or None,
+                "raw_metadata_path": c.raw_metadata_path or None}
     return {}
-
-
-def _jpeg(raw: bytes, layout: dict[str, Any]) -> bytes:
-    try:
-        import numpy as np
-        from PIL import Image
-    except ImportError as exc:
-        raise RuntimeError("JPEG export requires Pillow") from exc
-    planes = layout.get("planes")
-    if not isinstance(planes, list) or len(planes) < 2:
-        raise ValueError("mapper layout does not contain Y and chroma planes")
-    width, height = int(layout["width"]), int(layout["height"])
-    y, uv = planes[0], planes[1]
-    y_stride, uv_stride = int(y["row_stride"]), int(uv["row_stride"])
-    y_inc, uv_inc = max(1, int(y["sample_increment_bits"]) // 8), max(1, int(uv["sample_increment_bits"]) // 8)
-    y_off, uv_off = int(y["offset"]), int(uv["offset"])
-    components = {int(x["value"]): int(x["offset_bits"]) // 8 for x in uv.get("components", [])}
-    cr, cb = components.get(4), components.get(2)
-    if cr is None or cb is None:
-        raise ValueError("mapper chroma components are incomplete")
-    needed = max(y_off + (height - 1) * y_stride + (width - 1) * y_inc + 1,
-                 uv_off + (height // 2 - 1) * uv_stride + (width // 2 - 1) * uv_inc + max(cr, cb) + 1)
-    if needed > len(raw):
-        raise ValueError("last.raw is shorter than its mapper layout")
-    source = np.frombuffer(raw, dtype=np.uint8)
-    rows = np.arange(height, dtype=np.int64)[:, None]
-    columns = np.arange(width, dtype=np.int64)[None, :]
-    y_indices = y_off + rows * y_stride + columns * y_inc
-    uv_indices = uv_off + (rows // 2) * uv_stride + (columns // 2) * uv_inc
-    y_plane = source[y_indices]
-    cb_plane = source[uv_indices + cb]
-    cr_plane = source[uv_indices + cr]
-    ycbcr = np.stack((y_plane, cb_plane, cr_plane), axis=-1)
-    image = Image.fromarray(ycbcr, mode="YCbCr").convert("RGB")
-    out = io.BytesIO()
-    image.save(out, format="JPEG", quality=90, optimize=True)
-    return out.getvalue()
 
 
 class Bridge:
@@ -485,9 +456,26 @@ def autofocus(request: Request) -> Any:
 
 
 @app.post("/v1/capture", operation_id="capture", response_model=CaptureResultModel, responses=ERROR_RESPONSES)
-def capture(request: Request) -> Any:
+def capture(request: Request, shot_type: Literal["jpeg", "raw"] = Query("jpeg", alias="format")) -> Any:
     b = get_bridge(request)
-    return message_json(call(b, b.ipc.capture_still))
+    response = call(b, lambda: b.ipc.capture_still(2 if shot_type == "raw" else 1))
+    if shot_type == "jpeg":
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET) as processor:
+                processor.settimeout(15)
+                processor.connect(PROCESSOR_SOCKET)
+                message = f"JPEG|{response.capture.path}|/run/tb330fu-camera/last-still-yuv-layout.json".encode()
+                if len(message) > PROCESSOR_MAX_MESSAGE:
+                    raise BridgeError(502, "processor request is too large")
+                processor.sendall(message)
+                reply = processor.recv(PROCESSOR_MAX_MESSAGE).decode("ascii")
+            if reply != "OK|/run/tb330fu-camera/last.jpg":
+                raise BridgeError(502, f"JPEG processor failed: {reply[:64]}")
+        except (OSError, UnicodeError, TimeoutError) as exc:
+            raise BridgeError(502, f"JPEG processor unavailable: {exc}") from exc
+        response.capture.set_jpeg_path(str(JPEG_PATH))
+        response.capture.set_path(str(JPEG_PATH))
+    return message_json(response)
 
 
 @app.post("/video/start", operation_id="videoStart", responses=ERROR_RESPONSES)
@@ -520,8 +508,7 @@ def last_shot(request: Request, shot_type: Literal["raw", "jpg"] = Query("raw", 
         if shot_type == "raw":
             data, media_type = RAW_PATH.read_bytes(), "application/octet-stream"
         else:
-            data = _jpeg(RAW_PATH.read_bytes(), json.loads(LAYOUT_PATH.read_text()))
-            media_type = "image/jpeg"
+            data, media_type = JPEG_PATH.read_bytes(), "image/jpeg"
     except FileNotFoundError as exc:
         raise BridgeError(404, "no still capture available") from exc
     except (ValueError, RuntimeError, KeyError, json.JSONDecodeError) as exc:
