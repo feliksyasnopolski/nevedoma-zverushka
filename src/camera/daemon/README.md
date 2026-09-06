@@ -16,12 +16,13 @@ direct test client uses the generated binding
 [`../protocol/tb330fu_camera_pb2.py`](../protocol/tb330fu_camera_pb2.py) through
 [`../protocol/tb330fu_camera_client.py`](../protocol/tb330fu_camera_client.py).
 
-Regenerate and verify the bindings with the matching AOSP compiler:
+Regenerate and verify the bindings with the matching AOSP compiler (the
+canonical build host keeps this at the default path below):
 
 ```bash
-PROTOC=/path/to/aosp-protoc-3.21.12 \
+PROTOC=/home/felix/protobuf-3.21-build/protoc-3.21.12.0 \
   python3 src/camera/protocol/regenerate_camera_proto.py
-PROTOC=/path/to/aosp-protoc-3.21.12 \
+PROTOC=/home/felix/protobuf-3.21-build/protoc-3.21.12.0 \
   python3 src/camera/protocol/verify_camera_ipc_schema.py
 ```
 

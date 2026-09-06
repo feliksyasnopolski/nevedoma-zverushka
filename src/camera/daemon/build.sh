@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-PROTOC=${PROTOC:-protoc}
+PROTOC=${PROTOC:-/home/felix/protobuf-3.21-build/protoc-3.21.12.0}
+export PROTOC
 python3 "$ROOT/../protocol/regenerate_camera_proto.py" --protoc "$PROTOC" --check
 python3 "$ROOT/../protocol/verify_camera_ipc_schema.py"
 HDR=${HDR:?Set HDR to the AOSP camera/common header root}
