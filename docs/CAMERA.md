@@ -304,8 +304,19 @@ FFmpeg and AOSP protobuf sources required by
 [`src/camera/recorder/build.sh`](../src/camera/recorder/build.sh):
 
 ```bash
-sh src/camera/recorder/build.sh
+ssh entertainment.local
+cd /path/to/tb330fu-release
+PROTOC=/home/felix/protobuf-3.21-build/protoc-3.21.12.0 \
+  sh src/camera/recorder/build.sh
 ```
+
+The script uses `aarch64-linux-gnu-g++`, AArch64 glibc FFmpeg development
+headers/libraries, and the AOSP protobuf-lite sources at
+`/home/felix/aosp15-init/external/protobuf/src`. `PROTOC` must match the
+checked-in generated camera bindings; the build stops if they are stale. The
+result is native Linux AArch64 glibc, not Android/bionic. The successful
+production artifact linked against `libavcodec.so.58`, `libavformat.so.58`,
+and `libavutil.so.56`.
 
 Install the resulting `out/tb330fu-video-recorder` as
 `/usr/local/lib/tb330fu/tb330fu-video-recorder` on the target and use
@@ -313,6 +324,31 @@ Install the resulting `out/tb330fu-video-recorder` as
 The service is root-owned because it writes the runtime ring and
 `/var/lib/tb330fu-camera/video.mp4`; the camera daemon remains the Camera3
 owner.
+
+#### Tablet-native FFmpeg prototype recipe
+
+The tablet was also used for standalone encoder and muxer prototypes. This is
+not the production recorder build: it bypasses the shared-ring/control-socket
+integration and proves only the target FFmpeg/V4L2 encoder path. The target
+provides native `/usr/bin/g++`, AArch64 headers under
+`/usr/include/aarch64-linux-gnu`, and FFmpeg libraries under
+`/usr/lib/aarch64-linux-gnu`; the observed target ABI was FFmpeg `.62/.60`.
+With a prototype source staged under `/home/felix`, the equivalent recipe is:
+
+```bash
+g++ -std=c++20 -O2 \
+  -I/usr/include/aarch64-linux-gnu \
+  /home/felix/recorder.cpp \
+  -L/usr/lib/aarch64-linux-gnu \
+  -lavformat -lavcodec -lavutil \
+  -o /home/felix/mtk-camera-recorder-prototype
+```
+
+The exact historical one-line shell command was not retained, but the source,
+AArch64 ELF, linked SONAMEs, target compiler, and successful output artifacts
+establish this equivalent command. Do not use this prototype recipe for the
+production recorder: it has no protobuf-lite integration and does not build
+the checked-in `tb330fu-video-recorder.cpp` control/ring service.
 
 ### Kernel module
 

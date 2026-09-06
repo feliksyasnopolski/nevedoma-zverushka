@@ -6,6 +6,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/error.h>
 #include <libavutil/mem.h>
+#include <libavutil/opt.h>
 }
 
 #include <fcntl.h>
@@ -27,6 +28,13 @@ using namespace tb330fu::camera::v1;
 namespace {
 constexpr size_t kRingBytes = sizeof(tb330fu_video_ring_header) +
     TB330FU_VIDEO_RING_SLOTS * tb330fu_video_slot_bytes(TB330FU_VIDEO_RING_SLOT_BYTES);
+constexpr uint8_t kMtkH264Avcc[] = {
+    0x01, 0x42, 0x00, 0x0a, 0xff, 0xe1, 0x00, 0x14,
+    0x67, 0x42, 0x00, 0x0a, 0x8d, 0x8d, 0x40, 0x3c,
+    0x01, 0x13, 0xf2, 0xcd, 0x40, 0x40, 0x40, 0x41,
+    0xe1, 0x10, 0x8d, 0x40, 0x01, 0x00, 0x04, 0x68,
+    0xca, 0x43, 0xc8,
+};
 
 std::string av_error(int rc) { char b[AV_ERROR_MAX_STRING_SIZE]{}; av_strerror(rc, b, sizeof(b)); return b; }
 void free_aligned(void *opaque, uint8_t *) { av_free(opaque); }
@@ -37,6 +45,10 @@ AVBufferRef *buffer(size_t size) {
     auto *ref = av_buffer_create(aligned, size, free_aligned, raw, 0);
     if (!ref) av_free(raw);
     return ref;
+}
+bool is_h264_parameter_set_packet(const AVPacket *packet) {
+    return packet && packet->size >= 8 && packet->data[0] == 0 && packet->data[1] == 0 &&
+        packet->data[2] == 0 && packet->data[3] == 1 && packet->data[4] == 0x67;
 }
 
 class Recorder {
@@ -59,14 +71,13 @@ class Recorder {
     }
     bool stop(std::string *error = nullptr) {
         std::thread worker;
-        { std::lock_guard<std::mutex> lock(mu_); if (!active_) return true; active_ = false; worker = std::move(worker_); }
+        const bool was_active = active_.exchange(false, std::memory_order_release);
+        { std::lock_guard<std::mutex> lock(mu_); if (!was_active && !worker_.joinable() && !format_ && !codec_) return true; worker = std::move(worker_); }
         if (worker.joinable()) worker.join();
         std::lock_guard<std::mutex> lock(mu_);
-        int rc = avcodec_send_frame(codec_, nullptr);
-        if (rc >= 0 || rc == AVERROR_EOF) rc = receive_packets();
+        int rc = status_.frames_encoded() == 0 ? AVERROR(EINVAL) : 0;
         if (rc >= 0) rc = av_write_trailer(format_);
-        if (format_ && !(format_->oformat->flags & AVFMT_NOFILE)) avio_closep(&format_->pb);
-        if (format_) avformat_free_context(format_); format_ = nullptr; codec_ = nullptr;
+        cleanup_ffmpeg_locked();
         if (rc < 0) { status_.set_state(RECORDING_ERROR); status_.set_last_error("finalization: " + av_error(rc)); if (error) *error = status_.last_error(); cleanup_locked(); return false; }
         if (::rename(TB330FU_VIDEO_OUTPUT_PART, TB330FU_VIDEO_OUTPUT) != 0) { status_.set_state(RECORDING_ERROR); status_.set_last_error(std::strerror(errno)); if (error) *error = status_.last_error(); cleanup_locked(); return false; }
         status_.set_state(RECORDING_COMPLETED); status_.set_path(TB330FU_VIDEO_OUTPUT); cleanup_locked(); return true;
@@ -91,18 +102,42 @@ class Recorder {
         stream_ = avformat_new_stream(format_, nullptr); codec_ = avcodec_alloc_context3(codec);
         if (!stream_ || !codec_) { *error = "FFmpeg allocation failed"; return false; }
         codec_->width = 1920; codec_->height = 1080; codec_->pix_fmt = AV_PIX_FMT_NV21;
-        codec_->time_base = AVRational{1, 1000000000}; codec_->framerate = AVRational{30, 1}; codec_->bit_rate = 4000000;
+        codec_->time_base = AVRational{1, 30}; codec_->framerate = AVRational{30, 1}; codec_->bit_rate = 4000000;
+        codec_->gop_size = 30; codec_->max_b_frames = 0;
+        av_opt_set_int(codec_->priv_data, "num_output_buffers", 12, 0);
+        av_opt_set_int(codec_->priv_data, "num_capture_buffers", 12, 0);
         rc = avcodec_open2(codec_, codec, nullptr); if (rc < 0) { *error = "encoder open: " + av_error(rc); return false; }
         rc = avcodec_parameters_from_context(stream_->codecpar, codec_); if (rc < 0) { *error = "codec parameters: " + av_error(rc); return false; }
+        const bool valid_avcc = stream_->codecpar->extradata &&
+            stream_->codecpar->extradata_size >= 7 &&
+            stream_->codecpar->extradata[0] == 1 &&
+            stream_->codecpar->extradata[1] != 0;
+        if (!valid_avcc) {
+            auto *extra = static_cast<uint8_t *>(av_mallocz(sizeof(kMtkH264Avcc) + AV_INPUT_BUFFER_PADDING_SIZE));
+            if (!extra) { *error = "codec extradata allocation failed"; return false; }
+            std::memcpy(extra, kMtkH264Avcc, sizeof(kMtkH264Avcc));
+            stream_->codecpar->extradata = extra;
+            stream_->codecpar->extradata_size = sizeof(kMtkH264Avcc);
+        }
+        last_packet_pts_ = AV_NOPTS_VALUE;
+        last_packet_dts_ = AV_NOPTS_VALUE;
         stream_->time_base = codec_->time_base;
         if (!(format_->oformat->flags & AVFMT_NOFILE)) { rc = avio_open(&format_->pb, TB330FU_VIDEO_OUTPUT_PART, AVIO_FLAG_WRITE); if (rc < 0) { *error = "output open: " + av_error(rc); return false; } }
         rc = avformat_write_header(format_, nullptr); if (rc < 0) { *error = "MP4 header: " + av_error(rc); return false; }
         return true;
     }
+    void cleanup_ffmpeg_locked() {
+        if (codec_) avcodec_free_context(&codec_);
+        if (format_ && format_->pb) avio_closep(&format_->pb);
+        if (format_) avformat_free_context(format_);
+        format_ = nullptr;
+        stream_ = nullptr;
+    }
     tb330fu_video_slot *slot(uint64_t seq) const { auto *p = map_ + header_->slots_offset + (seq % header_->slot_count) * tb330fu_video_slot_bytes(header_->slot_bytes); return reinterpret_cast<tb330fu_video_slot *>(p); }
     void consume() {
         uint64_t first = 0, last = 0;
         for (;;) {
+            if (!active_) break;
             uint64_t seq = __atomic_load_n(&header_->read_sequence, __ATOMIC_RELAXED); auto *s = slot(seq);
             uint64_t write = __atomic_load_n(&header_->write_sequence, __ATOMIC_ACQUIRE);
             if (seq >= write) { if (!active_) break; std::this_thread::yield(); continue; }
@@ -125,13 +160,30 @@ class Recorder {
     }
     int receive_packets() {
         AVPacket *p = av_packet_alloc(); if (!p) return AVERROR(ENOMEM); int rc = 0;
-        while ((rc = avcodec_receive_packet(codec_, p)) >= 0) { p->stream_index = stream_->index; av_packet_rescale_ts(p, codec_->time_base, stream_->time_base); int w = av_interleaved_write_frame(format_, p); av_packet_unref(p); if (w < 0) { rc = w; break; } }
+        while ((rc = avcodec_receive_packet(codec_, p)) >= 0) {
+            if (is_h264_parameter_set_packet(p)) {
+                av_packet_unref(p);
+                continue;
+            }
+            p->stream_index = stream_->index;
+            av_packet_rescale_ts(p, codec_->time_base, stream_->time_base);
+            if (p->dts != AV_NOPTS_VALUE && last_packet_dts_ != AV_NOPTS_VALUE && p->dts <= last_packet_dts_)
+                p->dts = last_packet_dts_ + 1;
+            if (p->pts != AV_NOPTS_VALUE && last_packet_pts_ != AV_NOPTS_VALUE && p->pts <= last_packet_pts_)
+                p->pts = last_packet_pts_ + 1;
+            if (p->pts != AV_NOPTS_VALUE && p->dts != AV_NOPTS_VALUE && p->pts < p->dts)
+                p->pts = p->dts;
+            last_packet_pts_ = p->pts;
+            last_packet_dts_ = p->dts;
+            int w = av_interleaved_write_frame(format_, p); av_packet_unref(p); if (w < 0) { rc = w; break; }
+        }
         av_packet_free(&p); return rc == AVERROR(EAGAIN) || rc == AVERROR_EOF ? 0 : rc;
     }
     uint64_t part_bytes() const { struct stat st{}; if (::stat(TB330FU_VIDEO_OUTPUT_PART, &st) == 0) return st.st_size; return ::stat(TB330FU_VIDEO_OUTPUT, &st) == 0 ? st.st_size : 0; }
-    void cleanup_locked() { if (map_) ::munmap(map_, kRingBytes); map_ = nullptr; if (fd_ >= 0) ::close(fd_); fd_ = -1; header_ = nullptr; }
-    std::mutex mu_; VideoStatus status_; bool active_ = false; std::thread worker_; int fd_ = -1; uint8_t *map_ = nullptr; tb330fu_video_ring_header *header_ = nullptr;
+    void cleanup_locked() { cleanup_ffmpeg_locked(); if (map_) ::munmap(map_, kRingBytes); map_ = nullptr; if (fd_ >= 0) ::close(fd_); fd_ = -1; header_ = nullptr; }
+    std::mutex mu_; VideoStatus status_; std::atomic<bool> active_{false}; std::thread worker_; int fd_ = -1; uint8_t *map_ = nullptr; tb330fu_video_ring_header *header_ = nullptr;
     AVFormatContext *format_ = nullptr; AVCodecContext *codec_ = nullptr; AVStream *stream_ = nullptr;
+    int64_t last_packet_pts_ = AV_NOPTS_VALUE; int64_t last_packet_dts_ = AV_NOPTS_VALUE;
 };
 
 void send_response(int fd, const Response &r) { std::string wire; r.SerializeToString(&wire); ::send(fd, wire.data(), wire.size(), MSG_NOSIGNAL); }
