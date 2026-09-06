@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package tb330fu.camera.v1;
+
+enum CameraId { CAMERA_UNSPECIFIED = 0; CAMERA_REAR = 1; CAMERA_FRONT = 2; }
+enum CameraMode { MODE_UNSPECIFIED = 0; MODE_PHOTO = 1; MODE_VIDEO = 2; }
+enum CameraState { STATE_UNSPECIFIED = 0; STATE_IDLE = 1; STATE_CONFIGURING = 2; STATE_STREAMING = 3; STATE_CAPTURING = 4; STATE_ERROR = 5; }
+enum AeState { AE_STATE_UNSPECIFIED = 0; AE_INACTIVE = 1; AE_SEARCHING = 2; AE_CONVERGED = 3; AE_LOCKED = 4; AE_FLASH_REQUIRED = 5; AE_PRECAPTURE = 6; }
+enum AfState { AF_STATE_UNSPECIFIED = 0; AF_INACTIVE = 1; AF_PASSIVE_SCAN = 2; AF_PASSIVE_FOCUSED = 3; AF_ACTIVE_SCAN = 4; AF_FOCUSED_LOCKED = 5; AF_NOT_FOCUSED_LOCKED = 6; AF_PASSIVE_UNFOCUSED = 7; }
+enum AwbState { AWB_STATE_UNSPECIFIED = 0; AWB_INACTIVE = 1; AWB_SEARCHING = 2; AWB_CONVERGED = 3; AWB_LOCKED = 4; }
+enum ErrorCode { ERROR_NONE = 0; INVALID_REQUEST = 1; INVALID_STATE = 2; UNSUPPORTED = 3; BUSY = 4; CAMERA_UNAVAILABLE = 5; CAPTURE_FAILED = 6; INTERNAL_ERROR = 7; }
+
+message ResultState { AeState ae_state = 1; AfState af_state = 2; AwbState awb_state = 3; int64 exposure_time_ns = 4; int32 sensitivity_iso = 5; int64 frame_duration_ns = 6; float focus_distance_diopters = 7; uint64 frame_number = 8; int64 sensor_timestamp_ns = 9; }
+message Error { ErrorCode code = 1; string message = 2; }
+message CameraStatus { CameraId camera = 1; CameraMode mode = 2; CameraState state = 3; uint32 preview_width = 4; uint32 preview_height = 5; uint32 preview_fps = 6; ResultState result = 7; Error last_error = 8; }
+message Size { uint32 width = 1; uint32 height = 2; }
+message CameraCapabilities { repeated Size preview_sizes = 1; repeated Size still_sizes = 2; repeated string focus_modes = 3; repeated string white_balance_modes = 4; optional bool ae_lock_supported = 5; optional bool awb_lock_supported = 6; optional int32 exposure_compensation_min = 7; optional int32 exposure_compensation_max = 8; optional int64 manual_exposure_time_min_ns = 9; optional int64 manual_exposure_time_max_ns = 10; optional int32 iso_min = 11; optional int32 iso_max = 12; optional float focus_distance_min_diopters = 13; optional float focus_distance_max_diopters = 14; }
+message CameraControls { optional string focus_mode = 1; optional string white_balance_mode = 2; optional bool ae_lock = 3; optional bool awb_lock = 4; optional int32 exposure_compensation = 5; optional int64 manual_exposure_time_ns = 6; optional int32 manual_sensitivity_iso = 7; optional float manual_focus_distance_diopters = 8; }
+message CaptureResult { uint32 width = 1; uint32 height = 2; uint64 frame_number = 3; ResultState result = 4; string path = 5; }
+message Empty {}
+message GetStateRequest {}
+message SetCameraRequest { CameraId camera = 1; }
+message SetModeRequest { CameraMode mode = 1; }
+message GetCapabilitiesRequest {}
+message GetControlsRequest {}
+message SetControlsRequest { optional string focus_mode = 1; optional string white_balance_mode = 2; optional bool ae_lock = 3; optional bool awb_lock = 4; optional int32 exposure_compensation = 5; optional int64 manual_exposure_time_ns = 6; optional int32 manual_sensitivity_iso = 7; optional float manual_focus_distance_diopters = 8; }
+message TriggerAutofocusRequest {}
+message CaptureStillRequest {}
+message VideoStartRequest {}
+message VideoStopRequest {}
+message VideoStatusRequest {}
+enum RecordingState { RECORDING_UNSPECIFIED = 0; RECORDING_IDLE = 1; RECORDING_STARTING = 2; RECORDING_ACTIVE = 3; RECORDING_STOPPING = 4; RECORDING_COMPLETED = 5; RECORDING_ERROR = 6; }
+message VideoStatus { RecordingState state = 1; uint64 frames_received = 2; uint64 frames_transport_dropped = 3; uint64 frames_encoded = 4; uint64 last_video_timestamp_ns = 5; uint64 bytes_written = 6; string path = 7; string last_error = 8; }
+message Request { uint64 request_id = 1; oneof command { GetStateRequest get_state = 10; SetCameraRequest set_camera = 11; SetModeRequest set_mode = 12; GetCapabilitiesRequest get_capabilities = 13; GetControlsRequest get_controls = 14; SetControlsRequest set_controls = 15; TriggerAutofocusRequest trigger_autofocus = 16; CaptureStillRequest capture_still = 17; VideoStartRequest video_start = 18; VideoStopRequest video_stop = 19; VideoStatusRequest video_status = 20; } }
+message Response { uint64 request_id = 1; oneof result { Error error = 10; CameraStatus state = 11; CameraCapabilities capabilities = 12; CameraControls controls = 13; CaptureResult capture = 14; Empty ok = 15; VideoStatus video = 16; } }
+message StatusUpdate { uint64 sequence = 1; CameraStatus status = 2; }

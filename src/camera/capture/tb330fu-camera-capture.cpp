@@ -44,6 +44,7 @@
 #include <unistd.h>
 #include <linux/videodev2.h>
 #include <cerrno>
+#include <functional>
 
 using namespace aidl::android::hardware::camera::device;
 using aidl::android::hardware::graphics::common::BufferUsage;
@@ -68,7 +69,7 @@ static constexpr const char* kFramesPath = "/run/tb330fu/3a-frames.json";
 struct FrameInfo {
     int32_t frame = 0;
     int ae = -1, awb = -1, af = -1;
-    int64_t exposure = -1, frame_duration = -1, sensitivity = -1;
+    int64_t exposure = -1, frame_duration = -1, sensitivity = -1, sensor_timestamp = -1;
     int pipeline_depth = -1;
     int32_t ae_fps_min = -1, ae_fps_max = -1;
     int capture_intent = -1;
@@ -78,6 +79,7 @@ struct FrameInfo {
     bool has_crop = false;
     std::vector<uint8_t> metadata;
 };
+struct ReturnedBuffer { int32_t frame; int64_t buffer_id; int32_t stream_id; };
 
 static bool entry_i32(const std::vector<uint8_t>& bytes, uint32_t tag, int32_t* out) {
     if (bytes.empty()) return false;
@@ -124,6 +126,7 @@ static FrameInfo decode_frame(int32_t frame, const std::vector<uint8_t>& bytes) 
     if (find_camera_metadata_ro_entry(m, ANDROID_CONTROL_AF_STATE, &e) == 0 && e.count) f.af = e.data.u8[0];
     entry_i64(bytes, ANDROID_SENSOR_EXPOSURE_TIME, &f.exposure);
     entry_i64(bytes, ANDROID_SENSOR_FRAME_DURATION, &f.frame_duration);
+    entry_i64(bytes, ANDROID_SENSOR_TIMESTAMP, &f.sensor_timestamp);
     uint8_t pipeline_depth = 0;
     if (entry_u8(bytes, ANDROID_REQUEST_PIPELINE_DEPTH, &pipeline_depth))
         f.pipeline_depth = pipeline_depth;
@@ -143,8 +146,20 @@ static bool ae_stable(int v) { return v == ANDROID_CONTROL_AE_STATE_CONVERGED ||
 static bool awb_stable(int v) { return v == ANDROID_CONTROL_AWB_STATE_CONVERGED || v == ANDROID_CONTROL_AWB_STATE_LOCKED; }
 static bool af_stable(int v) { return v == ANDROID_CONTROL_AF_STATE_PASSIVE_FOCUSED || v == ANDROID_CONTROL_AF_STATE_FOCUSED_LOCKED || v == ANDROID_CONTROL_AF_STATE_PASSIVE_UNFOCUSED || v == ANDROID_CONTROL_AF_STATE_NOT_FOCUSED_LOCKED; }
 
+static FrameInfo gLastCompletedFrame;
+static bool gHasLastCompletedFrame = false;
+
 class Callback final : public BnCameraDeviceCallback {
 public:
+    bool frameInfo(int32_t frame, FrameInfo *out) {
+        std::lock_guard<std::mutex> lock(mu);
+        for (const auto &item : frames) if (item.frame == frame) { if (out) *out = item; return true; }
+        return false;
+    }
+    void setResultObserver(std::function<void(const FrameInfo&)> observer) {
+        std::lock_guard<std::mutex> lock(mu);
+        result_observer = std::move(observer);
+    }
     void setResultMetadataQueue(const std::shared_ptr<ResultMetadataQueue>& queue) {
         std::lock_guard<std::mutex> lock(mu);
         result_queue = queue;
@@ -194,6 +209,7 @@ public:
                             FrameInfo f = decode_frame(result.frameNumber, std::vector<uint8_t>(metadata.begin(), metadata.end()));
                             frames.push_back(std::move(f));
                             const FrameInfo& x = frames.back();
+                            if (result_observer) result_observer(x);
                             if (x.pipeline_depth > 0)
                                 observed_pipeline_depth = x.pipeline_depth;
                             std::printf("3a frame=%d ae=%d awb=%d af=%d exposure=%lld iso=%lld frame_duration=%lld pipeline_depth=%d ae_fps=%d-%d capture_intent=%d focus=%.6g ae_comp=%d crop=%s\n", x.frame, x.ae, x.awb, x.af, (long long)x.exposure, (long long)x.sensitivity, (long long)x.frame_duration, x.pipeline_depth, x.ae_fps_min, x.ae_fps_max, x.capture_intent, x.focus, x.ae_comp, x.has_crop ? "present" : "absent");
@@ -208,6 +224,7 @@ public:
                     FrameInfo f = decode_frame(result.frameNumber, std::vector<uint8_t>(result.result.metadata.begin(), result.result.metadata.end()));
                     frames.push_back(std::move(f));
                     const FrameInfo& x = frames.back();
+                    if (result_observer) result_observer(x);
                     if (x.pipeline_depth > 0)
                         observed_pipeline_depth = x.pipeline_depth;
                     std::printf("3a frame=%d ae=%d awb=%d af=%d exposure=%lld iso=%lld frame_duration=%lld pipeline_depth=%d ae_fps=%d-%d capture_intent=%d focus=%.6g ae_comp=%d crop=%s\n", x.frame, x.ae, x.awb, x.af, (long long)x.exposure, (long long)x.sensitivity, (long long)x.frame_duration, x.pipeline_depth, x.ae_fps_min, x.ae_fps_max, x.capture_intent, x.focus, x.ae_comp, x.has_crop ? "present" : "absent");
@@ -221,7 +238,7 @@ public:
             for (const auto& buffer : result.outputBuffers) {
                 ++completed_buffers;
                 output_frames.push_back(result.frameNumber);
-                returned_buffers.emplace_back(result.frameNumber, buffer.bufferId);
+                returned_buffers.push_back({result.frameNumber, buffer.bufferId, buffer.streamId});
                 returned_buffer_frame = result.frameNumber;
                 returned_buffer_id = buffer.bufferId;
                 returned_buffer_status = static_cast<int>(buffer.status);
@@ -252,6 +269,7 @@ public:
     }
     std::mutex mu;
     std::condition_variable cv;
+    std::function<void(const FrameInfo&)> result_observer;
     bool shutter_seen = false;
     bool error_seen = false;
     bool any_capture_callback = false;
@@ -263,7 +281,7 @@ public:
     std::vector<int32_t> result_frames;
     std::vector<int32_t> final_result_frames;
     std::vector<int32_t> output_frames;
-    std::deque<std::pair<int32_t, int64_t>> returned_buffers;
+    std::deque<ReturnedBuffer> returned_buffers;
     std::vector<FrameInfo> frames;
     int observed_pipeline_depth = -1;
     int32_t returned_buffer_frame = -1;
@@ -670,6 +688,7 @@ int main(int argc, char** argv) {
     std::ofstream rawout(kRawPath, std::ios::binary); rawout.write(reinterpret_cast<char*>(direct.data()), direct.size()); rawout.close();
     FrameInfo saved_info; bool got_saved_info = false;
     for (const auto& x : cb->frames) if (x.frame == saved_frame) { saved_info = x; got_saved_info = true; }
+    if (got_saved_info) { gLastCompletedFrame = saved_info; gHasLastCompletedFrame = true; }
     { std::FILE* f = std::fopen(kMetadataPath, "w"); if (f) { if (got_saved_info) json_metadata(f, saved_info.metadata); else std::fprintf(f, "{\"metadata\":null}\n"); std::fclose(f); } }
     { std::FILE* f = std::fopen(kFramesPath, "w"); if (f) { std::fprintf(f, "[\n"); for (size_t i=0;i<cb->frames.size();++i) { if(i) std::fprintf(f, ",\n"); const auto& x=cb->frames[i]; std::fprintf(f, "{\"frame\":%d,\"ae\":%d,\"awb\":%d,\"af\":%d,\"exposure_ns\":%lld,\"iso\":%lld,\"frame_duration_ns\":%lld,\"focus_distance\":%.9g}", x.frame,x.ae,x.awb,x.af,(long long)x.exposure,(long long)x.sensitivity,(long long)x.frame_duration,x.focus); } std::fprintf(f, "\n]\n"); std::fclose(f); } }
     int fence=-1; AIMapper_Error ue=mapper->v5.unlock(imported,&fence); AIMapper_Error fe=mapper->v5.freeBuffer(imported); std::printf("raw_file=%s raw_size=%zu png=DEFERRED_HOST unlock=%s free_imported=%s\n", kRawPath, direct.size(), mapper_error(ue), mapper_error(fe));

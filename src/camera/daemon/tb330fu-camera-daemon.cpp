@@ -2,12 +2,16 @@
 #include "../capture/tb330fu-camera-capture.cpp"
 #undef main
 
+#include "../protocol/tb330fu_camera.pb.h"
+#include "../video/tb330fu_video_ring.h"
+#include <google/protobuf/message_lite.h>
+
 #include "../../../modules/v4l2loopback-tb330fu/v4l2loopback.h"
 #include <camera_vendor_tags.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
 #include <poll.h>
 #include <sys/socket.h>
+#include <sys/un.h>
+#include <sys/mman.h>
 
 #include <atomic>
 #include <charconv>
@@ -23,14 +27,59 @@ using aidl::android::hardware::camera::common::VendorTag;
 using aidl::android::hardware::camera::common::VendorTagSection;
 
 namespace {
-constexpr int kControlPort = 39091;
+using namespace tb330fu::camera::v1;
+constexpr char kControlSocket[] = "/run/tb330fu-camera/control.sock";
+constexpr char kEventsSocket[] = "/run/tb330fu-camera/events.sock";
+constexpr size_t kMaxIpcPacket = 64 * 1024;
 constexpr int kFallbackPoolCount = 3;
 constexpr int kMaxPoolCount = 8;
-constexpr size_t kMaxJsonFrameLength = 1024 * 1024;
-constexpr size_t kMaxPayloadLength = 16 * 1024 * 1024;
 constexpr const char *kRearNode = "/dev/video-rear";
 constexpr const char *kFrontNode = "/dev/video-front";
-constexpr const char *kDaemonRawPath = "/tmp/tb330fu-daemon-frame.i420";
+constexpr const char *kDaemonRawPath = "/run/tb330fu-camera/preview.i420";
+constexpr const char *kStillDirectory = "/run/tb330fu-camera";
+constexpr const char *kStillRawPath = "/run/tb330fu-camera/last.raw";
+constexpr const char *kStillMetadataPath = "/run/tb330fu-camera/last-metadata.json";
+constexpr const char *kStillLayoutPath = "/run/tb330fu-camera/last-layout.json";
+constexpr const char *kRecorderSocket = TB330FU_VIDEO_RECORDER_SOCKET;
+
+struct YuvPlaneLayout {
+    int64_t offset = 0, sample_increment_bits = 0, row_stride = 0, width = 0, height = 0, total_size = 0;
+    int64_t cr_offset_bits = -1, cb_offset_bits = -1;
+};
+
+struct LiveRing {
+    int fd = -1; size_t bytes = 0; uint8_t *map = nullptr; tb330fu_video_ring_header *header = nullptr;
+    ~LiveRing() { close(); }
+    bool open_existing() {
+        fd = ::open(TB330FU_VIDEO_RING_PATH, O_RDWR); if (fd < 0) return false;
+        bytes = sizeof(tb330fu_video_ring_header) + TB330FU_VIDEO_RING_SLOTS * tb330fu_video_slot_bytes(TB330FU_VIDEO_RING_SLOT_BYTES);
+        map = static_cast<uint8_t *>(::mmap(nullptr, bytes, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+        if (map == MAP_FAILED) { map = nullptr; ::close(fd); fd = -1; return false; }
+        header = reinterpret_cast<tb330fu_video_ring_header *>(map);
+        if (std::memcmp(header->magic, TB330FU_VIDEO_RING_MAGIC, 8) != 0 ||
+            header->version != TB330FU_VIDEO_RING_VERSION) {
+            close();
+            return false;
+        }
+        return true;
+    }
+    void close() { if (map) ::munmap(map, bytes); if (fd >= 0) ::close(fd); map = nullptr; fd = -1; header = nullptr; }
+    bool publish(const uint8_t *base, const std::vector<YuvPlaneLayout> &planes, uint32_t width, uint32_t height, uint64_t timestamp) {
+        if (!header || planes.size() != 2 || !base) return false;
+        uint64_t w = __atomic_load_n(&header->write_sequence, __ATOMIC_RELAXED), r = __atomic_load_n(&header->read_sequence, __ATOMIC_ACQUIRE);
+        if (w - r >= header->slot_count) { __atomic_add_fetch(&header->frames_dropped, 1, __ATOMIC_RELAXED); return false; }
+        auto *slot = reinterpret_cast<tb330fu_video_slot *>(map + header->slots_offset + (w % header->slot_count) * tb330fu_video_slot_bytes(header->slot_bytes));
+        const size_t ybytes = static_cast<size_t>(width) * height, uvbytes = ybytes / 2;
+        if (planes[0].offset < 0 || planes[1].offset < 0 || planes[0].row_stride < width || planes[1].row_stride < width || ybytes + uvbytes > header->slot_bytes) return false;
+        std::memcpy(slot->payload, base + planes[0].offset, ybytes);
+        for (uint32_t y = 0; y < height / 2; ++y) std::memcpy(slot->payload + ybytes + static_cast<size_t>(y) * width, base + planes[1].offset + static_cast<size_t>(y) * planes[1].row_stride, width);
+        slot->capture_timestamp_ns = timestamp; slot->width = width; slot->height = height; slot->layout = TB330FU_VIDEO_LAYOUT_MAPPER_Y_VU; slot->plane_count = 2;
+        slot->planes[0] = {0, ybytes, static_cast<uint32_t>(width), 1}; slot->planes[1] = {ybytes, uvbytes, static_cast<uint32_t>(width), 2};
+        __atomic_store_n(&slot->sequence, w, __ATOMIC_RELEASE); __atomic_store_n(&header->write_sequence, w + 1, __ATOMIC_RELEASE); return true;
+    }
+};
+
+enum class CameraMode { VIDEO, PHOTO };
 
 struct Mode {
     int width = 1920;
@@ -125,17 +174,6 @@ static uint64_t monotonic_ns() {
                                      std::chrono::steady_clock::now().time_since_epoch())
                                      .count());
 }
-
-struct YuvPlaneLayout {
-    int64_t offset = 0;
-    int64_t sample_increment_bits = 0;
-    int64_t row_stride = 0;
-    int64_t width = 0;
-    int64_t height = 0;
-    int64_t total_size = 0;
-    int64_t cr_offset_bits = -1;
-    int64_t cb_offset_bits = -1;
-};
 
 static bool read_yuv_plane_layout(AIMapperV5 *mapper, buffer_handle_t handle,
                                   std::vector<YuvPlaneLayout> *planes) {
@@ -258,6 +296,25 @@ static bool self_test_vendor_tag_resolution() {
     return ok;
 }
 
+static bool update_request_metadata(CameraMetadata *settings, uint32_t tag,
+                                    const void *value, size_t count, size_t value_bytes) {
+    const camera_metadata_t *old = settings->metadata.empty()
+            ? nullptr : reinterpret_cast<const camera_metadata_t *>(settings->metadata.data());
+    camera_metadata_t *copy = allocate_camera_metadata((old ? get_camera_metadata_entry_count(old) : 0) + 16,
+                                                       (old ? get_camera_metadata_data_count(old) : 0) + value_bytes + 128);
+    if (!copy) return false;
+    if (old && append_camera_metadata(copy, old) != 0) { free_camera_metadata(copy); return false; }
+    camera_metadata_entry_t entry{};
+    int rc = find_camera_metadata_entry(copy, tag, &entry);
+    if (rc == 0) rc = update_camera_metadata_entry(copy, entry.index, value, count, nullptr);
+    else rc = add_camera_metadata_entry(copy, tag, value, count);
+    if (rc != 0) { free_camera_metadata(copy); return false; }
+    const size_t size = get_camera_metadata_size(copy);
+    settings->metadata.assign(reinterpret_cast<uint8_t *>(copy), reinterpret_cast<uint8_t *>(copy) + size);
+    free_camera_metadata(copy);
+    return true;
+}
+
 static bool make_stock_video_session_params(CameraMetadata *out) {
     constexpr uint32_t kZslMode = 0x800b000a;
     constexpr uint32_t kProprietaryRequest = 0x800d0002;
@@ -336,12 +393,49 @@ class CameraInstance {
     CameraInstance(std::string name, std::string id, std::string node, int producer, Mode mode)
         : name_(std::move(name)), id_(std::move(id)), node_(std::move(node)), producer_(producer),
           mode_(mode) {}
-    ~CameraInstance() { stop(); }
+    ~CameraInstance() { (void)stop(); }
     void set_mode(Mode m) {
         std::lock_guard<std::mutex> l(mu_);
         mode_ = m;
+        camera_mode_ = CameraMode::VIDEO;
         std::printf("camera=%s MODE_CHANGED received mode=%dx%d@%d\n", name_.c_str(), m.width,
                     m.height, m.fps);
+    }
+    bool set_control_mode(const std::string &mode) {
+        std::lock_guard<std::mutex> l(mu_);
+        if (mode != "video" && mode != "photo")
+            return false;
+        camera_mode_ = mode == "photo" ? CameraMode::PHOTO : CameraMode::VIDEO;
+        std::printf("camera=%s mode=%s\n", name_.c_str(), mode.c_str());
+        return true;
+    }
+    bool start_live_recording(std::string *error) {
+        std::lock_guard<std::mutex> lock(live_ring_mu_);
+        if (live_recording_) {
+            if (error) *error = "recording already attached";
+            return false;
+        }
+        if (!live_ring_.open_existing()) {
+            if (error) *error = "shared-memory ring unavailable";
+            return false;
+        }
+        live_recording_ = true;
+        std::printf("camera=%s recording attachment=enabled\n", name_.c_str());
+        return true;
+    }
+    void stop_live_recording() {
+        std::lock_guard<std::mutex> lock(live_ring_mu_);
+        live_recording_ = false;
+        live_ring_.close();
+        std::printf("camera=%s recording attachment=disabled\n", name_.c_str());
+    }
+    bool live_recording() {
+        std::lock_guard<std::mutex> lock(live_ring_mu_);
+        return live_recording_;
+    }
+    std::string control_mode() {
+        std::lock_guard<std::mutex> l(mu_);
+        return camera_mode_ == CameraMode::PHOTO ? "photo" : "video";
     }
     Mode mode() {
         std::lock_guard<std::mutex> l(mu_);
@@ -356,10 +450,47 @@ class CameraInstance {
         std::lock_guard<std::mutex> l(mu_);
         return error_;
     }
+    void update_result(const FrameInfo& f) {
+        std::lock_guard<std::mutex> l(mu_);
+        result_.set_ae_state(static_cast<AeState>(f.ae + 1));
+        result_.set_af_state(static_cast<AfState>(f.af + 1));
+        result_.set_awb_state(static_cast<AwbState>(f.awb + 1));
+        result_.set_exposure_time_ns(f.exposure > 0 ? f.exposure : 0);
+        result_.set_sensitivity_iso(f.sensitivity > 0 ? static_cast<int32_t>(f.sensitivity) : 0);
+        result_.set_frame_duration_ns(f.frame_duration > 0 ? f.frame_duration : 0);
+        result_.set_sensor_timestamp_ns(f.sensor_timestamp > 0 ? f.sensor_timestamp : 0);
+        result_.set_focus_distance_diopters(f.focus > 0 ? f.focus : 0);
+        result_.set_frame_number(f.frame > 0 ? static_cast<uint64_t>(f.frame) : 0);
+        latest_result_ = true;
+    }
+    ResultState result() { std::lock_guard<std::mutex> l(mu_); return result_; }
+    bool has_result() { std::lock_guard<std::mutex> l(mu_); return latest_result_; }
+    bool set_controls(const SetControlsRequest& c, std::string *error) {
+        std::lock_guard<std::mutex> l(mu_);
+        if (c.has_focus_mode() && c.focus_mode() != "auto" && c.focus_mode() != "continuous_picture" && c.focus_mode() != "continuous_video") { if(error)*error="unsupported focus_mode"; return false; }
+        if (c.has_white_balance_mode() && c.white_balance_mode() != "auto") { if(error)*error="unsupported white_balance_mode"; return false; }
+        if(c.has_focus_mode()) controls_.set_focus_mode(c.focus_mode());
+        if(c.has_white_balance_mode()) controls_.set_white_balance_mode(c.white_balance_mode());
+        if(c.has_ae_lock()) controls_.set_ae_lock(c.ae_lock());
+        if(c.has_awb_lock()) controls_.set_awb_lock(c.awb_lock());
+        if(c.has_exposure_compensation()) controls_.set_exposure_compensation(c.exposure_compensation());
+        if(c.has_manual_exposure_time_ns()) controls_.set_manual_exposure_time_ns(c.manual_exposure_time_ns());
+        if(c.has_manual_sensitivity_iso()) controls_.set_manual_sensitivity_iso(c.manual_sensitivity_iso());
+        if(c.has_manual_focus_distance_diopters()) controls_.set_manual_focus_distance_diopters(c.manual_focus_distance_diopters());
+        return true;
+    }
+    SetControlsRequest controls() { std::lock_guard<std::mutex> l(mu_); return controls_; }
+    bool trigger_autofocus(std::string *error) {
+        std::lock_guard<std::mutex> l(mu_);
+        if (!worker_.joinable()) { if(error)*error="camera is not streaming"; return false; }
+        af_trigger_pending_ = true; return true;
+    }
     bool start(std::shared_ptr<ICameraProvider> provider) {
+        std::lock_guard<std::mutex> lifecycle_lock(lifecycle_mu_);
         std::lock_guard<std::mutex> l(mu_);
         if (worker_.joinable())
             return false;
+        stop_requested_ = false;
         std::fprintf(stderr, "worker thread creation attempted camera=%s\n", name_.c_str());
         std::fprintf(stderr, "worker thread creation attempted camera=%s\n", name_.c_str());
         stop_requested_ = false;
@@ -370,13 +501,45 @@ class CameraInstance {
         std::fprintf(stderr, "worker thread creation succeeded camera=%s\n", name_.c_str());
         return true;
     }
-    void stop() {
+    bool stop() {
+        std::lock_guard<std::mutex> lifecycle_lock(lifecycle_mu_);
         {
             std::lock_guard<std::mutex> l(mu_);
             stop_requested_ = true;
         }
-        if (worker_.joinable())
-            worker_.join();
+        if (!worker_.joinable())
+            return false;
+        worker_.join();
+        return true;
+    }
+    bool capture_still(std::shared_ptr<ICameraProvider> /*provider*/, std::string *error) {
+        std::unique_lock<std::mutex> lock(mu_);
+        if (camera_mode_ != CameraMode::PHOTO) {
+            if (error) *error = "camera is not in photo mode";
+            return false;
+        }
+        if (!worker_.joinable()) {
+            if (error) *error = "camera is not streaming";
+            return false;
+        }
+        if (still_pending_) {
+            if (error) *error = "still capture already pending";
+            return false;
+        }
+        still_completed_ = false;
+        still_success_ = false;
+        still_error_.clear();
+        still_pending_ = true;
+        state_ = "capturing";
+        cv_.notify_all();
+        const bool completed = cv_.wait_for(lock, std::chrono::seconds(10),
+                                            [&] { return still_completed_ || !worker_.joinable(); });
+        if (!completed || !still_completed_) {
+            if (error) *error = "still capture timeout";
+            return false;
+        }
+        if (!still_success_ && error) *error = still_error_;
+        return still_success_;
     }
 
   private:
@@ -389,11 +552,30 @@ class CameraInstance {
         error_ = e;
         state_ = "error";
     }
+    void apply_controls(CameraMetadata *settings) {
+        SetControlsRequest c; bool trigger = false;
+        { std::lock_guard<std::mutex> l(mu_); c = controls_; trigger = af_trigger_pending_; af_trigger_pending_ = false; }
+        if (c.has_focus_mode()) {
+            uint8_t mode = ANDROID_CONTROL_AF_MODE_AUTO;
+            if (c.focus_mode() == "continuous_picture") mode = ANDROID_CONTROL_AF_MODE_CONTINUOUS_PICTURE;
+            else if (c.focus_mode() == "continuous_video") mode = ANDROID_CONTROL_AF_MODE_CONTINUOUS_VIDEO;
+            update_request_metadata(settings, ANDROID_CONTROL_AF_MODE, &mode, 1, sizeof(mode));
+        }
+        if (c.has_white_balance_mode()) { uint8_t mode = ANDROID_CONTROL_AWB_MODE_AUTO; update_request_metadata(settings, ANDROID_CONTROL_AWB_MODE, &mode, 1, sizeof(mode)); }
+        if (c.has_ae_lock()) { uint8_t v = c.ae_lock() ? ANDROID_CONTROL_AE_LOCK_ON : ANDROID_CONTROL_AE_LOCK_OFF; update_request_metadata(settings, ANDROID_CONTROL_AE_LOCK, &v, 1, sizeof(v)); }
+        if (c.has_awb_lock()) { uint8_t v = c.awb_lock() ? ANDROID_CONTROL_AWB_LOCK_ON : ANDROID_CONTROL_AWB_LOCK_OFF; update_request_metadata(settings, ANDROID_CONTROL_AWB_LOCK, &v, 1, sizeof(v)); }
+        if (c.has_exposure_compensation()) { auto v = c.exposure_compensation(); update_request_metadata(settings, ANDROID_CONTROL_AE_EXPOSURE_COMPENSATION, &v, 1, sizeof(v)); }
+        if (c.has_manual_exposure_time_ns()) { auto v = c.manual_exposure_time_ns(); uint8_t off = ANDROID_CONTROL_AE_MODE_OFF; update_request_metadata(settings, ANDROID_CONTROL_AE_MODE, &off, 1, sizeof(off)); update_request_metadata(settings, ANDROID_SENSOR_EXPOSURE_TIME, &v, 1, sizeof(v)); }
+        if (c.has_manual_sensitivity_iso()) { auto v = c.manual_sensitivity_iso(); uint8_t off = ANDROID_CONTROL_AE_MODE_OFF; update_request_metadata(settings, ANDROID_CONTROL_AE_MODE, &off, 1, sizeof(off)); update_request_metadata(settings, ANDROID_SENSOR_SENSITIVITY, &v, 1, sizeof(v)); }
+        if (c.has_manual_focus_distance_diopters()) { auto v = c.manual_focus_distance_diopters(); uint8_t off = ANDROID_CONTROL_AF_MODE_OFF; update_request_metadata(settings, ANDROID_CONTROL_AF_MODE, &off, 1, sizeof(off)); update_request_metadata(settings, ANDROID_LENS_FOCUS_DISTANCE, &v, 1, sizeof(v)); }
+        if (trigger) { uint8_t start = ANDROID_CONTROL_AF_TRIGGER_START; update_request_metadata(settings, ANDROID_CONTROL_AF_TRIGGER, &start, 1, sizeof(start)); }
+    }
     void run(std::shared_ptr<ICameraProvider> provider) {
         std::fprintf(stderr, "worker entry camera=%s provider=available\n", name_.c_str());
         std::fprintf(stderr, "worker entry camera=%s provider=available\n", name_.c_str());
         Mode m = mode();
         auto cb = ndk::SharedRefBase::make<Callback>();
+        cb->setResultObserver([this](const FrameInfo& frame) { update_result(frame); });
         std::shared_ptr<ICameraDevice> device;
         std::shared_ptr<ICameraDeviceSession> session;
         std::fprintf(stderr, "getCameraDeviceInterface call camera=%s\n", name_.c_str());
@@ -443,14 +625,24 @@ class CameraInstance {
         stream.streamType = StreamType::OUTPUT;
         stream.width = m.width;
         stream.height = m.height;
-        stream.format = PixelFormat::YCBCR_420_888;
-        stream.usage = BufferUsage::CPU_READ_OFTEN;
+        stream.format = PixelFormat::IMPLEMENTATION_DEFINED;
+        stream.usage = BufferUsage::GPU_TEXTURE;
         stream.dataSpace = Dataspace::UNKNOWN;
         stream.rotation = StreamRotation::ROTATION_0;
         stream.groupId = -1;
         stream.dynamicRangeProfile =
             aidl::android::hardware::camera::metadata::RequestAvailableDynamicRangeProfilesMap(1);
         stream.useCase = aidl::android::hardware::camera::metadata::ScalerAvailableStreamUseCases(0);
+        Stream still_stream{};
+        still_stream.id = 2;
+        still_stream.streamType = StreamType::OUTPUT;
+        still_stream.width = name_ == "rear" ? 3264 : 1920;
+        still_stream.height = name_ == "rear" ? 2448 : 1080;
+        still_stream.format = PixelFormat::YCBCR_420_888;
+        still_stream.usage = BufferUsage::CPU_READ_OFTEN;
+        still_stream.dataSpace = Dataspace::UNKNOWN;
+        still_stream.rotation = StreamRotation::ROTATION_0;
+        still_stream.groupId = -1;
         std::printf("configure_stream width=%d height=%d format=%d usage=0x%llx dataspace=%d "
                     "dynamicRangeProfile=%lld streamUseCase=%lld rotation=%d groupId=%d "
                     "physicalCameraId=%s\n",
@@ -481,8 +673,22 @@ class CameraInstance {
             fail("default preview: " + s.getDescription());
             return;
         }
+        CameraMetadata still_tmpl;
+        s = session->constructDefaultRequestSettings(RequestTemplate::STILL_CAPTURE, &still_tmpl);
+        if (!s.isOk()) {
+            session->close();
+            fail("default still: " + s.getDescription());
+            return;
+        }
+        CameraMetadata photo_tmpl;
+        s = session->constructDefaultRequestSettings(RequestTemplate::PREVIEW, &photo_tmpl);
+        if (!s.isOk()) {
+            session->close();
+            fail("photo preview template: " + s.getDescription());
+            return;
+        }
         StreamConfiguration cfg{};
-        cfg.streams = {stream};
+        cfg.streams = {stream, still_stream};
         cfg.operationMode = StreamConfigurationMode::NORMAL_MODE;
         if (!make_stock_video_session_params(&cfg.sessionParams)) {
             session->close();
@@ -498,9 +704,9 @@ class CameraInstance {
         std::fprintf(stderr, "configureStreams returned camera=%s isOk=%d exception=%d service=%d desc=%s hal_count=%zu\n",
                      name_.c_str(), s.isOk(), s.getExceptionCode(), s.getServiceSpecificError(),
                      s.getDescription().c_str(), hal.size());
-        if (!s.isOk() || hal.empty()) {
+        if (!s.isOk() || hal.size() != 2) {
             session->close();
-            fail("configureStreams: " + s.getDescription());
+            fail("configureStreams dual stream: " + s.getDescription());
             return;
         }
         std::printf("camera=%s configureStreams ok\n", name_.c_str());
@@ -522,16 +728,41 @@ class CameraInstance {
             fail("mapper suffix: " + s.getDescription());
             return;
         }
-        const HalStream &hs = hal.front();
+        const HalStream *video_hs = nullptr;
+        const HalStream *still_hs = nullptr;
+        for (const auto &candidate : hal) {
+            if (candidate.id == stream.id) video_hs = &candidate;
+            if (candidate.id == still_stream.id) still_hs = &candidate;
+        }
+        if (!video_hs) {
+            session->close();
+            fail("configureStreams missing video stream");
+            return;
+        }
+        if (!still_hs) {
+            session->close();
+            fail("configureStreams missing still stream");
+            return;
+        }
+        auto log_hal_stream = [&](const char *label, const HalStream &h) {
+            std::printf("returned_hal_stream label=%s id=%d overrideFormat=%d producerUsage=0x%llx "
+                        "consumerUsage=0x%llx maxBuffers=%d overrideDataSpace=%d\n",
+                        label, h.id, static_cast<int>(h.overrideFormat),
+                        static_cast<unsigned long long>(h.producerUsage),
+                        static_cast<unsigned long long>(h.consumerUsage), h.maxBuffers,
+                        static_cast<int>(h.overrideDataSpace));
+        };
+        log_hal_stream("main_video", *video_hs);
+        log_hal_stream("still", *still_hs);
         BufferDescriptorInfo info{};
         const char label[] = "tb330fu-camera-daemon";
         std::memcpy(info.name.data(), label, sizeof(label));
         info.width = m.width;
         info.height = m.height;
         info.layerCount = 1;
-        info.format = hs.overrideFormat;
-        info.usage = static_cast<BufferUsage>(static_cast<uint64_t>(hs.producerUsage) |
-                                              static_cast<uint64_t>(hs.consumerUsage));
+        info.format = video_hs->overrideFormat;
+        info.usage = static_cast<BufferUsage>(static_cast<uint64_t>(video_hs->producerUsage) |
+                                              static_cast<uint64_t>(video_hs->consumerUsage));
         aidl::android::hardware::graphics::allocator::AllocationResult allocation;
         std::fprintf(stderr, "allocation request camera=%s count=%d\n", name_.c_str(), pool_count);
         s = allocator->allocate2(info, pool_count, &allocation);
@@ -584,6 +815,42 @@ class CameraInstance {
             raws.push_back(raw);
             image_fds.push_back(raw->data[1]);
         }
+        aidl::android::hardware::graphics::allocator::AllocationResult still_allocation;
+        std::vector<native_handle_t *> still_raws;
+        auto cleanup_still_handles = [&] {
+            for (auto *h : still_raws) { native_handle_close(h); native_handle_delete(h); }
+            still_raws.clear();
+        };
+        BufferDescriptorInfo still_info{};
+        const char still_label[] = "tb330fu-camera-still";
+        std::memcpy(still_info.name.data(), still_label, sizeof(still_label));
+        still_info.width = still_stream.width;
+        still_info.height = still_stream.height;
+        still_info.layerCount = 1;
+        still_info.format = still_hs->overrideFormat;
+        still_info.usage = static_cast<BufferUsage>(static_cast<uint64_t>(still_hs->producerUsage) |
+                                                     static_cast<uint64_t>(still_hs->consumerUsage));
+        s = allocator->allocate2(still_info, pool_count, &still_allocation);
+        if (!s.isOk() || still_allocation.buffers.size() != static_cast<size_t>(pool_count)) {
+            cleanup_handles(); session->close(); fail("allocate2 still pool"); return;
+        }
+        for (auto &ah : still_allocation.buffers) {
+            native_handle_t *raw = native_handle_create(ah.fds.size(), ah.ints.size());
+            if (!raw || ah.fds.size() < 2) {
+                if (raw) { native_handle_close(raw); native_handle_delete(raw); }
+                cleanup_still_handles(); cleanup_handles(); session->close();
+                fail("still native handle allocation"); return;
+            }
+            bool valid = true;
+            for (size_t i = 0; i < ah.fds.size(); ++i) {
+                raw->data[i] = fcntl(ah.fds[i].get(), F_DUPFD_CLOEXEC, 0);
+                if (raw->data[i] < 0) valid = false;
+            }
+            for (size_t i = 0; valid && i < ah.ints.size(); ++i)
+                raw->data[ah.fds.size() + i] = ah.ints[i];
+            if (!valid) { native_handle_close(raw); native_handle_delete(raw); cleanup_still_handles(); cleanup_handles(); session->close(); fail("still native handle fd duplication"); return; }
+            still_raws.push_back(raw);
+        }
 
         void *mapper_dl = dlopen((std::string("/vendor/lib64/hw/mapper.") + suffix + ".so").c_str(),
                                  RTLD_NOW | RTLD_LOCAL);
@@ -604,6 +871,7 @@ class CameraInstance {
             return;
         }
         std::vector<buffer_handle_t> imported_buffers;
+        std::vector<buffer_handle_t> imported_still_buffers;
         std::vector<YuvPlaneLayout> yuv_planes;
         for (auto *raw : raws) {
             buffer_handle_t imported = nullptr;
@@ -618,6 +886,16 @@ class CameraInstance {
                 return;
             }
             imported_buffers.push_back(imported);
+        }
+        for (auto *raw : still_raws) {
+            buffer_handle_t imported = nullptr;
+            mapper_error_code = mapper->v5.importBuffer(raw, &imported);
+            if (mapper_error_code != AIMAPPER_ERROR_NONE || !imported) {
+                for (auto h : imported_still_buffers) mapper->v5.freeBuffer(h);
+                for (auto h : imported_buffers) mapper->v5.freeBuffer(h);
+                cleanup_still_handles(); cleanup_handles(); dlclose(mapper_dl); session->close(); fail("still mapper import"); return;
+            }
+            imported_still_buffers.push_back(imported);
         }
         std::vector<uint8_t> allocation_metadata;
         int64_t allocation_size = 0;
@@ -641,6 +919,18 @@ class CameraInstance {
             fail("YUV plane layout");
             return;
         }
+        std::vector<YuvPlaneLayout> still_planes;
+        int64_t still_allocation_size = 0;
+        std::vector<uint8_t> still_size_bytes;
+        if (!metadata(&mapper->v5, imported_still_buffers.front(), 10, &still_size_bytes) ||
+            still_size_bytes.size() < sizeof(still_allocation_size) ||
+            !read_yuv_plane_layout(&mapper->v5, imported_still_buffers.front(), &still_planes)) {
+            for (auto h : imported_still_buffers) mapper->v5.freeBuffer(h);
+            for (auto h : imported_buffers) mapper->v5.freeBuffer(h);
+            cleanup_still_handles(); cleanup_handles(); dlclose(mapper_dl); session->close();
+            fail("still YUV plane layout"); return;
+        }
+        std::memcpy(&still_allocation_size, still_size_bytes.data(), sizeof(still_allocation_size));
         std::printf("camera=%s mapper YUV layout planes=%zu y_stride=%lld uv_stride=%lld "
                     "uv_cr_offset_bits=%lld uv_cb_offset_bits=%lld allocation_size=%lld\n",
                     name_.c_str(), yuv_planes.size(),
@@ -764,7 +1054,9 @@ class CameraInstance {
             CaptureRequest req{};
             req.frameNumber = frame;
             req.fmqSettingsSize = 0;
-            req.settings = tmpl;
+            CameraMetadata request_settings = control_mode() == "photo" ? photo_tmpl : tmpl;
+            apply_controls(&request_settings);
+            req.settings = std::move(request_settings);
             req.outputBuffers.emplace_back(std::move(out));
             StreamBuffer input{};
             input.streamId = -1;
@@ -837,8 +1129,10 @@ class CameraInstance {
 #endif
         std::map<int, uint64_t> submit_t0;
         std::map<int, uint64_t> submit_t1;
+        std::map<std::string, int> repeating_template_log_count;
         auto submit_frame = [&](int frame, int buffer_id) {
             const uint64_t t0 = monotonic_ns();
+            const std::string request_mode = control_mode();
             StreamBuffer out{};
             out.streamId = stream.id;
             out.bufferId = buffer_id;
@@ -848,7 +1142,9 @@ class CameraInstance {
             CaptureRequest req{};
             req.frameNumber = frame;
             req.fmqSettingsSize = 0;
-            req.settings = tmpl;
+            CameraMetadata request_settings = request_mode == "photo" ? photo_tmpl : tmpl;
+            apply_controls(&request_settings);
+            req.settings = std::move(request_settings);
             req.outputBuffers.emplace_back(std::move(out));
             StreamBuffer input{};
             input.streamId = -1;
@@ -871,9 +1167,40 @@ class CameraInstance {
             const uint64_t t1 = monotonic_ns();
             if (!submit_status.isOk() || processed != 1)
                 return false;
+            static const char *const kTemplateNames[] = {"VIDEO_RECORD", "PREVIEW"};
+            const int template_index = request_mode == "photo" ? 1 : 0;
+            int &template_log_count = repeating_template_log_count[request_mode];
+            if (template_log_count < 3) {
+                std::printf("camera=%s repeating_request frame=%d mode=%s template=%s\n",
+                            name_.c_str(), frame, request_mode.c_str(),
+                            kTemplateNames[template_index]);
+                ++template_log_count;
+            }
             submit_t0[frame] = t0;
             submit_t1[frame] = t1;
             return true;
+        };
+        std::vector<bool> still_handle_sent(static_cast<size_t>(pool_count) + 1, false);
+        auto submit_still = [&](int frame, int buffer_id) {
+            StreamBuffer out{};
+            out.streamId = still_stream.id;
+            out.bufferId = buffer_id;
+            if (!still_handle_sent[static_cast<size_t>(buffer_id)]) {
+                out.buffer = std::move(still_allocation.buffers[buffer_id - 1]);
+                still_handle_sent[static_cast<size_t>(buffer_id)] = true;
+            }
+            out.status = BufferStatus::OK;
+            CaptureRequest req{}; req.frameNumber = frame; req.settings = still_tmpl;
+            req.outputBuffers.emplace_back(std::move(out));
+            StreamBuffer input{}; input.streamId = -1; input.bufferId = 0; input.status = BufferStatus::ERROR;
+            req.inputBuffer = std::move(input);
+            std::vector<CaptureRequest> requests; requests.emplace_back(std::move(req));
+            int processed = 0;
+            const auto result = session->processCaptureRequest(std::move(requests), {}, &processed);
+            if (result.isOk() && processed == 1)
+                std::printf("camera=%s still_request frame=%d template=STILL_CAPTURE stream=%d\n",
+                            name_.c_str(), frame, still_stream.id);
+            return result.isOk() && processed == 1;
         };
 
         int next_frame = 1;
@@ -905,6 +1232,61 @@ class CameraInstance {
             ++in_flight;
         }
         while (in_flight > 0 && !should_stop()) {
+            bool do_still = false;
+            {
+                std::lock_guard<std::mutex> lock(mu_);
+                if (still_pending_) { still_pending_ = false; do_still = true; }
+            }
+            if (do_still) {
+                const int still_frame = next_frame++;
+                const int still_buffer = (still_frame - 1) % pool_count + 1;
+                bool success = submit_still(still_frame, still_buffer);
+                int64_t returned_still = 0;
+                if (success) {
+                    std::unique_lock<std::mutex> lock(cb->mu);
+                    success = cb->cv.wait_for(lock, std::chrono::seconds(5), [&] {
+                        return std::any_of(cb->returned_buffers.begin(), cb->returned_buffers.end(),
+                            [&](const auto &b) { return b.frame == still_frame && b.stream_id == still_stream.id; });
+                    });
+                    if (success) {
+                        auto it = std::find_if(cb->returned_buffers.begin(), cb->returned_buffers.end(),
+                            [&](const auto &b) { return b.frame == still_frame && b.stream_id == still_stream.id; });
+                        returned_still = it->buffer_id; cb->returned_buffers.erase(it);
+                    }
+                }
+                bool saved = success && returned_still > 0 && static_cast<size_t>(returned_still) <= imported_still_buffers.size();
+                void *still_base = nullptr;
+                if (saved) {
+                    ARect region{0, 0, still_stream.width, still_stream.height};
+                    saved = mapper->v5.lock(imported_still_buffers[returned_still - 1],
+                        static_cast<uint64_t>(BufferUsage::CPU_READ_OFTEN), region, -1, &still_base) == AIMAPPER_ERROR_NONE && still_base;
+                }
+                if (saved) {
+                    const std::string raw_tmp = std::string(kStillRawPath) + ".tmp";
+                    int fd = ::open(raw_tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    saved = fd >= 0 && write_full(fd, still_base, static_cast<size_t>(still_allocation_size));
+                    if (fd >= 0) ::close(fd);
+                    int fence = -1; mapper->v5.unlock(imported_still_buffers[returned_still - 1], &fence);
+                    if (saved) saved = std::rename(raw_tmp.c_str(), kStillRawPath) == 0;
+                }
+                FrameInfo still_info; bool have_info = false;
+                { std::lock_guard<std::mutex> lock(cb->mu); for (const auto &f : cb->frames) if (f.frame == still_frame) { still_info = f; have_info = true; } }
+                if (have_info) { gLastCompletedFrame = still_info; gHasLastCompletedFrame = true; }
+                if (saved && have_info) {
+                    const std::string meta_tmp = std::string(kStillMetadataPath) + ".tmp";
+                    FILE *f = std::fopen(meta_tmp.c_str(), "w");
+                    if (f) { json_metadata(f, still_info.metadata); std::fclose(f); saved = std::rename(meta_tmp.c_str(), kStillMetadataPath) == 0; }
+                    const auto &y = still_planes[0]; const auto &uv = still_planes[1];
+                    const std::string layout_tmp = std::string(kStillLayoutPath) + ".tmp";
+                    f = std::fopen(layout_tmp.c_str(), "w");
+                    if (f) {
+                        std::fprintf(f, "{\"mapper_suffix\":\"%s\",\"mapper_api\":5,\"width\":%d,\"height\":%d,\"format\":35,\"format_name\":\"YCBCR_420_888\",\"allocation_size\":%lld,\"planes\":[{\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld},{\"components\":[{\"value\":4,\"offset_bits\":%lld},{\"value\":2,\"offset_bits\":%lld}],\"offset\":%lld,\"sample_increment_bits\":%lld,\"row_stride\":%lld,\"width\":%lld,\"height\":%lld,\"total_size\":%lld}]}\n", suffix.c_str(), still_stream.width, still_stream.height, (long long)still_allocation_size, (long long)y.offset, (long long)y.sample_increment_bits, (long long)y.row_stride, (long long)y.width, (long long)y.height, (long long)y.total_size, (long long)uv.cr_offset_bits, (long long)uv.cb_offset_bits, (long long)uv.offset, (long long)uv.sample_increment_bits, (long long)uv.row_stride, (long long)uv.width, (long long)uv.height, (long long)uv.total_size);
+                        std::fclose(f); saved = std::rename(layout_tmp.c_str(), kStillLayoutPath) == 0;
+                    } else saved = false;
+                }
+                { std::lock_guard<std::mutex> lock(mu_); still_success_ = saved; still_error_ = saved ? "" : "still result/publication failed"; still_completed_ = true; state_ = saved ? "streaming" : "error"; if (!saved) error_ = still_error_; cv_.notify_all(); }
+                continue;
+            }
             int32_t returned_frame = -1;
             int64_t returned_buffer = 0;
             uint64_t t2 = 0;
@@ -915,10 +1297,12 @@ class CameraInstance {
                     fail("capture result timeout");
                     break;
                 }
-                returned_frame = cb->returned_buffers.front().first;
-                returned_buffer = cb->returned_buffers.front().second;
+                returned_frame = cb->returned_buffers.front().frame;
+                returned_buffer = cb->returned_buffers.front().buffer_id;
+                const int returned_stream = cb->returned_buffers.front().stream_id;
                 cb->returned_buffers.pop_front();
                 t2 = monotonic_ns();
+                if (returned_stream != stream.id) continue;
             }
             update_pipeline_target();
             if (returned_buffer < 1 || static_cast<size_t>(returned_buffer) > image_fds.size()) {
@@ -990,11 +1374,28 @@ class CameraInstance {
                     kDaemonRawPath, raw_write ? "PASS" : "FAILED");
                 raw_dumped = true;
             }
+            if (!packed) {
+                fail("mapper YUV pack");
+                break;
+            }
+            {
+                std::lock_guard<std::mutex> lock(live_ring_mu_);
+                if (live_recording_ && live_ring_.header) {
+                    FrameInfo fi{}; uint64_t timestamp = monotonic_ns();
+                    if (cb->frameInfo(returned_frame, &fi) && fi.sensor_timestamp > 0)
+                        timestamp = static_cast<uint64_t>(fi.sensor_timestamp);
+                    if (!live_ring_.publish(allocation_base, yuv_planes,
+                                            static_cast<uint32_t>(m.width),
+                                            static_cast<uint32_t>(m.height), timestamp))
+                        std::fprintf(stderr, "camera=%s live_ring_drop frame=%d\n",
+                                     name_.c_str(), returned_frame);
+                }
+            }
             int fence = -1;
             AIMapper_Error unlock_error = mapper->v5.unlock(imported_buffers[returned_buffer - 1], &fence);
             const uint64_t pack_end = monotonic_ns();
-            if (!packed || unlock_error != AIMAPPER_ERROR_NONE) {
-                fail("mapper YUV pack");
+            if (unlock_error != AIMAPPER_ERROR_NONE) {
+                fail("mapper YUV unlock");
                 break;
             }
             const uint64_t t3 = monotonic_ns();
@@ -1077,10 +1478,25 @@ class CameraInstance {
     int producer_;
     Mode mode_;
     std::mutex mu_;
+    std::condition_variable cv_;
+    std::mutex lifecycle_mu_;
+    std::mutex live_ring_mu_;
+    LiveRing live_ring_;
     bool stop_requested_ = false;
     std::thread worker_;
     std::atomic<uint64_t> frames_{0};
+    CameraMode camera_mode_ = CameraMode::VIDEO;
+    SetControlsRequest controls_;
+    bool af_trigger_pending_ = false;
+    bool live_recording_ = false;
+    bool still_pending_ = false;
+    bool still_completed_ = false;
+    bool still_success_ = false;
+    std::string still_error_;
+    ResultState result_;
+    bool latest_result_ = false;
 };
+static bool recorder_call(const Request &request, Response *response, std::string *error);
 
 class CameraManager {
   public:
@@ -1112,17 +1528,27 @@ class CameraManager {
         rear_ = r;
         front_ = f;
     }
-    std::string status(const std::string &camera, const std::string &id) {
+    CameraStatus status(const std::string &camera) {
         CameraInstance *c = camera == "front" ? front_ : rear_;
         std::lock_guard<std::mutex> l(mu_);
-        std::string owner = owner_.empty() ? "NONE" : owner_;
         Mode m = c->mode();
-        return "{\"id\":" + id + ",\"camera\":\"" + camera + "\",\"state\":\"" + c->state() +
-               "\",\"width\":" + std::to_string(m.width) +
-               ",\"height\":" + std::to_string(m.height) + ",\"fps\":" + std::to_string(m.fps) +
-               ",\"frame_count\":" + std::to_string(c->frames()) + ",\"active_owner\":\"" + owner +
-               "\",\"last_error\":\"" + c->error() + "\",\"payload_length\":0}";
+        CameraStatus out;
+        out.set_camera(camera == "front" ? CAMERA_FRONT : CAMERA_REAR);
+        out.set_mode(c->control_mode() == "photo" ? MODE_PHOTO : MODE_VIDEO);
+        const std::string state = c->state();
+        out.set_state(state == "streaming" ? STATE_STREAMING : state == "error" ? STATE_ERROR : STATE_IDLE);
+        out.set_preview_width(m.width); out.set_preview_height(m.height); out.set_preview_fps(m.fps);
+        if (c->has_result()) *out.mutable_result() = c->result();
+        if (!c->error().empty()) { out.mutable_last_error()->set_code(INTERNAL_ERROR); out.mutable_last_error()->set_message(c->error()); }
+        return out;
     }
+    ::tb330fu::camera::v1::CameraId selected_camera() const { std::lock_guard<std::mutex> l(mu_); return selected_; }
+    bool set_camera(::tb330fu::camera::v1::CameraId id) { if (id != CAMERA_REAR && id != CAMERA_FRONT) return false; std::lock_guard<std::mutex> l(mu_); selected_ = id; return true; }
+    SetControlsRequest controls() { CameraInstance *c = selected_ == CAMERA_FRONT ? front_ : rear_; return c->controls(); }
+    uint64_t next_event_sequence() { return event_sequence_.fetch_add(1) + 1; }
+    bool set_controls(const SetControlsRequest& c, std::string *error) { CameraInstance *camera = selected_ == CAMERA_FRONT ? front_ : rear_; return camera->set_controls(c, error); }
+    bool trigger_autofocus(std::string *error) { CameraInstance *camera = selected_ == CAMERA_FRONT ? front_ : rear_; return camera->trigger_autofocus(error); }
+    CameraCapabilities capabilities(::tb330fu::camera::v1::CameraId id) const { CameraCapabilities out; const Capability* caps = id == CAMERA_FRONT ? kFrontCaps : kRearCaps; size_t n = id == CAMERA_FRONT ? sizeof(kFrontCaps)/sizeof(*kFrontCaps) : sizeof(kRearCaps)/sizeof(*kRearCaps); for(size_t i=0;i<n;i++){auto *z=out.add_preview_sizes(); z->set_width(caps[i].width); z->set_height(caps[i].height); if(caps[i].width>1920){auto *s=out.add_still_sizes(); s->set_width(caps[i].width); s->set_height(caps[i].height);}} out.add_focus_modes("auto"); out.add_focus_modes("continuous_picture"); out.add_focus_modes("continuous_video"); out.add_white_balance_modes("auto"); out.set_ae_lock_supported(true); out.set_awb_lock_supported(true); out.set_exposure_compensation_min(0); out.set_exposure_compensation_max(0); out.set_manual_exposure_time_min_ns(0); out.set_manual_exposure_time_max_ns(0); out.set_iso_min(0); out.set_iso_max(0); out.set_focus_distance_min_diopters(0); out.set_focus_distance_max_diopters(0); return out; }
     bool start(const std::string &n) {
         CameraInstance *c = n == "front" ? front_ : rear_;
         std::lock_guard<std::mutex> l(mu_);
@@ -1137,99 +1563,236 @@ class CameraManager {
     }
     void stop(const std::string &n) {
         CameraInstance *c = n == "front" ? front_ : rear_;
-        c->stop();
         std::lock_guard<std::mutex> l(mu_);
+        c->stop();
         if (owner_ == n)
             owner_.clear();
     }
+    bool set_mode(const std::string &n, const std::string &mode) {
+        CameraInstance *c = n == "front" ? front_ : rear_;
+        return c->set_control_mode(mode);
+    }
+    bool capture_still(const std::string &n, std::string *error) {
+        CameraInstance *c = n == "front" ? front_ : rear_;
+        std::lock_guard<std::mutex> l(mu_);
+        if (owner_ != n) {
+            if (error) *error = "camera is not the active HAL owner";
+            return false;
+        }
+        return c->capture_still(provider_, error);
+    }
     std::shared_ptr<ICameraProvider> provider() { return provider_; }
+    bool video_start(std::string *error) {
+        const std::string n = selected_ == CAMERA_FRONT ? "front" : "rear";
+        CameraInstance *c = n == "front" ? front_ : rear_;
+        std::lock_guard<std::mutex> l(mu_);
+        if (owner_ != n) {
+            if (error) *error = owner_.empty() ? "camera is not currently streaming" : "a different camera owns the active session";
+            return false;
+        }
+        if (c->state() != "streaming") {
+            if (error) *error = "camera is not currently streaming";
+            return false;
+        }
+        if (!recording_camera_.empty()) {
+            if (error) *error = "recording already active";
+            return false;
+        }
+        Request q; q.set_request_id(1); q.mutable_video_start(); Response r;
+        if (!recorder_call(q, &r, error)) return false;
+        std::string attach_error;
+        if (!c->start_live_recording(&attach_error)) {
+            Request stop_request; stop_request.set_request_id(2); stop_request.mutable_video_stop();
+            Response stop_response; std::string unwind_error;
+            (void)recorder_call(stop_request, &stop_response, &unwind_error);
+            if (error) *error = attach_error;
+            return false;
+        }
+        recording_camera_ = n;
+        return true;
+    }
+    bool video_stop(VideoStatus *out, std::string *error) {
+        std::lock_guard<std::mutex> l(mu_);
+        if (recording_camera_.empty()) { if (error) *error = "no active recording"; return false; }
+        CameraInstance *c = recording_camera_ == "front" ? front_ : rear_;
+        c->stop_live_recording();
+        recording_camera_.clear();
+        Request q; q.set_request_id(2); q.mutable_video_stop(); Response r;
+        if (!recorder_call(q, &r, error)) return false; if (out && r.result_case() == Response::kVideo) *out = r.video(); return true;
+    }
+    bool video_status(VideoStatus *out, std::string *error) {
+        Request q; q.set_request_id(3); q.mutable_video_status(); Response r;
+        if (!recorder_call(q, &r, error)) return false; if (out && r.result_case() == Response::kVideo) *out = r.video(); return true;
+    }
 
   private:
     std::shared_ptr<ICameraProvider> provider_;
     CameraInstance *rear_ = nullptr, *front_ = nullptr;
     std::string owner_;
-    std::mutex mu_;
+    std::string recording_camera_;
+    ::tb330fu::camera::v1::CameraId selected_ = CAMERA_REAR;
+    std::atomic<uint64_t> event_sequence_{0};
+    mutable std::mutex mu_;
 };
 
-static void tcp_server(CameraManager &manager) {
-    int s = socket(AF_INET, SOCK_STREAM, 0);
-    int one = 1;
-    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-    sockaddr_in a{};
-    a.sin_family = AF_INET;
-    a.sin_port = htons(kControlPort);
-    inet_pton(AF_INET, "127.0.0.1", &a.sin_addr);
-    if (bind(s, (sockaddr *)&a, sizeof(a)) < 0 || listen(s, 8) < 0) {
-        std::perror("camera control listen");
-        close(s);
-        return;
+static int unix_listener(const char *path) {
+    int s = ::socket(AF_UNIX, SOCK_SEQPACKET, 0);
+    if (s < 0) return -1;
+    ::unlink(path);
+    sockaddr_un a{};
+    a.sun_family = AF_UNIX;
+    if (std::strlen(path) >= sizeof(a.sun_path)) { ::close(s); return -1; }
+    std::strncpy(a.sun_path, path, sizeof(a.sun_path) - 1);
+    if (::bind(s, reinterpret_cast<sockaddr *>(&a), sizeof(a)) < 0 || ::listen(s, 8) < 0) {
+        std::perror(path); ::close(s); return -1;
     }
-    std::printf("tcp_listen=127.0.0.1:%d\n", kControlPort);
+    // The bridge is a local peer; the socket carries no image bytes or FDs.
+    // Allow the unprivileged bridge user to connect while keeping it Unix-only.
+    ::chmod(path, 0666);
+    return s;
+}
+static bool recorder_call(const Request &request, Response *response, std::string *error) {
+    int fd = ::socket(AF_UNIX, SOCK_SEQPACKET, 0); if (fd < 0) { *error = std::strerror(errno); return false; }
+    sockaddr_un a{}; a.sun_family = AF_UNIX; std::strncpy(a.sun_path, kRecorderSocket, sizeof(a.sun_path) - 1);
+    if (::connect(fd, reinterpret_cast<sockaddr *>(&a), sizeof(a)) < 0) { *error = std::strerror(errno); ::close(fd); return false; }
+    std::string wire; request.SerializeToString(&wire); if (::send(fd, wire.data(), wire.size(), MSG_NOSIGNAL) != static_cast<ssize_t>(wire.size())) { *error = "recorder request send failed"; ::close(fd); return false; }
+    uint8_t buf[kMaxIpcPacket]; ssize_t n = ::recv(fd, buf, sizeof(buf), 0); ::close(fd);
+    if (n <= 0 || !response->ParseFromArray(buf, static_cast<int>(n))) { *error = "malformed recorder response"; return false; }
+    if (response->result_case() == Response::kError) { *error = response->error().message(); return false; }
+    return true;
+}
+static void send_response(int c, const Response& response) {
+    std::vector<uint8_t> wire(static_cast<size_t>(response.ByteSizeLong()));
+    if (response.SerializeToArray(wire.data(), static_cast<int>(wire.size())))
+        (void)::send(c, wire.data(), wire.size(), MSG_NOSIGNAL);
+}
+static Response error_response(uint64_t id, tb330fu::camera::v1::ErrorCode code, const std::string& message) {
+    Response out; out.set_request_id(id);
+    out.mutable_error()->set_code(code); out.mutable_error()->set_message(message); return out;
+}
+static std::string selected_name(const CameraManager& manager) {
+    return manager.selected_camera() == CAMERA_FRONT ? "front" : "rear";
+}
+static void control_client(int c, CameraManager& manager) {
+    std::vector<uint8_t> packet(kMaxIpcPacket);
     for (;;) {
-        int c = accept(s, nullptr, nullptr);
-        if (c < 0)
-            continue;
-        for (;;) {
-            char ch = 0;
-            std::string digits;
-            do {
-                if (!read_full(c, &ch, 1))
-                    goto done;
-                if (ch < '0' || ch > '9')
-                    break;
-                digits += ch;
-                if (digits.size() > 20)
-                    goto done;
-            } while (true);
-            if (ch != '{' || digits.empty())
-                goto done;
-            size_t n = 0;
-            if (!parse_bounded_decimal(digits, kMaxJsonFrameLength, &n) || n < 1)
-                goto done;
-            std::string j(n, ' ');
-            j[0] = '{';
-            if (!read_full(c, j.data() + 1, n - 1))
-                goto done;
-            size_t payload = 0;
-            std::string payload_text = json_value(j, "payload_length");
-            if (!payload_text.empty() &&
-                !parse_bounded_decimal(payload_text, kMaxPayloadLength, &payload))
-                goto done;
-            if (payload) {
-                std::vector<char> ignored(payload);
-                if (!read_full(c, ignored.data(), ignored.size()))
-                    goto done;
-            }
-            std::string id = json_value(j, "id"), op = json_value(j, "op"),
-                        cam = json_value(j, "camera");
-            if (cam.empty())
-                cam = "rear";
-            std::string out;
-            if (op == "get_cameras")
-                out = "{\"id\":" + id + ",\"cameras\":[\"rear\",\"front\"],\"payload_length\":0}";
-            else if (op == "get_status")
-                out = manager.status(cam, id);
-            else if (op == "get_capabilities") {
-                const Capability *caps = cam == "front" ? kFrontCaps : kRearCaps;
-                size_t count = cam == "front" ? sizeof(kFrontCaps) / sizeof(*kFrontCaps)
-                                              : sizeof(kRearCaps) / sizeof(*kRearCaps);
-                out = "{\"id\":" + id + ",\"camera\":\"" + cam +
-                      "\",\"fourcc\":\"YU12\",\"fps\":30,\"modes\":[";
-                for (size_t i = 0; i < count; i++) {
-                    if (i)
-                        out += ",";
-                    out += "{\"width\":" + std::to_string(caps[i].width) +
-                           ",\"height\":" + std::to_string(caps[i].height) + "}";
-                }
-                out += "] ,\"payload_length\":0}";
-            } else
-                out = "{\"id\":" + id + ",\"error\":\"unsupported_op\",\"payload_length\":0}";
-            std::string frame = std::to_string(out.size()) + out;
-            if (!write_full(c, frame.data(), frame.size()))
-                goto done;
+        const ssize_t n = ::recv(c, packet.data(), packet.size(), 0);
+        if (n <= 0) break;
+        Request request;
+        if (!request.ParseFromArray(packet.data(), static_cast<int>(n))) {
+            send_response(c, error_response(0, INVALID_REQUEST, "malformed protobuf Request"));
+            break;
         }
-    done:
-        close(c);
+        const std::string camera = selected_name(manager);
+        Response response; response.set_request_id(request.request_id());
+        switch (request.command_case()) {
+        case Request::kGetState:
+            *response.mutable_state() = manager.status(camera); break;
+        case Request::kSetCamera:
+            if (!manager.set_camera(request.set_camera().camera())) response = error_response(request.request_id(), INVALID_REQUEST, "invalid camera");
+            else response.mutable_ok(); break;
+        case Request::kSetMode: {
+            const bool ok = manager.set_mode(camera, request.set_mode().mode() == MODE_PHOTO ? "photo" : request.set_mode().mode() == MODE_VIDEO ? "video" : "");
+            if (!ok) response = error_response(request.request_id(), INVALID_REQUEST, "invalid mode");
+            else response.mutable_ok(); break;
+        }
+        case Request::kGetCapabilities:
+            *response.mutable_capabilities() = manager.capabilities(manager.selected_camera()); break;
+        case Request::kGetControls:
+        {
+            const auto current = manager.controls();
+            auto *controls = response.mutable_controls();
+            if (current.has_focus_mode()) controls->set_focus_mode(current.focus_mode());
+            if (current.has_white_balance_mode()) controls->set_white_balance_mode(current.white_balance_mode());
+            controls->set_ae_lock(current.has_ae_lock() && current.ae_lock());
+            controls->set_awb_lock(current.has_awb_lock() && current.awb_lock());
+            controls->set_exposure_compensation(current.has_exposure_compensation() ? current.exposure_compensation() : 0);
+            controls->set_manual_exposure_time_ns(current.has_manual_exposure_time_ns() ? current.manual_exposure_time_ns() : 0);
+            controls->set_manual_sensitivity_iso(current.has_manual_sensitivity_iso() ? current.manual_sensitivity_iso() : 0);
+            controls->set_manual_focus_distance_diopters(current.has_manual_focus_distance_diopters() ? current.manual_focus_distance_diopters() : 0.0f);
+            break;
+        }
+        case Request::kSetControls: {
+            std::string error;
+            if (!manager.set_controls(request.set_controls(), &error)) response = error_response(request.request_id(), UNSUPPORTED, error);
+            else response.mutable_ok(); break;
+        }
+        case Request::kTriggerAutofocus: {
+            std::string error;
+            if (!manager.trigger_autofocus(&error)) response = error_response(request.request_id(), INVALID_STATE, error);
+            else response.mutable_ok(); break;
+        }
+        case Request::kCaptureStill: {
+            std::string error; const bool ok = manager.capture_still(camera, &error);
+            if (!ok) response = error_response(request.request_id(), CAPTURE_FAILED, error);
+            else {
+                auto *capture = response.mutable_capture(); capture->set_width(3264); capture->set_height(2448);
+                capture->set_frame_number(gHasLastCompletedFrame ? static_cast<uint64_t>(gLastCompletedFrame.frame) : 0);
+                capture->set_path(kStillRawPath);
+                if (gHasLastCompletedFrame) {
+                    auto *result = capture->mutable_result();
+                    result->set_ae_state(static_cast<AeState>(gLastCompletedFrame.ae + 1));
+                    result->set_af_state(static_cast<AfState>(gLastCompletedFrame.af + 1));
+                    result->set_awb_state(static_cast<AwbState>(gLastCompletedFrame.awb + 1));
+                    result->set_exposure_time_ns(gLastCompletedFrame.exposure);
+                    result->set_sensitivity_iso(gLastCompletedFrame.sensitivity);
+                    result->set_frame_duration_ns(gLastCompletedFrame.frame_duration);
+                    result->set_focus_distance_diopters(gLastCompletedFrame.focus);
+                    result->set_frame_number(capture->frame_number());
+                    result->set_sensor_timestamp_ns(gLastCompletedFrame.sensor_timestamp);
+                }
+            }
+            break;
+        }
+        case Request::kVideoStart: {
+            std::string error;
+            if (!manager.video_start(&error)) response = error_response(request.request_id(), BUSY, error);
+            else { VideoStatus s; manager.video_status(&s, &error); response.mutable_video()->CopyFrom(s); }
+            break;
+        }
+        case Request::kVideoStop: {
+            std::string error; VideoStatus s;
+            if (!manager.video_stop(&s, &error)) response = error_response(request.request_id(), INTERNAL_ERROR, error);
+            else response.mutable_video()->CopyFrom(s);
+            break;
+        }
+        case Request::kVideoStatus: {
+            std::string error; VideoStatus s;
+            if (!manager.video_status(&s, &error)) response = error_response(request.request_id(), INVALID_STATE, error);
+            else response.mutable_video()->CopyFrom(s);
+            break;
+        }
+        default: response = error_response(request.request_id(), INVALID_REQUEST, "empty command"); break;
+        }
+        send_response(c, response);
+    }
+    ::close(c);
+}
+static void control_server(CameraManager& manager) {
+    const int s = unix_listener(kControlSocket);
+    if (s < 0) return;
+    std::printf("protobuf_seqpacket_control=%s max_packet=%zu\n", kControlSocket, kMaxIpcPacket);
+    for (;;) { int c = ::accept(s, nullptr, nullptr); if (c >= 0) std::thread(control_client, c, std::ref(manager)).detach(); }
+}
+static void events_server(CameraManager& manager) {
+    const int s = unix_listener(kEventsSocket);
+    if (s < 0) return;
+    std::printf("protobuf_seqpacket_events=%s max_packet=%zu\n", kEventsSocket, kMaxIpcPacket);
+    for (;;) {
+        int c = ::accept(s, nullptr, nullptr);
+        if (c < 0) continue;
+        std::thread([c, &manager] {
+            for (;;) {
+                StatusUpdate update; update.set_sequence(manager.next_event_sequence()); *update.mutable_status() = manager.status(selected_name(manager));
+                std::vector<uint8_t> wire(static_cast<size_t>(update.ByteSizeLong()));
+                if (!update.SerializeToArray(wire.data(), static_cast<int>(wire.size()))) break;
+                // A slow consumer may lose this snapshot; the next complete
+                // snapshot is sufficient to resynchronize it.
+                if (::send(c, wire.data(), wire.size(), MSG_NOSIGNAL | MSG_DONTWAIT) < 0 && errno != EAGAIN && errno != EWOULDBLOCK) break;
+                std::this_thread::sleep_for(std::chrono::milliseconds(33));
+            }
+            ::close(c);
+        }).detach();
     }
 }
 } // namespace
@@ -1264,8 +1827,10 @@ int main(int argc, char **argv) {
         front("front", "device@1.1/internal/1", kFrontNode, ffd, {1920, 1080, 30});
     manager.set(&rear, &front);
     std::fprintf(stderr, "daemon main loop ready\n");
-    std::thread tcp([&] { tcp_server(manager); });
-    tcp.detach();
+    std::thread control([&] { control_server(manager); });
+    std::thread events([&] { events_server(manager); });
+    control.detach();
+    events.detach();
     for (;;) {
         pollfd p[2] = {{rfd, POLLPRI, 0}, {ffd, POLLPRI, 0}};
         if (poll(p, 2, -1) < 0)

@@ -35,6 +35,8 @@ The module and V4L2 nodes are native Linux-facing transport.
 |---|---|
 | `src/camera/daemon/tb330fu-camera-daemon.cpp` | resident bionic Camera3-to-V4L2 daemon |
 | `src/camera/capture/tb330fu-camera-capture.cpp` | shared Camera3/AIDL/FMQ/mapper implementation |
+| `src/camera/bridge/camera_bridge.py` | FastAPI/uvicorn app-facing HTTP and WebSocket bridge |
+| `src/camera/bridge/openapi.json` | generated v1 HTTP contract for the future frontend |
 | `modules/v4l2loopback-tb330fu/v4l2loopback.c` | GPL v4l2loopback fork with DMABUF OUTPUT and producer events |
 | `modules/v4l2loopback-tb330fu/build.sh` | target-kernel build and BTF gate |
 | `modules/v4l2loopback-tb330fu/v4l2loopback.h` | daemon/module event ABI |
@@ -72,8 +74,8 @@ For video/preview the daemon creates one Camera3 `OUTPUT` stream with:
 
 | Field | Value |
 |---|---|
-| format | `YCBCR_420_888` |
-| usage | `CPU_READ_OFTEN` |
+| requested format | `IMPLEMENTATION_DEFINED` |
+| requested usage | `GPU_TEXTURE` (`0x100`) |
 | dataspace | `UNKNOWN` |
 | rotation | `ROTATION_0` |
 | template | `VIDEO_RECORD` |
@@ -83,7 +85,10 @@ For video/preview the daemon creates one Camera3 `OUTPUT` stream with:
 
 V4L2 `S_FMT` and `S_PARM` events select the supported width, height, and frame interval while the producer is idle.
 Preview and video use the same daemon stream configuration.
-The Camera3 stream is YUV; the Linux-facing format is YU12 after conversion.
+The daemon uses the returned `HalStream` format and usage for allocation and
+buffer import. The Linux-facing format is YU12 after conversion of the
+mapper-visible Y-plus-interleaved-VU payload. The separate still stream uses
+`YCBCR_420_888` with `CPU_READ_OFTEN`.
 
 ## Scene control
 
@@ -95,7 +100,11 @@ The current implementation does not claim a separate rear/front value.
 
 ## Control plane
 
-The daemon listens only on TCP `127.0.0.1:39091`.
+The daemon exposes local protobuf v1 `SOCK_SEQPACKET` endpoints:
+`/run/tb330fu-camera/control.sock` for synchronous request/reply and
+`/run/tb330fu-camera/events.sock` for asynchronous current-state snapshots.
+Packets are bounded to 64 KiB; image bytes and file descriptors are excluded.
+The schema and dependency-free direct client are under `src/camera/protocol/`.
 Despite the historical description as an HTTP control plane, the current implementation is not an HTTP server: it has no HTTP request line, headers, content types, or HTTP status codes.
 It uses a length-prefixed JSON protocol.
 
@@ -203,11 +212,20 @@ The validated format is YU12/I420 (`yuv420p`), with the camera-specific modes li
 MMAP CAPTURE is supported; OUTPUT DMABUF is an internal producer path.
 Consumers do not need the project ABI or Camera3 knowledge.
 
-## Still capture
+## App-facing bridge
 
-Still capture is not implemented in the canonical daemon.
-There is no HTTP or framed-TCP still endpoint, JPEG/BLOB response, file-output API, or separate still session.
-The backend currently provides preview/video frames only.
+The Python bridge exposes the stable v1 API through FastAPI and uvicorn. Its
+canonical generated contract is [`src/camera/bridge/openapi.json`](../src/camera/bridge/openapi.json).
+The bridge translates public string/enumeration models to the daemon's
+protobuf requests and does not become authoritative for camera state.
+
+The API includes synchronous still capture and raw/JPEG retrieval from the
+daemon-owned last-shot files. `/v1/events` uses Starlette WebSocket support and
+sends complete status snapshots, beginning with the latest available snapshot.
+The generated contract freezes operation IDs, cleaned status enums, and binary
+`/v1/last-shot` responses. Control PATCH fields are optional for omission, but
+explicit `null` and unknown fields are rejected. Capture responses expose only
+image dimensions, frame number, and result metadata.
 
 ## Startup and lifecycle
 
@@ -216,7 +234,18 @@ Its stop action removes the aliases and unloads the module.
 
 `tb330fu-camera-daemon.service` requires the module unit, starts after the module and `tb330fu-android-boot-complete.service`, runs the target-bionic `/usr/local/lib/tb330fu/tb330fu-camera-daemon` as `felix`, and uses `Restart=on-failure` with a two-second delay.
 The daemon remains alive while both cameras are stopped.
-A camera worker opens and closes one Camera3 device session per V4L2 producer interval.
+A camera worker opens one Camera3 device session when its V4L2 producer starts and
+keeps that session alive until the producer stops. Video recording attaches to
+the active worker's shared-memory ring and does not acquire or release camera
+ownership.
+
+The recorder is a separate native glibc process. The daemon publishes Camera3
+frames to the bounded four-slot ring declared in
+[`src/camera/video/tb330fu_video_ring.h`](../src/camera/video/tb330fu_video_ring.h);
+the recorder owns MP4 finalization. Control/status protobuf, HTTP, and WebSocket
+messages never carry frame payloads. For `h264_v4l2m2m`, the recorder supplies
+independent 32-byte-aligned `AVBufferRef`s for the NV21 Y and VU planes before
+`avcodec_send_frame()`.
 
 ## Failure behavior
 
@@ -260,6 +289,23 @@ Z_LIB=/path/to/libz.so \
 The resulting ELF uses `/system/bin/linker64` and target bionic libraries.
 Do not run it against real Camera3 hardware on the build host.
 
+### Native video recorder
+
+Build the glibc/AArch64 recorder on `entertainment.local` with the external
+FFmpeg and AOSP protobuf sources required by
+[`src/camera/recorder/build.sh`](../src/camera/recorder/build.sh):
+
+```bash
+sh src/camera/recorder/build.sh
+```
+
+Install the resulting `out/tb330fu-video-recorder` as
+`/usr/local/lib/tb330fu/tb330fu-video-recorder` on the target and use
+[`systemd/tb330fu-video-recorder.service`](../systemd/tb330fu-video-recorder.service).
+The service is root-owned because it writes the runtime ring and
+`/var/lib/tb330fu-camera/video.mp4`; the camera daemon remains the Camera3
+owner.
+
 ### Kernel module
 
 Build against the reconstructed target kernel tree with the exact target `Module.symvers`, recovered symbol CRCs, Android clang, and module BTF enabled.
@@ -283,7 +329,7 @@ Read-only target checks:
 systemctl is-active tb330fu-camera-daemon.service tb330fu-camera-module.service
 pgrep -af tb330fu-camera
 ls -l /dev/video-rear /dev/video-front /dev/video10 /dev/video11
-ss -ltnp | grep 39091
+ls -l /run/tb330fu-camera/control.sock /run/tb330fu-camera/events.sock
 grep '^v4l2loopback' /proc/modules
 v4l2-ctl --all -d /dev/video-rear
 v4l2-ctl --list-formats-ext -d /dev/video-rear
@@ -296,9 +342,16 @@ Sustained delivery was measured below nominal 30 fps; that does not change the V
 
 ## Known limitations
 
-- The control interface is framed TCP, not HTTP, despite older terminology.
+- The daemon control interface is protobuf over Unix `SOCK_SEQPACKET`; the
+  separate app-facing bridge provides HTTP/WebSocket through FastAPI.
+- `focus_mode`, `white_balance_mode`, AE/AWB lock, exposure compensation,
+  manual exposure, ISO, and manual focus are daemon-owned requested controls;
+  they are applied to subsequent Camera3 requests where the target metadata
+  supports them. Autofocus is a one-shot Camera3 AF trigger.
 - Rear/front simultaneous HAL capture is unsupported.
-- Still capture is absent.
+- Still capture returns result metadata and the canonical last-shot path;
+  image bytes are served by the bridge from daemon-owned files and are not
+  transported over IPC.
 - The DMA-BUF path performs a module copy and the daemon performs an NV21 to I420 conversion; it is not zero-copy.
 - Busy consumers may wait instead of receiving immediate `EBUSY`.
 - Nominal 30 fps is not reached in the validated deployment.

@@ -1,0 +1,1394 @@
+{
+  "components": {
+    "schemas": {
+      "AeStateName": {
+        "enum": [
+          "unspecified",
+          "inactive",
+          "searching",
+          "converged",
+          "locked",
+          "flash_required",
+          "precapture"
+        ],
+        "title": "AeStateName",
+        "type": "string"
+      },
+      "AfStateName": {
+        "enum": [
+          "unspecified",
+          "inactive",
+          "passive_scan",
+          "passive_focused",
+          "active_scan",
+          "focused_locked",
+          "not_focused_locked",
+          "passive_unfocused"
+        ],
+        "title": "AfStateName",
+        "type": "string"
+      },
+      "AwbStateName": {
+        "enum": [
+          "unspecified",
+          "inactive",
+          "searching",
+          "converged",
+          "locked"
+        ],
+        "title": "AwbStateName",
+        "type": "string"
+      },
+      "CameraName": {
+        "enum": [
+          "rear",
+          "front"
+        ],
+        "title": "CameraName",
+        "type": "string"
+      },
+      "CameraSelection": {
+        "additionalProperties": false,
+        "properties": {
+          "camera": {
+            "$ref": "#/components/schemas/CameraName"
+          }
+        },
+        "required": [
+          "camera"
+        ],
+        "title": "CameraSelection",
+        "type": "object"
+      },
+      "CameraStateName": {
+        "enum": [
+          "unspecified",
+          "idle",
+          "configuring",
+          "streaming",
+          "capturing",
+          "error"
+        ],
+        "title": "CameraStateName",
+        "type": "string"
+      },
+      "CameraStatusModel": {
+        "additionalProperties": false,
+        "properties": {
+          "camera": {
+            "$ref": "#/components/schemas/CameraStatusName"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorBody"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode": {
+            "$ref": "#/components/schemas/ModeStatusName"
+          },
+          "preview_fps": {
+            "title": "Preview Fps",
+            "type": "integer"
+          },
+          "preview_height": {
+            "title": "Preview Height",
+            "type": "integer"
+          },
+          "preview_width": {
+            "title": "Preview Width",
+            "type": "integer"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResultMetadata"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/CameraStateName"
+          }
+        },
+        "required": [
+          "camera",
+          "mode",
+          "state",
+          "preview_width",
+          "preview_height",
+          "preview_fps"
+        ],
+        "title": "CameraStatusModel",
+        "type": "object"
+      },
+      "CameraStatusName": {
+        "enum": [
+          "unspecified",
+          "rear",
+          "front"
+        ],
+        "title": "CameraStatusName",
+        "type": "string"
+      },
+      "CapabilitiesModel": {
+        "additionalProperties": false,
+        "properties": {
+          "ae_lock_supported": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ae Lock Supported"
+          },
+          "awb_lock_supported": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awb Lock Supported"
+          },
+          "exposure_compensation_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exposure Compensation Max"
+          },
+          "exposure_compensation_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exposure Compensation Min"
+          },
+          "focus_distance_max_diopters": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus Distance Max Diopters"
+          },
+          "focus_distance_min_diopters": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus Distance Min Diopters"
+          },
+          "focus_modes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Focus Modes",
+            "type": "array"
+          },
+          "iso_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso Max"
+          },
+          "iso_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso Min"
+          },
+          "manual_exposure_time_max_ns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manual Exposure Time Max Ns"
+          },
+          "manual_exposure_time_min_ns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manual Exposure Time Min Ns"
+          },
+          "preview_sizes": {
+            "items": {
+              "$ref": "#/components/schemas/SizeModel"
+            },
+            "title": "Preview Sizes",
+            "type": "array"
+          },
+          "still_sizes": {
+            "items": {
+              "$ref": "#/components/schemas/SizeModel"
+            },
+            "title": "Still Sizes",
+            "type": "array"
+          },
+          "white_balance_modes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "White Balance Modes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "preview_sizes",
+          "still_sizes",
+          "focus_modes",
+          "white_balance_modes"
+        ],
+        "title": "CapabilitiesModel",
+        "type": "object"
+      },
+      "CaptureResultModel": {
+        "additionalProperties": false,
+        "properties": {
+          "frame_number": {
+            "title": "Frame Number",
+            "type": "integer"
+          },
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResultMetadata"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "width",
+          "height",
+          "frame_number"
+        ],
+        "title": "CaptureResultModel",
+        "type": "object"
+      },
+      "ControlsModel": {
+        "additionalProperties": false,
+        "properties": {
+          "ae_lock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ae Lock"
+          },
+          "awb_lock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awb Lock"
+          },
+          "exposure_compensation": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exposure Compensation"
+          },
+          "focus_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus Mode"
+          },
+          "manual_exposure_time_ns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manual Exposure Time Ns"
+          },
+          "manual_focus_distance_diopters": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manual Focus Distance Diopters"
+          },
+          "manual_sensitivity_iso": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manual Sensitivity Iso"
+          },
+          "white_balance_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "White Balance Mode"
+          }
+        },
+        "title": "ControlsModel",
+        "type": "object"
+      },
+      "ControlsPatch": {
+        "additionalProperties": false,
+        "description": "Omitted fields are unchanged; explicit null values are rejected.",
+        "properties": {
+          "ae_lock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Ae Lock"
+          },
+          "awb_lock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Awb Lock"
+          },
+          "exposure_compensation": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Exposure Compensation"
+          },
+          "focus_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Focus Mode"
+          },
+          "manual_exposure_time_ns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Manual Exposure Time Ns"
+          },
+          "manual_focus_distance_diopters": {
+            "anyOf": [
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Manual Focus Distance Diopters"
+          },
+          "manual_sensitivity_iso": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Manual Sensitivity Iso"
+          },
+          "white_balance_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ],
+            "title": "White Balance Mode"
+          }
+        },
+        "title": "ControlsPatch",
+        "type": "object"
+      },
+      "EmptyModel": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "EmptyModel",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "daemon_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daemon Code"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorEnvelope",
+        "type": "object"
+      },
+      "ModeName": {
+        "enum": [
+          "photo",
+          "video"
+        ],
+        "title": "ModeName",
+        "type": "string"
+      },
+      "ModeSelection": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/ModeName"
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "title": "ModeSelection",
+        "type": "object"
+      },
+      "ModeStatusName": {
+        "enum": [
+          "unspecified",
+          "photo",
+          "video"
+        ],
+        "title": "ModeStatusName",
+        "type": "string"
+      },
+      "ResultMetadata": {
+        "additionalProperties": false,
+        "properties": {
+          "ae_state": {
+            "$ref": "#/components/schemas/AeStateName"
+          },
+          "af_state": {
+            "$ref": "#/components/schemas/AfStateName"
+          },
+          "awb_state": {
+            "$ref": "#/components/schemas/AwbStateName"
+          },
+          "exposure_time_ns": {
+            "title": "Exposure Time Ns",
+            "type": "integer"
+          },
+          "focus_distance_diopters": {
+            "title": "Focus Distance Diopters",
+            "type": "number"
+          },
+          "frame_duration_ns": {
+            "title": "Frame Duration Ns",
+            "type": "integer"
+          },
+          "frame_number": {
+            "title": "Frame Number",
+            "type": "integer"
+          },
+          "sensitivity_iso": {
+            "title": "Sensitivity Iso",
+            "type": "integer"
+          },
+          "sensor_timestamp_ns": {
+            "title": "Sensor Timestamp Ns",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ae_state",
+          "af_state",
+          "awb_state",
+          "exposure_time_ns",
+          "sensitivity_iso",
+          "frame_duration_ns",
+          "focus_distance_diopters",
+          "frame_number",
+          "sensor_timestamp_ns"
+        ],
+        "title": "ResultMetadata",
+        "type": "object"
+      },
+      "SizeModel": {
+        "additionalProperties": false,
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "width",
+          "height"
+        ],
+        "title": "SizeModel",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "App-facing camera API over the native protobuf daemon.",
+    "title": "TB330FU Camera Bridge",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/autofocus": {
+      "post": {
+        "operationId": "autofocus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Autofocus"
+      }
+    },
+    "/v1/camera": {
+      "put": {
+        "operationId": "setCamera",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CameraSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Set Camera"
+      }
+    },
+    "/v1/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilitiesModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Get Capabilities"
+      }
+    },
+    "/v1/capture": {
+      "post": {
+        "operationId": "capture",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureResultModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Capture"
+      }
+    },
+    "/v1/controls": {
+      "get": {
+        "operationId": "getControls",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ControlsModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Get Controls"
+      },
+      "patch": {
+        "operationId": "setControls",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControlsPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ControlsModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Set Controls"
+      }
+    },
+    "/v1/last-shot": {
+      "get": {
+        "operationId": "getLastShot",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "default": "raw",
+              "enum": [
+                "raw",
+                "jpg"
+              ],
+              "title": "Type",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {},
+              "image/jpeg": {}
+            },
+            "description": "Raw or JPEG still image"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Last Shot"
+      }
+    },
+    "/v1/mode": {
+      "put": {
+        "operationId": "setMode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Set Mode"
+      }
+    },
+    "/v1/state": {
+      "get": {
+        "operationId": "getState",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CameraStatusModel"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Structured error response"
+          }
+        },
+        "summary": "Get State"
+      }
+    }
+  }
+}

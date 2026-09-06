@@ -1,0 +1,18 @@
+[Unit]
+Description=TB330FU Camera live video recorder
+Requires=tb330fu-android-boot-complete.service
+After=tb330fu-android-boot-complete.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/lib/tb330fu/tb330fu-video-recorder
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=yes
+ReadWritePaths=/run/tb330fu-camera /var/lib/tb330fu-camera
+ExecStartPre=/usr/bin/install -d -o root -g root -m 0775 /run/tb330fu-camera
+StateDirectory=tb330fu-camera
+
+[Install]
+WantedBy=multi-user.target

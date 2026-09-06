@@ -135,7 +135,9 @@ The production camera daemon is native Linux-facing bridge code and is ordered a
 The deployed BTF-enabled `v4l2loopback` module exposes `/dev/video10` and `/dev/video11`, with stable `/dev/video-rear` and `/dev/video-front` symlinks.
 
 Preview and video are exposed through V4L2.
-The daemon has a localhost length-prefixed JSON control socket; it is not an HTTP server.
+The daemon has local protobuf v1 Unix `SOCK_SEQPACKET` control and events
+sockets; it is not an HTTP server. The daemon remains authoritative for camera
+selection, mode, controls, Camera3 observation, and capture lifecycle.
 Still capture is not implemented.
 Device-node and daemon liveness do not by themselves prove correct pixels, format negotiation, or product-complete camera behavior.
 
