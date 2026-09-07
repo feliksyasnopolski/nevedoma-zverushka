@@ -8,8 +8,6 @@ Type=simple
 User=root
 SupplementaryGroups=video render
 ExecStart=/usr/local/lib/tb330fu/tb330fu-camera-daemon
-Restart=on-failure
-RestartSec=2
 NoNewPrivileges=yes
 ExecStartPre=/usr/bin/install -d -o root -g root -m 0775 /run/tb330fu-camera
 

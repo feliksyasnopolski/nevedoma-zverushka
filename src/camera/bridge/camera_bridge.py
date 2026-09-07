@@ -473,8 +473,8 @@ def capture(request: Request, shot_type: Literal["jpeg", "raw"] = Query("jpeg", 
                 raise BridgeError(502, f"JPEG processor failed: {reply[:64]}")
         except (OSError, UnicodeError, TimeoutError) as exc:
             raise BridgeError(502, f"JPEG processor unavailable: {exc}") from exc
-        response.capture.set_jpeg_path(str(JPEG_PATH))
-        response.capture.set_path(str(JPEG_PATH))
+        response.capture.jpeg_path = str(JPEG_PATH)
+        response.capture.path = str(JPEG_PATH)
     return message_json(response)
 
 

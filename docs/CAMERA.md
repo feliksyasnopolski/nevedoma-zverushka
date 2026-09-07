@@ -237,10 +237,62 @@ image dimensions, frame number, and result metadata.
 
 ## Startup and lifecycle
 
-`tb330fu-camera-module.service` requires the Android readiness gate, loads `v4l2loopback-events-btf.ko` with two devices, `max_buffers=4`, and `max_openers=3`, then creates the stable aliases.
-Its stop action removes the aliases and unloads the module.
+The production project service graph is:
 
-`tb330fu-camera-daemon.service` requires the module unit, starts after the module and `tb330fu-android-boot-complete.service`, runs the target-bionic `/usr/local/lib/tb330fu/tb330fu-camera-daemon` as `felix`, and uses `Restart=on-failure` with a two-second delay.
+```text
+tb330fu-android-boot-complete.service
+             |
+             +--> tb330fu-camera-module.service
+             |          |
+             |          +--> tb330fu-camera-daemon.service
+             |                         |
+             +--> tb330fu-video-recorder.service
+                                       |
+                                       +--> tb330fu-camera-daemon.service
+                                                    |
+                                                    +--> tb330fu-camera-bridge.service
+                                                                 ^
+             tb330fu-android-boot-complete.service --> tb330fu-camera-processor.service
+```
+
+`tb330fu-camera-module.service` is a `oneshot` unit with
+`RemainAfterExit=yes`. It requires `tb330fu-android-boot-complete.service`,
+starts after `local-fs.target`, `systemd-udev-settle.service`, and the
+readiness gate, and is before `tb330fu-camera-daemon.service`. Its
+`ExecStart` loads `v4l2loopback-events-btf.ko` with
+`devices=2 video_nr=10,11 max_buffers=4 max_openers=3`, then creates the rear
+and front aliases. `ExecStop` removes both aliases and unloads the module.
+
+`tb330fu-video-recorder.service` is a root `Type=simple` unit. It requires and
+starts after `tb330fu-android-boot-complete.service`, runs
+`/usr/local/lib/tb330fu/tb330fu-video-recorder`, creates
+`/run/tb330fu-camera` with mode `0775`, uses `RuntimeDirectory=tb330fu-camera`
+and `StateDirectory=tb330fu-camera`, and permits writes to the runtime and
+state paths. `tb330fu-camera-daemon.service` requires the module and recorder,
+starts after both plus the Android readiness gate, runs as root with
+`SupplementaryGroups=video render`, and executes
+`/usr/local/lib/tb330fu/tb330fu-camera-daemon` after creating the runtime
+directory. `tb330fu-camera-bridge.service` requires and starts after the
+daemon, runs as `felix`, sets
+`PYTHONPATH=/usr/local/lib/tb330fu/camera-bridge-deps:/usr/local/lib/tb330fu/camera-bridge`,
+and executes the bridge on `127.0.0.1:3909`.
+
+`tb330fu-camera-processor.service` is a root `Type=simple` unit. It requires
+and starts after `tb330fu-android-boot-complete.service`, creates
+`/run/tb330fu-camera` with mode `0775`, and executes the persistent glibc
+`/usr/local/lib/tb330fu/tb330fu-camera-processor`. The bridge requires and
+starts after both the daemon and this processor because JPEG capture uses
+`/run/tb330fu-camera/processor.sock` synchronously.
+
+All three long-running project units deliberately have `Restart=no` (the
+systemd default) and no `RestartSec`; failures remain visible for diagnosis.
+The module unit is also non-restarting by virtue of being `oneshot`.
+None of these units enables or restarts the vendor-managed
+`camerahalserver`, `cameraserver`, allocator, or `connectivity-fsm` graph.
+
+The daemon requires the module unit, starts after the module and
+`tb330fu-android-boot-complete.service`, and runs the target-bionic
+`/usr/local/lib/tb330fu/tb330fu-camera-daemon` as root.
 The daemon remains alive while both cameras are stopped.
 A camera worker opens one Camera3 device session when its V4L2 producer starts and
 keeps that session alive until the producer stops. Video recording attaches to
@@ -258,7 +310,8 @@ independent 32-byte-aligned `AVBufferRef`s for the NV21 Y and VU planes before
 ## Failure behavior
 
 Provider lookup timeout, missing video nodes, event subscription failure, camera open/configuration failure, allocator/mapper failure, invalid layout, DMA-BUF failure, and V4L2 producer setup failure are logged.
-Worker failures set the camera state to `error`; daemon initialization failures terminate the daemon and systemd may restart it.
+Worker failures set the camera state to `error`; daemon initialization failures
+terminate the daemon and remain stopped for diagnosis.
 Camera3 error notifications and failed buffer results are recorded in the daemon log.
 
 Malformed control framing disconnects the client.
@@ -299,24 +352,20 @@ Do not run it against real Camera3 hardware on the build host.
 
 ### Native video recorder
 
-Build the glibc/AArch64 recorder on `entertainment.local` with the external
-FFmpeg and AOSP protobuf sources required by
-[`src/camera/recorder/build.sh`](../src/camera/recorder/build.sh):
+Build the glibc/AArch64 recorder on the tablet itself. The tablet-local
+`/home/felix/tb330fu-recorder-native` build checkout and its target-local
+compiler, FFmpeg development libraries, and AOSP protobuf sources are the
+production build authority; do not substitute an `entertainment.local`
+cross-build when reconciling the service artifact. The release source and
+[`src/camera/recorder/build.sh`](../src/camera/recorder/build.sh) remain the
+canonical source contract, and the generated protobuf bindings must be
+verified before building.
 
-```bash
-ssh entertainment.local
-cd /path/to/tb330fu-release
-PROTOC=/home/felix/protobuf-3.21-build/protoc-3.21.12.0 \
-  sh src/camera/recorder/build.sh
-```
-
-The script uses `aarch64-linux-gnu-g++`, AArch64 glibc FFmpeg development
-headers/libraries, and the AOSP protobuf-lite sources at
-`/home/felix/aosp15-init/external/protobuf/src`. `PROTOC` must match the
-checked-in generated camera bindings; the build stops if they are stale. The
-result is native Linux AArch64 glibc, not Android/bionic. The successful
-production artifact linked against `libavcodec.so.58`, `libavformat.so.58`,
-and `libavutil.so.56`.
+The validated tablet-built artifact is installed as
+`/usr/local/lib/tb330fu/tb330fu-video-recorder` and is consumed by
+[`systemd/tb330fu-video-recorder.service`](../systemd/tb330fu-video-recorder.service).
+Record its SHA-256 and compare it with the tablet-local build output before
+deployment; a host-built artifact is not equivalent evidence.
 
 Install the resulting `out/tb330fu-video-recorder` as
 `/usr/local/lib/tb330fu/tb330fu-video-recorder` on the target and use
