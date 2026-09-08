@@ -28,8 +28,13 @@ except ImportError:  # direct execution from this directory
 
 RAW_PATH = Path("/run/tb330fu-camera/last.raw")
 JPEG_PATH = Path("/run/tb330fu-camera/last.jpg")
+DNG_PATH = Path("/run/tb330fu-camera/last.dng")
 PROCESSOR_SOCKET = "/run/tb330fu-camera/processor.sock"
+DNG_SOCKET = "/run/tb330fu-camera/dng.sock"
 PROCESSOR_MAX_MESSAGE = 4096
+RAW_LAYOUT_PATH = Path("/run/tb330fu-camera/last-raw-layout.json")
+RAW_METADATA_PATH = Path("/run/tb330fu-camera/last-metadata.json")
+CHARACTERISTICS_PATH = Path("/usr/local/share/tb330fu/rear-characteristics.json")
 
 
 class CameraName(str, Enum):
@@ -213,6 +218,7 @@ class CaptureResultModel(PublicModel):
     jpeg_path: Optional[str] = None
     raw_path: Optional[str] = None
     raw_metadata_path: Optional[str] = None
+    dng_path: Optional[str] = None
 
 
 class EmptyModel(PublicModel):
@@ -299,9 +305,10 @@ def message_json(message: Any) -> dict[str, Any]:
         c = message.capture
         return {"width": c.width, "height": c.height, "frame_number": c.frame_number,
                 "result": result_json(c.result) if c.HasField("result") else None,
-                "jpeg_path": c.jpeg_path or c.path or None,
+                "jpeg_path": c.jpeg_path or None,
                 "raw_path": c.raw_path or None,
-                "raw_metadata_path": c.raw_metadata_path or None}
+                "raw_metadata_path": c.raw_metadata_path or None,
+                "dng_path": c.path if c.path.endswith(".dng") else None}
     return {}
 
 
@@ -456,9 +463,9 @@ def autofocus(request: Request) -> Any:
 
 
 @app.post("/v1/capture", operation_id="capture", response_model=CaptureResultModel, responses=ERROR_RESPONSES)
-def capture(request: Request, shot_type: Literal["jpeg", "raw"] = Query("jpeg", alias="format")) -> Any:
+def capture(request: Request, shot_type: Literal["jpeg", "raw", "dng"] = Query("jpeg", alias="format")) -> Any:
     b = get_bridge(request)
-    response = call(b, lambda: b.ipc.capture_still(2 if shot_type == "raw" else 1))
+    response = call(b, lambda: b.ipc.capture_still(2 if shot_type in ("raw", "dng") else 1))
     if shot_type == "jpeg":
         try:
             with socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET) as processor:
@@ -475,6 +482,25 @@ def capture(request: Request, shot_type: Literal["jpeg", "raw"] = Query("jpeg", 
             raise BridgeError(502, f"JPEG processor unavailable: {exc}") from exc
         response.capture.jpeg_path = str(JPEG_PATH)
         response.capture.path = str(JPEG_PATH)
+    elif shot_type == "dng":
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET) as converter:
+                converter.settimeout(30)
+                converter.connect(DNG_SOCKET)
+                message = (f"DNG|{response.capture.path}|{RAW_LAYOUT_PATH}|{RAW_METADATA_PATH}|"
+                           f"{CHARACTERISTICS_PATH}").encode()
+                if len(message) > PROCESSOR_MAX_MESSAGE:
+                    raise BridgeError(502, "DNG request is too large")
+                converter.sendall(message)
+                reply = converter.recv(PROCESSOR_MAX_MESSAGE).decode("ascii")
+            if reply != f"OK|{DNG_PATH}":
+                raise BridgeError(502, f"DNG converter failed: {reply[:64]}")
+        except (OSError, UnicodeError, TimeoutError) as exc:
+            raise BridgeError(502, f"DNG converter unavailable: {exc}") from exc
+        response.capture.path = str(DNG_PATH)
+        response.capture.jpeg_path = ""
+        response.capture.raw_path = ""
+        response.capture.raw_metadata_path = ""
     return message_json(response)
 
 
@@ -498,17 +524,19 @@ def video_stop(request: Request) -> Any:
 
 @app.get("/v1/last-shot", operation_id="getLastShot", response_class=Response, responses={
     **ERROR_RESPONSES,
-    200: {"description": "Raw or JPEG still image", "content": {
-        "application/octet-stream": {}, "image/jpeg": {}
+    200: {"description": "Raw, JPEG, or DNG still image", "content": {
+        "application/octet-stream": {}, "image/jpeg": {}, "image/x-adobe-dng": {}
     }},
 })
-def last_shot(request: Request, shot_type: Literal["raw", "jpg"] = Query("raw", alias="type")) -> Response:
+def last_shot(request: Request, shot_type: Literal["raw", "jpg", "dng"] = Query("raw", alias="type")) -> Response:
     del request
     try:
         if shot_type == "raw":
             data, media_type = RAW_PATH.read_bytes(), "application/octet-stream"
-        else:
+        elif shot_type == "jpg":
             data, media_type = JPEG_PATH.read_bytes(), "image/jpeg"
+        else:
+            data, media_type = DNG_PATH.read_bytes(), "image/x-adobe-dng"
     except FileNotFoundError as exc:
         raise BridgeError(404, "no still capture available") from exc
     except (ValueError, RuntimeError, KeyError, json.JSONDecodeError) as exc:

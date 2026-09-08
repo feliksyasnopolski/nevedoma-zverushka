@@ -66,10 +66,10 @@ class BridgeContractTests(unittest.TestCase):
             operation = next(iter(paths[path].values()))
             self.assertEqual(operation["operationId"], operation_id)
         last_shot = paths["/v1/last-shot"]["get"]
-        self.assertEqual(last_shot["parameters"][0]["schema"]["enum"], ["raw", "jpg"])
-        self.assertEqual(set(last_shot["responses"]["200"]["content"]), {"application/octet-stream", "image/jpeg"})
+        self.assertEqual(last_shot["parameters"][0]["schema"]["enum"], ["raw", "jpg", "dng"])
+        self.assertEqual(set(last_shot["responses"]["200"]["content"]), {"application/octet-stream", "image/jpeg", "image/x-adobe-dng"})
         capture = paths["/v1/capture"]["post"]
-        self.assertEqual(capture["parameters"][0]["schema"]["enum"], ["jpeg", "raw"])
+        self.assertEqual(capture["parameters"][0]["schema"]["enum"], ["jpeg", "raw", "dng"])
         self.assertNotIn("path", camera_bridge.app.openapi()["components"]["schemas"]["CaptureResultModel"]["properties"])
 
 class FakeSocket:

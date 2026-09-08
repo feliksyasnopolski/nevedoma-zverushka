@@ -1,11 +1,14 @@
 [Unit]
 Description=TB330FU Python camera HTTP bridge
 Requires=tb330fu-camera-daemon.service tb330fu-camera-processor.service
-After=tb330fu-camera-daemon.service tb330fu-camera-processor.service
+Requires=systemd-tmpfiles-setup-dev.service
+Wants=tb330fu-camera-dng.service
+After=tb330fu-camera-daemon.service tb330fu-camera-processor.service tb330fu-camera-dng.service systemd-tmpfiles-setup-dev.service
 
 [Service]
 Type=simple
 User=felix
+StandardInput=data
 Environment=PYTHONPATH=/usr/local/lib/tb330fu/camera-bridge-deps:/usr/local/lib/tb330fu/camera-bridge
 ExecStart=/usr/bin/python3 /usr/local/lib/tb330fu/camera-bridge/camera_bridge.py --listen 127.0.0.1 --port 3909
 NoNewPrivileges=yes

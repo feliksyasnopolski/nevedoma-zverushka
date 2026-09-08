@@ -32,6 +32,14 @@ dependency. JPEG capture requests conversion from the persistent
 `tb330fu-camera-processor` over `/run/tb330fu-camera/processor.sock`; the raw
 endpoint serves the daemon's RAW16 artifact.
 
+Still-capture smoke tests must start a V4L2 preview consumer first, for
+example `single-consumer-test-release /dev/video-rear`. Keep that consumer
+running while calling `POST /v1/capture?format=jpeg` and
+`POST /v1/capture?format=dng`, stop it afterward, and confirm `GET /v1/state`
+returns `state: idle`. Calling either capture endpoint without an active
+preview consumer is expected to return HTTP `502` (`bad_gateway`) with daemon
+code `CAPTURE_FAILED` and message `camera is not the active HAL owner`.
+
 Status camera/mode values are `unspecified`, `rear`/`front`, and
 `unspecified`, `photo`/`video`. PATCH controls preserve omitted fields, accept
 explicit zero/false values, and reject null or unknown fields. Capture responses

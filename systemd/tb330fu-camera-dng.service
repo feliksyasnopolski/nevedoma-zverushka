@@ -1,0 +1,18 @@
+[Unit]
+Description=TB330FU camera DNG converter
+Requires=tb330fu-android-boot-complete.service
+Requires=tb330fu-camera-daemon.service
+Requires=systemd-tmpfiles-setup-dev.service
+After=tb330fu-android-boot-complete.service tb330fu-camera-daemon.service systemd-tmpfiles-setup-dev.service
+
+[Service]
+Type=simple
+User=root
+StandardInput=data
+ExecStart=/usr/local/lib/tb330fu/tb330fu-camera-dng-producer
+NoNewPrivileges=yes
+ReadWritePaths=/run/tb330fu-camera
+ExecStartPre=/usr/bin/install -d -o root -g root -m 0775 /run/tb330fu-camera
+
+[Install]
+WantedBy=multi-user.target

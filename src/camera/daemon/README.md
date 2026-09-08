@@ -53,3 +53,33 @@ configured concurrently.
 The events stream sends a complete snapshot immediately and continues
 at approximately 30 Hz; each packet is independently current and it is not a
 durable event log. Slow consumers may drop packets without blocking capture.
+
+## Capture smoke-test order
+
+The V4L2 preview consumer must be started before requesting a still. The
+consumer establishes the active preview path on `/dev/video-rear` (or
+`/dev/video-front`); the HTTP bridge's JPEG and DNG capture requests depend on
+that active HAL owner. A bounded smoke test therefore follows this order:
+
+```bash
+/home/felix/single-consumer-test-release /dev/video-rear 120 \
+  >/tmp/tb330fu-preview-smoke.log 2>&1 &
+consumer_pid=$!
+sleep 2
+curl -X POST http://127.0.0.1:3909/v1/capture?format=jpeg
+curl -X POST http://127.0.0.1:3909/v1/capture?format=dng
+kill "$consumer_pid"
+wait "$consumer_pid" 2>/dev/null || true
+curl http://127.0.0.1:3909/v1/state
+```
+
+The consumer must remain active for both capture requests. Stop it only after
+the captures complete, then verify that the bridge reports camera state
+`idle`. If the consumer was not started, or has already stopped, capture is
+expected to fail with HTTP `502` and a structured error such as:
+
+```json
+{"error":{"code":"bad_gateway",
+"message":"camera is not the active HAL owner",
+"daemon_code":"CAPTURE_FAILED"}}
+```

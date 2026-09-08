@@ -291,6 +291,17 @@
       "CaptureResultModel": {
         "additionalProperties": false,
         "properties": {
+          "dng_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dng Path"
+          },
           "frame_number": {
             "title": "Frame Number",
             "type": "integer"
@@ -936,7 +947,8 @@
               "default": "jpeg",
               "enum": [
                 "jpeg",
-                "raw"
+                "raw",
+                "dng"
               ],
               "title": "Format",
               "type": "string"
@@ -1194,7 +1206,8 @@
               "default": "raw",
               "enum": [
                 "raw",
-                "jpg"
+                "jpg",
+                "dng"
               ],
               "title": "Type",
               "type": "string"
@@ -1205,9 +1218,10 @@
           "200": {
             "content": {
               "application/octet-stream": {},
-              "image/jpeg": {}
+              "image/jpeg": {},
+              "image/x-adobe-dng": {}
             },
-            "description": "Raw or JPEG still image"
+            "description": "Raw, JPEG, or DNG still image"
           },
           "400": {
             "content": {

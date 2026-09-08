@@ -120,6 +120,10 @@ The following areas are native Linux ownership rather than Android framework rep
 | [`scripts/`](scripts/) | Build, extraction, validation, and installation support scripts. |
 | [`manifests/`](manifests/) | External-input and module-order manifests. |
 
+Licensing and provenance boundaries are documented in
+[`docs/LICENSING.md`](docs/LICENSING.md) and
+[`vendor/init-corpus/PROVENANCE.md`](vendor/init-corpus/PROVENANCE.md).
+
 Generated boot images, deployed binaries, stock images, proprietary firmware, calibration and security material, and other recovery-critical external inputs are not release-tree source files.
 
 ## Documentation

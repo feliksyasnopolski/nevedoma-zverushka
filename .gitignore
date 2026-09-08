@@ -38,6 +38,7 @@ meson-logs/
 *.swo
 *~
 __pycache__/
+*.dSYM/
 
 # Local and transient runtime output
 *.log
@@ -59,6 +60,14 @@ core.*
 
 # Generated and device-specific images
 /generated-images/
+/apps/camera/build/
+/apps/camera/.dart_tool/
+/apps/camera/**/build/
+/apps/camera/**/.dart_tool/
+/apps/camera/**/Pods/
+/apps/camera/**/.symlinks/
+/apps/camera/**/Flutter/ephemeral/
+/apps/camera-*.png
 /images/boot*.img
 /images/vendor_boot*.img
 /images/init_boot*.img
