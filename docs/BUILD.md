@@ -5,7 +5,7 @@ It is a provenance contract.
 Subsystem documents and the repository build files remain the authority for individual commands.
 
 The build host is a Linux x86_64 machine.
-The currently validated host is `entertainment.local`, Ubuntu 26.04.1 LTS.
+The currently validated host is `entertainment.local`, Ubuntu 22.04.1 LTS.
 The host is not the target runtime: native Linux artifacts target AArch64 glibc, while retained Android/vendor bridges target AArch64 bionic and are linked with target Android libraries.
 
 ## Dependency status
